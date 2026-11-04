@@ -36,6 +36,7 @@
 \newcommand{\tr}{\operatorname{tr}}
 \newcommand{\diag}{\operatorname{diag}}
 \newcommand{\LS}{\mathcal{L}}
+\newcommand{\X}{\mathcal X}
 \newcommand{\comment}{\textcolor{red}}
 % Proofs in gray: the statements stand out, proofs are secondary reading.
 \definecolor{proofgray}{gray}{0.45}
@@ -125,31 +126,37 @@ In the present mechanical interpretation, this is the \textit{resultant normal f
 \begin{align}
 m_1(\nu_N) \triangleq \int_P x\,d\nu_N(x)\in\mathbb R^2.
 \end{align}
-If $f_N>0$, the \textit{center of pressure} is the normalized first moment, 
-\begin{align} 
+If $f_N>0$, the \textit{center of pressure} is the normalized first moment,
+\begin{align}
 c[\nu_N] &\triangleq \frac{m_1(\nu_N)}{m_0(\nu_N)} \\
          & = \frac{1}{f_N} \int_P x\,d\nu_N(x).
 \end{align}
-Hence knowing the total normal force and the center of pressure is equivalent to knowing the zeroth and first moments of the normal force measure $m_0(\nu_N)=f_N, m_1(\nu_N)=f_Nc[\nu_N]$. 
+Hence knowing the total normal force and the center of pressure is equivalent to knowing the zeroth and first moments of the normal force measure $m_0(\nu_N)=f_N, m_1(\nu_N)=f_Nc[\nu_N]$.
+Unlike the CoP, the pair $(m_0,m_1)$ is linear in $\nu_N$ and defined for every measure, including $\nu_N=0$. We work with these \textit{homogeneous coordinates} throughout, and use the CoP only when $f_N>0$.
 
-\paragraph{Barycenters and local CoPs.}
-More generally, the \textit{barycenter} of a nonnegative measure $\nu$ carried by a set $E$ with $\nu(E)>0$ is its normalized first moment
-$\frac{1}{\nu(E)}\int_E x\,d\nu(x)$. For the normal force measure on $P$, the barycenter is the CoP, $c[\nu_N]$. For the restriction of $\nu_N$ to a
-subset $E\subseteq P$, such as a taxel, it is the \textit{local CoP} of the normal force carried by $E$. 
-% We use the word barycenter only in proofs where the measure is not a normal force, e.g. a probability measure. The \textit{barycentric coordinates} used in Lemma~\ref{lem:vertex_reduction} are a different notion, recalled there.
+\paragraph{Local moments.}
+For a measurable subset $E\subseteq P$, such as a taxel, the \textit{local first moment} of the force carried by $E$ is $\int_Ex\,d\nu_N(x)$. If $\nu_N(E)>0$, the normalized
+first moment $\frac{1}{\nu_N(E)}\int_E x\,d\nu_N(x)$ is the \textit{local CoP} of $E$, i.e., the barycenter of the restriction of $\nu_N$ to $E$; it lies in the closed convex hull of $E$.
 
 \section{Problem formulation}
 \subsection{Planar contact model}
 
-Assume that the planar contact patch $P\subset\mathbb R^2$ is compact and convex,
-and let $\nu_N\in\mathcal M_+(P)$ and $\nu_T$ be the normal and tangential force
-measures introduced above. We assume
+\paragraph{Frame.}
+All quantities are coordinates in a fixed frame $\mathcal R=(O,\mathcal B)$ of the contact plane: $O$ is the origin and $\mathcal B=(e_1,e_2)$ an orthonormal basis, completed by the contact normal
+$e_3$. A point of the plane is identified with its coordinate vector $x\in\R^2$. A wrench or a twist is always written in a frame, and its coordinates depend on the reference point
+(Lemma~\ref{lem:varignon}); here the reference point is $O$ unless stated otherwise. For $x,y\in\R^2$, the \textit{planar cross product} is the scalar
 \begin{align}
-f_N=m_0(\nu_N)>0,
+    x\times y \triangleq \langle e_3,(x,0)\times(y,0)\rangle = x_1y_2-x_2y_1 = (Jx)^\top y,
+    \qquad
+    J \triangleq
+    \begin{bmatrix}
+    0&-1\\
+    1&0
+    \end{bmatrix}.
 \end{align}
-so that the center of pressure $c$ is well-defined. Since $P$ is convex and
-$\nu_N$ is nonnegative, $c\in P$.
-We further assume a known and spatially uniform Coulomb friction coefficient
+
+Let the planar contact patch $P\subset\mathbb R^2$ be compact, and let $\nu_N\in\mathcal M_+(P)$ and $\nu_T$ be the normal and tangential force
+measures introduced above. We do not assume $f_N>0$. Convexity of $P$ is assumed only where stated. We further assume a known and spatially uniform Coulomb friction coefficient
 $\mu>0$.
 We impose Coulomb friction in measure form by requiring that there exists a
 measurable density $\gamma_T:P\rightarrow\mathbb R^2$ of $\nu_T$ with respect
@@ -162,10 +169,10 @@ d\nu_T(x)=\gamma_T(x)\,d\nu_N(x),
 \quad \nu_N\text{-a.e. on }P.
 \end{align}
 We call $\gamma_T$ the \textit{friction ratio field}. It can be interpreted as
-the tangential force per unit normal force. 
+the tangential force per unit normal force.
 The above condition expresses both that tangential friction force can only be carried where normal force is present
 and that its local magnitude is bounded by $\mu$\footnote{In particular, $d\nu_T=\gamma_T\,d\nu_N$ implies
-$\nu_T\ll\nu_N$.}. When $\nu_N$ admits the normal pressure field $\rho_N$ introduced above, i.e. $d\nu_N=\rho_N\,dA$, the tangential force measure also admits a density with respect to area,
+$\nu_T\ll\nu_N$. Conversely, by the Radon--Nikodym theorem, a tangential measure with $\|\nu_T(E)\|_2\le\mu\,\nu_N(E)$ for every $E$ has such a density.}. When $\nu_N$ admits the normal pressure field $\rho_N$ introduced above, i.e. $d\nu_N=\rho_N\,dA$, the tangential force measure also admits a density with respect to area,
 \begin{align}
 \rho_T(x)=\gamma_T(x)\rho_N(x),
 \end{align}
@@ -175,28 +182,20 @@ called the \textit{tangential traction field}. The measure-form Coulomb conditio
 \|\rho_T(x)\|_2\le\mu\rho_N(x)
 \qquad \text{a.e. on }P.
 \end{align}
-We define the \textit{resultant tangential force} and \textit{resultant torsional moment} about the center of pressure $c$ as
+We define the \textit{resultant tangential force} and the \textit{resultant torsional moment} about the origin $O$ as
 \begin{align}
 f_T \triangleq \nu_T(P)
 = \int_P\gamma_T(x)\,d\nu_N(x),
 \qquad
 \tau_N \triangleq
-\int_P (x-c)\times\gamma_T(x)\,d\nu_N(x).
+\int_P x\times\gamma_T(x)\,d\nu_N(x).
 \end{align}
-We finally define the skew-symmetric matrix
-\begin{align}
-J \triangleq
-\begin{bmatrix}
-0&-1\\
-1&0
-\end{bmatrix},
-\end{align}
-so that for $x,y\in\mathbb R^2$ $x\times y=(Jx)^\top y$
 
 \begin{definition}[Admissible tangential wrench set]
-    Define a normal force measure $\nu_N\in\mathcal M_+(P)$. We define \textit{admissible tangential wrench set} :
+    \label{def:wrench_set}
+    For a normal force measure $\nu_N\in\mathcal M_+(P)$, the \textit{admissible tangential wrench set} is
     \begin{align}
-    \mathcal W(\nu_N)
+    \X(\nu_N)
     \triangleq
     \left\{
     (f_T,\tau_N)\in\mathbb R^2\times\mathbb R:
@@ -207,47 +206,80 @@ so that for $x,y\in\mathbb R^2$ $x\times y=(Jx)^\top y$
     \quad\nu_N\text{-a.e.},\\
     f_T=\displaystyle\int_P\gamma_T(x)\,d\nu_N(x),\\
     \tau_N=\displaystyle\int_P
-    (x-c[\nu_N])\times\gamma_T(x)\,d\nu_N(x)
+    x\times\gamma_T(x)\,d\nu_N(x)
     \end{array}
     \right\}.
     \end{align}
-    The set $\mathcal W(\nu_N)$ is a non-empty compact subset of $\R^3$ containing all resultant tangential wrenches (tangential force and torsional moment) that are compatible with the normal force measure $\nu_N$ and the local Coulomb friction condition~\eqref{eq:coulomb_measure}.
+    It is a nonempty, convex, compact subset of $\R^3$, symmetric about $0$, containing all resultant tangential wrenches (tangential force and torsional moment about $O$) that are
+    compatible with the normal force measure $\nu_N$ and the local Coulomb friction condition~\eqref{eq:coulomb_measure}.
 \end{definition}
-
-
-
 
 \begin{proposition}[Support function of the admissible tangential wrench set]
     \label{prop:support}
-    For any $\nu_N\in\mathcal M_+(P)$ and for every $q=(a,b)\in\mathbb R^2\times\mathbb R$, the support function of $\mathcal W(\nu_N)$ is
+    For any $\nu_N\in\mathcal M_+(P)$ and for every $q=(a,b)\in\mathbb R^2\times\mathbb R$, the support function of $\X(\nu_N)$ is
     \begin{align}
-    h_{\mathcal W(\nu_N)}(q) = \mu \int_P \left\|a+bJ(x-c[\nu_N])\right\|_2\,d\nu_N(x).
+    h_{\X(\nu_N)}(q) = \mu \int_P \left\|a+bJx\right\|_2\,d\nu_N(x).
     \end{align}
 \end{proposition}
 \begin{proof}
-    By definition, $\forall q=(a,b)\in\R^2\times \R$
+    By definition, $\forall q=(a,b)\in\R^2\times \R$,
+    $h_{\X(\nu_N)}(q) =\sup_{(f_T,\tau_N)\in\X(\nu_N)}\left(a^\top f_T+b\tau_N\right)$.
+    For any friction ratio field $\gamma_T$,
     \begin{align}
-    h_{\mathcal W(\nu_N)}(q) =\sup_{(f_T,\tau_N)\in\mathcal W(\nu_N)}\left(a^\top f_T+b\tau_N\right).
+    a^\top f_T+b\tau_N=\int_P\left[a+bJx\right]^\top\gamma_T(x)\,d\nu_N(x)
+    \le\mu\int_P\left\|a+bJx\right\|_2\,d\nu_N(x),
     \end{align}
-    For any friction ratio field $\gamma_T$
-    \begin{align}
-    a^\top f_T+b\tau_N=\int_P\left[a+bJ(x-c[\nu_N])\right]^\top\gamma_T(x)\,d\nu_N(x).
-    \end{align}
-    Using Cauchy--Schwarz and
-    $\|\gamma_T(x)\|_2\le\mu$,
-    \begin{align}
-    a^\top f_T+b\tau_N\le\mu\int_P\left\|a+bJ(x-c[\nu_N])\right\|_2\,d\nu_N(x).
-    \end{align}
-    The bound is attained by choosing $\gamma_T(x)$ with magnitude $\mu$ and aligned with
-    $a+bJ(x-c[\nu_N])$ whenever this vector is nonzero:
-    \begin{align}
-        \gamma_T^{\star}(x)= \begin{cases}
-                \mu\frac{a + bJ(x-c[\nu_N])}{\|a + bJ(x-c[\nu_N])\|_2}~~&\text{if}~\|a + bJ(x-c[\nu_N])\|_2\neq 0\\
-                0~~&\text{otherwise}
-        \end{cases} 
-    \end{align}
+    by Cauchy--Schwarz and $\|\gamma_T(x)\|_2\le\mu$.
+    The bound is attained by the field of magnitude $\mu$ aligned with $a+bJx$ where this vector is nonzero, and $\gamma_T^\star(x)=0$ elsewhere.
 \end{proof}
 
+\begin{remark}[Twists and dissipated power]
+\label{rem:power}
+    The direction $q=(a,b)$ is the coordinate vector of a planar rigid twist about $O$: $a$ is the velocity of the material point at $O$ and $b$ the angular velocity, so the
+    point at $x$ has velocity $v_q(x)=a+bJx$. The power of the tangential forces under this twist is
+    $\int_P\langle v_q(x),\gamma_T(x)\rangle\,d\nu_N(x)=a^\top f_T+b\tau_N=\langle q,(f_T,\tau_N)\rangle$. Hence $h_{\X(\nu_N)}(q)$ is the largest power that admissible friction can
+    exert under the twist $q$; since $\X(\nu_N)=-\X(\nu_N)$, it is also the maximal power that friction can dissipate when the contact slides with twist $q$, which is the
+    value selected by the maximal dissipation principle. This reading requires $q$ and the wrench to be written about the same point.
+\end{remark}
+
+\begin{lemma}[Change of reference point]
+\label{lem:varignon}
+    For $o\in\R^2$, let $T_o(f,\tau)\triangleq(f,\tau-o\times f)$ and $S_o(a,b)\triangleq(a+bJo,b)$ (wrench and twist coordinates about $o$; Varignon's formula). Then $T_o$ and $S_o$ are
+    invertible linear maps and
+    \begin{enumerate}[label=(\roman*)]
+        \item $\langle S_oq,T_ow\rangle=\langle q,w\rangle$ for all $q,w\in\R^3$: the power does not depend on the reference point;
+        \item the set of wrenches about $o$, $\X_o(\nu_N)\triangleq\{(f_T,\int_P(x-o)\times\gamma_T\,d\nu_N)\}$ (over the same fields $\gamma_T$), is $T_o\X(\nu_N)$, and
+        \begin{align}
+            h_{\X_o(\nu_N)}(S_oq)=h_{\X(\nu_N)}(q),
+            \qquad\text{i.e.}\qquad
+            h_{\X_o(\nu_N)}(a',b)=\mu\int_P\|a'+bJ(x-o)\|_2\,d\nu_N(x).
+        \end{align}
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    (i) $\langle S_oq,T_ow\rangle=(a+bJo)^\top f+b(\tau-o\times f)=a^\top f+b\tau$, since $o\times f=(Jo)^\top f$.
+    (ii) $\int_P(x-o)\times\gamma_T\,d\nu_N=\tau_N-o\times f_T$. Then $h_{\X_o(\nu_N)}(S_oq)=\sup_{w\in\X(\nu_N)}\langle S_oq,T_ow\rangle=h_{\X(\nu_N)}(q)$ by (i),
+    and $S_o^{-1}(a',b)=(a'-bJo,b)$ gives the integral form.
+\end{proof}
+
+\begin{remark}[Torsion about the CoP]
+\label{rem:cop_frame}
+    For $f_N>0$, the set $\mathcal W(\nu_N)\triangleq\X_{c[\nu_N]}(\nu_N)$ of wrenches about the CoP is the one usually considered for torsional friction (soft-finger models), with
+    support function $\mu\int_P\|a+bJ(x-c[\nu_N])\|_2\,d\nu_N$. For a single measure the two descriptions are equivalent. When several measures are combined, as in the
+    bounds below, the change of coordinates $T_{c[\nu_N]}$ depends on the measure: unions, intersections, infima and suprema of $\mathcal W(\nu_N)$ over measures with different CoPs
+    combine coordinates written about different points, which no longer describe one physical twist or one set of physical wrenches. We therefore work with $\X$ throughout and
+    recover statements about the CoP through Lemma~\ref{lem:varignon} when the CoP is measured.
+\end{remark}
+
+\begin{lemma}[Linearity in the normal force]
+\label{lem:linearity}
+    For $\nu_1,\nu_2\in\mathcal M_+(P)$ and $t\ge0$, $h_{\X(\nu_1+\nu_2)}=h_{\X(\nu_1)}+h_{\X(\nu_2)}$ and $h_{\X(t\nu_1)}=t\,h_{\X(\nu_1)}$. Consequently
+    $\X(\nu_1+\nu_2)=\X(\nu_1)\oplus\X(\nu_2)$ (Minkowski sum), $\X(t\nu_1)=t\,\X(\nu_1)$ and $\X(0)=\{0\}$.
+\end{lemma}
+\begin{proof}
+    The first claims follow from Proposition~\ref{prop:support}. The support function of a Minkowski sum is the sum of the support functions, and nonempty compact convex sets
+    with the same support function are equal~\cite[Section~13]{rockafellar1970convex}.
+\end{proof}
 
 \subsection{Measurement-conditioned support bounds}
 \begin{table}[t]
@@ -257,18 +289,18 @@ so that for $x,y\in\mathbb R^2$ $x\times y=(Jx)^\top y$
         \toprule
         Symbol & Meaning & Remark & Lives in \\
         \midrule
-        $\nu_N$ 
+        $\nu_N$
         & normal force measure
         & true $\nu_N^\star$ is unknown
         & $\mathcal M_+(P)$
         \\
-        $c[\nu_N]$
-        & CoP induced by measure $\nu_N$
-        & depends on $\nu_N$
-        & $P\subset\mathbb R^2$
+        $(m_0,m_1)$
+        & zeroth and first moments of $\nu_N$
+        & $m_1=f_Nc[\nu_N]$ if $f_N>0$
+        & $\R\times\R^2$
         \\
         $q=(a,b)$
-        & wrench support direction
+        & twist about $O$ (support direction)
         & prescribed
         & $\mathbb R^2\times\mathbb R$
         \\
@@ -278,7 +310,7 @@ so that for $x,y\in\mathbb R^2$ $x\times y=(Jx)^\top y$
         & $\mathcal M_+(P)\rightarrow\mathbb R^r$
         \\
         $y$
-        & measurement value 
+        & measurement value
         & observed data from $(\mathcal M,\nu_N)$
         & $\mathbb R^r$
         \\
@@ -287,25 +319,20 @@ so that for $x,y\in\mathbb R^2$ $x\times y=(Jx)^\top y$
         & depends on $(\mathcal M,y)$
         & $\subseteq\mathcal M_+(P)$
         \\
-        $\mathcal C_{\mathcal M}(y)$
-        & CoPs compatible with $y$
-        & depends on $(\mathcal M,y)$
-        & $\subseteq P$
-        \\
-        % $h_{\mathcal W(\nu_N)}(q)$
-        % & support of the wrench set for $\nu_N$
-        % & depends on $(\nu_N,q)$
-        % & $\mathbb R$
-        % \\
-        $\underline h_{\mathcal M}(q;y)$
+        $\underline h(q;y,\mathcal M)$
         & measurement-conditioned lower bound
         & depends on $(\mathcal M,y,q)$
         & $\mathbb R$
         \\
-        $\overline h_{\mathcal M}(q;y)$
+        $\overline h(q;y,\mathcal M)$
         & measurement-conditioned upper bound
         & depends on $(\mathcal M,y,q)$
         & $\mathbb R$
+        \\
+        $\X^-(y,\mathcal M)$, $\X^+(y,\mathcal M)$
+        & guaranteed and possible wrench sets
+        & Proposition~\ref{prop:inner_outer}
+        & $\subseteq\R^3$
         \\
         \bottomrule
     \end{tabular}}
@@ -313,255 +340,193 @@ so that for $x,y\in\mathbb R^2$ $x\times y=(Jx)^\top y$
     \label{tab:measurement_notation}
 \end{table}
 
-We focus here on the case where we do not know the \textit{true} force measure $\nu_N^\star$ but we have only access to some measurements of it (e.g. resultant normal force, CoP, etc.). 
-The goal is to investigate what can be known about the support of $\mathcal W(\nu_N^\star)$ given partial measurements of $\nu_N^\star$. 
+We focus here on the case where we do not know the \textit{true} force measure $\nu_N^\star$ but we have only access to some measurements of it (e.g. resultant normal force, CoP, etc.).
+The goal is to investigate what can be known about the support of $\X(\nu_N^\star)$ given partial measurements of $\nu_N^\star$.
 \begin{definition}[Measurement operator]\label{def:measurement_operator}
-    We define a \textit{measurement operator} as a function $\mathcal M:\mathcal M_+(P)\rightarrow\mathbb R^r$. We assume that its components are linear integral measurements of the form
+    A \textit{measurement operator} is a map $\mathcal M:\mathcal M_+(P)\rightarrow\mathbb R^r$ of the form
     \begin{align}
-    \mathcal M(\nu_N) = 
+    \mathcal M(\nu_N) =
     \begin{bmatrix}
     \displaystyle\int_P \phi_1(x)\,d\nu_N(x)\\
     \vdots\\
     \displaystyle\int_P \phi_r(x)\,d\nu_N(x)
-    \end{bmatrix},\qquad \forall \nu_N \in \mathcal M_+(P)
+    \end{bmatrix},\qquad \forall \nu_N \in \mathcal M_+(P),
     \end{align}
-    where the prescribed measurable functions
+    where the prescribed bounded Borel functions
     $\phi_j:P\rightarrow\mathbb R$ are called the \textit{measurement functions}.
     In the following, we denote a measurement value (or observation) induced by the (unknown) true force measure $\nu_N^\star$ as $y = \mathcal M(\nu_N^\star) \in\mathbb R^r$.
 \end{definition}
 
 \begin{definition}[Measurement-compatible normal force family]
-    Given a measurement operator $\mathcal M:\mathcal M_+(P)\rightarrow\mathbb R^r$ and the observation $y\in\R^r$, we define the set of \textit{normal force measures that are compatible with observation $y$} 
+    Given a measurement operator $\mathcal M:\mathcal M_+(P)\rightarrow\mathbb R^r$ and the observation $y\in\R^r$, the set of \textit{normal force measures compatible with $y$} is
+    the preimage
     \begin{align}
-    \Pi_{\mathcal M}(y) \triangleq\left\{\nu_N\in\mathcal M_+(P):\mathcal M(\nu_N)=y\right\}.
+    \Pi_{\mathcal M}(y) \triangleq\left\{\nu_N\in\mathcal M_+(P):\mathcal M(\nu_N)=y\right\}=\mathcal M^{-1}[\{y\}].
     \end{align}
-    The set $\Pi_{\mathcal M}(y)$ contains all the normal force measures that are indistinguishable under measurement $y$. Note that this is the pre-image of $y$ through $\mathcal{M}$ : $\Pi_{\mathcal{M}(y)} = \mathcal{M}^{-1}[\{y\}]$.
+    It contains all the normal force measures that are indistinguishable under the measurement $y$, and it is convex.
 \end{definition}
 
-\begin{assumption}
-    \label{ass:positive_mass}
-    From now on, we assume \(\forall \nu_N\in\Pi_{\mathcal M}(y)\), $\nu_N(P) >0$. Purpose: we restrict the measurement-compatible family to measures that have a well-defined CoP.
-    % From now on, we assume that the measurement operator includes at least the zeroth moment, i.e. $r\geq 1$ and $\phi_1(x)=1$. \textcolor{red}{Not true for $\mathcal{M}_F$ !}
+\begin{assumption}[Mass control]
+    \label{ass:mass_control}
+    There exists $\lambda\in\R^r$ such that $\sum_j\lambda_j\phi_j(x)\ge1$ for every $x\in P$.
 \end{assumption}
+Under Assumption~\ref{ass:mass_control}, every $\nu_N\in\Pi_{\mathcal M}(y)$ satisfies $\nu_N(P)\le\int_P\sum_j\lambda_j\phi_j\,d\nu_N=\lambda^\top y$, so the compatible family has bounded
+mass. All measurement operators studied below measure the resultant normal force, directly or as the sum of the taxel forces, and satisfy it. Without it, force could be hidden where
+all the measurement functions vanish, and the upper bound below would be infinite. No positivity assumption on $f_N$ is needed.
 
-\begin{definition}[Set of measurement-compatible CoPs]\label{def:CM}
-    We define
-    \begin{align}
-    \mathcal C_{\mathcal M}(y)
-    \triangleq
-    \left\{
-    c[\nu_N]:
-    \nu_N\in\Pi_{\mathcal M}(y)
-    \right\}
-    \end{align}
-    as the set of CoPs compatible with the observation $y \in \mathbb{R}^r$.    
-\end{definition}
-
-Given an observation $y$ of the unknown true force measure $\nu_N^\star$, we can compute measurement-conditioned lower/upper bounds on the support function $h_{\mathcal W(\nu_N^\star)}$ by optimizing over $\Pi_{\mathcal M}(y)$. 
+Given an observation $y$ of the unknown true force measure $\nu_N^\star$, we can compute measurement-conditioned lower/upper bounds on the support function $h_{\X(\nu_N^\star)}$ by optimizing over $\Pi_{\mathcal M}(y)$.
 
 \begin{definition}[Measurement-conditioned support bounds]\label{def:measurement_support_bounds}
-Let $\mathcal M:\mathcal M_+(P)\rightarrow\mathbb R^r$ be a measurement operator as defined above and let $y=\mathcal M(\nu_N^\star)$ denote the observation induced by the unknown true normal force measure $\nu_N^\star$. For a wrench direction $q\in\mathbb R^2\times\mathbb R$, we define the \textit{measurement-conditioned bounds in direction $q$}:
+Let $\mathcal M$ be a measurement operator and $y\in\R^r$ an observation. For a twist $q\in\mathbb R^2\times\mathbb R$, the \textit{measurement-conditioned bounds in direction $q$} are
 \begin{align}
     \label{eq:def_mea_bounds}
-    \underline h_{\mathcal M}(q;y)
+    \underline h(q;y,\mathcal M)
     &\triangleq
     \inf_{\nu_N\in\Pi_{\mathcal M}(y)}
-    h_{\mathcal W(\nu_N)}(q),\\
-    \overline h_{\mathcal M}(q;y)
+    h_{\X(\nu_N)}(q)
+    =\inf_{\nu_N\in\Pi_{\mathcal M}(y)}\mu\int_P\|a+bJx\|_2\,d\nu_N(x),\\
+    \overline h(q;y,\mathcal M)
     &\triangleq
     \sup_{\nu_N\in\Pi_{\mathcal M}(y)}
-    h_{\mathcal W(\nu_N)}(q).
+    h_{\X(\nu_N)}(q)
+    =\sup_{\nu_N\in\Pi_{\mathcal M}(y)}\mu\int_P\|a+bJx\|_2\,d\nu_N(x),
+\end{align}
+and the \textit{guaranteed} and \textit{possible} wrench sets are
+\begin{align}
+    \X^-(y,\mathcal M)\triangleq\bigcap_{\nu_N\in\Pi_{\mathcal M}(y)}\X(\nu_N),
+    \qquad
+    \X^+(y,\mathcal M)\triangleq\bigcup_{\nu_N\in\Pi_{\mathcal M}(y)}\X(\nu_N).
 \end{align}
 \end{definition}
+The objective of both problems in~\eqref{eq:def_mea_bounds} is linear in $\nu_N$, and the constraints $\int_P\phi_j\,d\nu_N=y_j$ are linear moment constraints:
+\textit{the bounds are Generalized Moment Problems (GMP)}~\cite{lasserre2010moments}, for every measurement operator. This is a consequence of the fixed reference point; about the
+CoP of each measure the objective would depend on $\nu_N$ through $c[\nu_N]$ (Remark~\ref{rem:cop_frame}).
 
-% By this definition, for every $q\in\mathbb R^2\times\mathbb R$ and every
-% $\nu_N\in\Pi_{\mathcal M}(y)$,
-% \begin{align}
-%     \underline h_{\mathcal M}(q;y)
-%     \le
-%     h_{\mathcal W(\nu_N)}(q)
-%     \le
-%     \overline h_{\mathcal M}(q;y).
-% \end{align}
+\begin{proposition}[Guaranteed and possible wrench sets]
+    \label{prop:inner_outer}
+    Let $\mathcal M$ satisfy Assumption~\ref{ass:mass_control} and $y\in\R^r$.
+    \begin{enumerate}[label=(\roman*)]
+        \item The possible set $\X^+(y,\mathcal M)$ is convex, and its support function is $\overline h(\cdot;y,\mathcal M)$.
+        \item The guaranteed set is $\X^-(y,\mathcal M)=\{w:\langle q,w\rangle\le\underline h(q;y,\mathcal M)~\forall q\}$. Its support function is the closed convex envelope of
+        $\underline h(\cdot;y,\mathcal M)$, which is in general strictly below $\underline h$.
+        \item $y\mapsto\overline h(q;y,\mathcal M)$ is concave and $y\mapsto\underline h(q;y,\mathcal M)$ is convex on the set of observations $\mathcal M(\mathcal M_+(P))$, and both are
+        positively homogeneous.
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    (i) Let $w_k\in\X(\nu_k)$ with $\nu_k\in\Pi_{\mathcal M}(y)$, $k=1,2$, and $t\in[0,1]$. By Lemma~\ref{lem:linearity},
+    $tw_1+(1-t)w_2\in t\X(\nu_1)\oplus(1-t)\X(\nu_2)=\X(t\nu_1+(1-t)\nu_2)$, and $t\nu_1+(1-t)\nu_2\in\Pi_{\mathcal M}(y)$ since $\Pi_{\mathcal M}(y)$ is convex. The support function of a union is the
+    supremum of the support functions.
+    (ii) $w\in\X^-$ if and only if $w\in\X(\nu_N)$ for every compatible $\nu_N$, i.e., $\langle q,w\rangle\le h_{\X(\nu_N)}(q)$ for all $q$ and all compatible $\nu_N$~\cite[Section~13]{rockafellar1970convex}.
+    The support function of the set $\{w:\langle q,w\rangle\le\underline h(q)~\forall q\}$ is the closed convex envelope of $\underline h$~\cite[Section~13]{rockafellar1970convex}.
+    (iii) If $\nu_k\in\Pi_{\mathcal M}(y_k)$, then $t\nu_1+(1-t)\nu_2\in\Pi_{\mathcal M}(ty_1+(1-t)y_2)$, and $\nu_N\mapsto h_{\X(\nu_N)}(q)$ is linear; take the supremum (resp. infimum) over $\nu_1,\nu_2$.
+\end{proof}
+Property (i) depends on the fixed reference point: with the CoP-referenced sets $\mathcal W(\nu_N)$, a convex combination of measures with different CoPs moves the reference point,
+and the union need not be convex. Property (iii) generalizes the concavity of Proposition~4.4 of Yann's draft (Remark~\ref{rem:demontmarin}).
 
-\begin{remark}[How to use the bounds $\underline h_{\mathcal M}(q;y), \overline h_{\mathcal M}(q;y)$]
+\begin{remark}[How to use the bounds]
     \label{rem:use_bounds}
-    A practical consequence of knowing the bounds is that we can test the slip feasibility of a candidate tangential wrench $w$: guaranteed feasible if $\forall q,~\langle q,w\rangle \le \underline h_{\mathcal M}(q;y)$.
-    Conversely, if $\exists q,~\langle q,w\rangle >\overline h_{\mathcal M}(q;y)$, then $w$ is infeasible for every normal force measure compatible with the measurement $y$\footnote{Because all support functions are positively homogeneous in $q$, it is sufficient in practice to search over one normalized representative of each nonzero ray. After fixing a consistent scaling between force and torque coordinates, one may for instance impose $\|q\|_2=1$.}.
+    A candidate tangential wrench $w$ (about $O$) is carried by every compatible normal force measure, i.e., $w\in\X^-(y,\mathcal M)$, if and only if
+    $\langle q,w\rangle\le\underline h(q;y,\mathcal M)$ for all $q$. Conversely, if $\langle q,w\rangle>\overline h(q;y,\mathcal M)$ for some $q$, then $w\notin\X^+(y,\mathcal M)$: no compatible
+    measure carries $w$, and the contact slips whatever the actual pressure distribution. By Proposition~\ref{prop:inner_outer}(i), the second test is a convex membership test.
+    Section~\ref{sec:load_factor} turns both tests into convex programs along a load direction\footnote{Because all support functions are positively homogeneous in $q$, it is sufficient
+    to consider one normalized representative of each nonzero ray.}.
 \end{remark}
-
-
-\begin{remark}[Relation with inner/outer wrench sets]
-    \label{rem:inner_outer}
-    We can relate the bounds of Definition~\ref{def:measurement_support_bounds} to outer/inner approximations of the admissible wrench set
-    \begin{align}
-        \mathcal W^+(y)
-        &\triangleq
-        \bigcup_{\nu_N\in\Pi_{\mathcal M}(y)}\mathcal W(\nu_N),
-        &
-        \mathcal W^-(y)
-        &\triangleq
-        \bigcap_{\nu_N\in\Pi_{\mathcal M}(y)}\mathcal W(\nu_N).
-        \end{align}
-    Then $h_{\mathcal W^+(y)}(q) =\overline h_{\mathcal M}(q;y)$ and $h_{\mathcal W^-(y)}(q) \le\underline h_{\mathcal M}(q;y)$ (equality need not hold for the inner set). Nevertheless, the lower bound characterizes the inner set exactly through
-    \begin{align}
-        \mathcal W^-(y)
-        =
-        \left\{
-        w:\,
-        \langle q,w\rangle
-        \le
-        \underline h_{\mathcal M}(q;y)
-        \quad \forall q
-        \right\}.
-    \end{align}
-\end{remark}
-
-Computing the bounds of Definition~\ref{def:measurement_support_bounds} is difficult in general as it leads to a nonlinear optimization problem over measurement-compatible measures:
-\begin{align}
-    \underline h_{\mathcal M}(q;y)
-    &=
-    \inf_{\nu_N\in\Pi_{\mathcal M}(y)}
-    \mu
-    \int_P
-    \left\|
-    a+bJ\left(
-    x-
-    c[\nu_N]
-    \right)
-    \right\|_2
-    \,d\nu_N(x),
-    \label{eq:general_nonlinear_lower}
-    \\
-    \overline h_{\mathcal M}(q;y)
-    &=
-    \sup_{\nu_N\in\Pi_{\mathcal M}(y)}
-    \mu
-    \int_P
-    \left\|
-    a+bJ\left(
-    x-
-    c[\nu_N]
-    \right)
-    \right\|_2
-    \,d\nu_N(x).
-    \label{eq:general_nonlinear_upper}
-\end{align}
-The objective is nonlinear in $\nu_N$ since the integrand depends
-on it through $c[\nu_N]$. Hence, this is not a standard Generalized
-Moment Problem (GMP)~\cite{lasserre2010moments}. The next subsection collects the generic properties of \eqref{eq:general_nonlinear_lower}--\eqref{eq:general_nonlinear_upper} that are used for all the measurement operators studied afterwards.
 
 \subsection{General structure of the bounds}
 \label{sec:general_structure}
 
-For $q=(a,b)\in\R^2\times\R$ and a reference point $c\in\R^2$, we write
+For $q=(a,b)\in\R^2\times\R$, we write
 \begin{align}
     \label{eq:def_g}
-    g(x;q,c)\triangleq\left\|a+bJ(x-c)\right\|_2,
+    g(x;q)\triangleq\left\|a+bJx\right\|_2,
 \end{align}
-so that, by Proposition~\ref{prop:support},
-$h_{\mathcal W(\nu_N)}(q)=\mu\int_P g(x;q,c[\nu_N])\,d\nu_N(x)$.
+the speed of the material point at $x$ under the twist $q$, so that, by Proposition~\ref{prop:support},
+$h_{\X(\nu_N)}(q)=\mu\int_P g(x;q)\,d\nu_N(x)$.
+For $b\neq0$, $a+bJx=bJ(x-p)$ with $p\triangleq Ja/b$, the instantaneous center of rotation, so that $g(x;q)=|b|\,\|x-p\|_2$. For $b=0$, $g(x;q)=\|a\|_2$.
 
 \begin{lemma}[Properties of the integrand]
 \label{lem:integrand}
-    For every $q=(a,b)\in\R^2\times\R$ and $c,c'\in\R^2$:
+    For every $q=(a,b)\in\R^2\times\R$:
     \begin{enumerate}[label=(\roman*)]
-        \item $x\mapsto g(x;q,c)$ is convex on $\R^2$;
-        \item for all $x,x'\in\R^2$, $\left|g(x;q,c)-g(x';q,c')\right|\le|b|\left(\|x-x'\|_2+\|c-c'\|_2\right)$;
-        \item for every $\nu_N\in\mathcal M_+(P)$ with $\nu_N(P)>0$,
-        $\int_P g(x;q,c)\,d\nu_N(x)\ge\nu_N(P)\,g(c[\nu_N];q,c)$. In particular, taking $c=c[\nu_N]$,
+        \item $x\mapsto g(x;q)$ is convex on $\R^2$;
+        \item for all $x,x'\in\R^2$, $\left|g(x;q)-g(x';q)\right|\le|b|\,\|x-x'\|_2$;
+        \item for every $\nu_N\in\mathcal M_+(P)$,
         \begin{align}
             \label{eq:universal_lower}
-            h_{\mathcal W(\nu_N)}(q)\ge\mu\,\nu_N(P)\,\|a\|_2.
+            h_{\X(\nu_N)}(q)\ge\mu\left\|m_0(\nu_N)\,a+bJm_1(\nu_N)\right\|_2,
         \end{align}
+        which, for $f_N>0$, reads $h_{\X(\nu_N)}(q)\ge\mu f_N\,g(c[\nu_N];q)$: the maximal dissipated power is at least that of the whole normal force concentrated at the CoP.
     \end{enumerate}
 \end{lemma}
 \begin{proof}
-    (i) $g(\cdot;q,c)$ is a norm composed with an affine map.
-    (ii) By the reverse triangle inequality and $\|J\|_2=1$,
-    $|g(x;q,c)-g(x';q,c')|\le|b|\,\|J((x-c)-(x'-c'))\|_2\le|b|(\|x-x'\|_2+\|c-c'\|_2)$.
-    (iii) Apply Jensen's inequality:
-    %  if $\pi$ is a probability measure on $P$ and $\varphi:\R^2\to\R$ is convex and continuous, then
-    % \begin{align*}
-    %     \varphi\left(\int_P x\,d\pi(x)\right)\le\int_P\varphi(x)\,d\pi(x).
-    % \end{align*}
-    % Let $m=\nu_N(P)>0$ and apply it with $\pi=\nu_N/m$, which is a probability measure on $P$ and $\varphi=g(\cdot;q,c)$, which is convex by (i) and continuous.
-    Let $m=\nu_N(P)>0$. The mean of the measure $\pi=\nu_N/m$ is the CoP: $\int_P x\,d\pi(x)=\frac1m\int_P x\,d\nu_N(x)=c[\nu_N]$. Jensen's inequality thus reads
-    \begin{align*}
-        g(c[\nu_N];q,c)\le\frac1m\int_P g(x;q,c)\,d\nu_N(x),
-    \end{align*}
-    and multiplying by $m=\nu_N(P)$ gives the first claim.
-    The particular case also follows directly, without Jensen's inequality (compare Remark~4.2 of Yann's draft):
-    the uniform friction ratio field $\gamma_T\equiv\mu u$, with $u=a/\|a\|_2$ (any unit vector if $a=0$), gives $f_T=\mu\,\nu_N(P)\,u$ and
-    $\tau_N=\mu\left(J\int_P(x-c[\nu_N])\,d\nu_N(x)\right)^\top u=0$, since the CoP is the barycenter of $\nu_N$. Hence $(f_T,\tau_N)\in\mathcal W(\nu_N)$, and
-    $h_{\mathcal W(\nu_N)}(q)\ge a^\top f_T+b\tau_N=\mu\,\nu_N(P)\|a\|_2$, which is~\eqref{eq:universal_lower}. 
-    % Equality holds, for instance, for the point load $\nu_N=m\,\delta_{c[\nu_N]}$.
+    (i) $g(\cdot;q)$ is a norm composed with an affine map.
+    (ii) By the reverse triangle inequality and $\|J\|_2=1$.
+    (iii) By the triangle inequality for vector-valued integrals, $\int_P\|a+bJx\|_2\,d\nu_N\ge\|\int_P(a+bJx)\,d\nu_N\|_2=\|m_0a+bJm_1\|_2$.
 \end{proof}
 
-\begin{lemma}[CoP slicing]
-\label{lem:cop_slicing}
-    For $c\in\R^2$, let
-    $\Pi_{\mathcal M}(y;c)\triangleq\left\{\nu_N\in\Pi_{\mathcal M}(y):\int_P(x-c)\,d\nu_N(x)=0\right\}$
-    be the compatible measures whose CoP is $c$. Then
-    $\Pi_{\mathcal M}(y)=\bigcup_{c\in\mathcal C_{\mathcal M}(y)}\Pi_{\mathcal M}(y;c)$, and
+\paragraph{Comparing measurement operators.}
+The bounds of two measurement operators can only be compared if their observations come from the same normal force measure. This leads to an order on the information carried by
+measurement operators.
+
+\begin{definition}[Information preorder]
+\label{def:preorder}
+    A measurement operator $\mathcal M$ is \textit{at least as informative} as $\mathcal M'$, written $\mathcal M\succeq\mathcal M'$, if
     \begin{align}
-        \underline h_{\mathcal M}(q;y)
-        &=
-        \inf_{c\in\mathcal C_{\mathcal M}(y)}
-        \;
-        \inf_{\nu_N\in\Pi_{\mathcal M}(y;c)}
-        \mu\int_P
-        g(x;q,c)\,d\nu_N(x),
-        \label{eq:parametric_gmp_lower}
-        \\
-        \overline h_{\mathcal M}(q;y)
-        &=
-        \sup_{c\in\mathcal C_{\mathcal M}(y)}
-        \;
-        \sup_{\nu_N\in\Pi_{\mathcal M}(y;c)}
-        \mu\int_P
-        g(x;q,c)\,d\nu_N(x).
-        \label{eq:parametric_gmp_upper}
+        \Pi_{\mathcal M}(\mathcal M(\nu_N))\subseteq\Pi_{\mathcal M'}(\mathcal M'(\nu_N))\qquad\text{for every }\nu_N\in\mathcal M_+(P),
     \end{align}
-    For a fixed $c$, the inner problems are linear in $\nu_N$ under linear moment constraints, i.e. GMPs.
-    In particular, if $\mathcal C_{\mathcal M}(y)=\{c\}$, the outer optimization disappears and bounds are GMPs.
-\end{lemma}
-\begin{proof}
-    Under Assumption~\ref{ass:positive_mass}, $\nu_N\in\Pi_{\mathcal M}(y)$ belongs to $\Pi_{\mathcal M}(y;c)$
-    if and only if $c=c[\nu_N]$, which gives the decomposition. On $\Pi_{\mathcal M}(y;c)$ the integrand of
-    \eqref{eq:general_nonlinear_lower}--\eqref{eq:general_nonlinear_upper} is $g(x;q,c)$.
-\end{proof}
+    i.e., every measure that $\mathcal M$ cannot distinguish from $\nu_N$ is also indistinguishable from $\nu_N$ under $\mathcal M'$. The \textit{concatenation}
+    $\mathcal M\vee\mathcal M'\triangleq(\mathcal M,\mathcal M')$ is the operator with measurement functions $(\phi_1,\ldots,\phi_r,\phi_1',\ldots,\phi_{r'}')$.
+\end{definition}
 
-\begin{lemma}[Monotonicity with respect to information]
+\begin{proposition}[Properties of the information preorder]
+\label{prop:preorder}
+    \begin{enumerate}[label=(\roman*)]
+        \item $\succeq$ is a preorder (reflexive and transitive). It is not antisymmetric, and not total.
+        \item $\mathcal M\succeq\mathcal M'$ if and only if there is a matrix $A\in\R^{r'\times r}$ with $\phi'_j(x)=\sum_kA_{jk}\phi_k(x)$ for every $x\in P$ and every $j$, i.e.,
+        $\mathcal M'=A\,\mathcal M$.
+        \item $\mathcal M\vee\mathcal M'\succeq\mathcal M$ and $\mathcal M\vee\mathcal M'\succeq\mathcal M'$, with $\Pi_{\mathcal M\vee\mathcal M'}((y,y'))=\Pi_{\mathcal M}(y)\cap\Pi_{\mathcal M'}(y')$.
+    \end{enumerate}
+\end{proposition}
+\begin{proof}
+    (i) Inclusion is reflexive and transitive. Scaling the measurement functions by $2$ gives a different operator with the same compatible families, and the operators $\mathcal M_0$
+    and $\mathcal M_F$ of the next sections are not comparable (see (ii)).
+    (ii) If $\mathcal M'=A\mathcal M$, then $\mathcal M(\nu)=\mathcal M(\nu_N)$ implies $\mathcal M'(\nu)=\mathcal M'(\nu_N)$. Conversely, write $\Phi(x)=(\phi_k(x))_k$ and
+    $\Phi'(x)=(\phi'_j(x))_j$. A linear map $A$ with $A\Phi(x)=\Phi'(x)$ for all $x\in P$ exists if and only if $\sum_i\alpha_i\Phi(x_i)=0$ implies $\sum_i\alpha_i\Phi'(x_i)=0$ for all
+    finite families $x_i\in P$, $\alpha_i\in\R$. Given such a family, let $\sigma^\pm=\sum_{i:\pm\alpha_i>0}|\alpha_i|\delta_{x_i}\in\mathcal M_+(P)$. Then
+    $\mathcal M(\sigma^+)=\mathcal M(\sigma^-)$, so $\sigma^-\in\Pi_{\mathcal M}(\mathcal M(\sigma^+))\subseteq\Pi_{\mathcal M'}(\mathcal M'(\sigma^+))$, i.e.,
+    $\sum_i\alpha_i\Phi'(x_i)=\mathcal M'(\sigma^+)-\mathcal M'(\sigma^-)=0$.
+    (iii) Immediate from the definitions.
+\end{proof}
+The characterization (ii) is pointwise: functions that agree almost everywhere with respect to area are not equivalent, since point loads see their values at single points.
+The number $r$ of measurement functions is not monotone with respect to $\succeq$, because measurement functions can be redundant.
+
+\begin{theorem}[Monotonicity with respect to information]
 \label{lem:monotone}
-    Let $(\mathcal M,y)$ and $(\mathcal M',y')$ be two measurement operators and observations such that
-    $\Pi_{\mathcal M'}(y')\subseteq\Pi_{\mathcal M}(y)$. Then $\mathcal C_{\mathcal M'}(y')\subseteq\mathcal C_{\mathcal M}(y)$ and,
-    for every $q\in\R^2\times\R$ and every $\nu_N\in\Pi_{\mathcal M'}(y')$,
+    Let $\mathcal M\succeq\mathcal M'$, $\nu_N\in\mathcal M_+(P)$, $y=\mathcal M(\nu_N)$ and $y'=\mathcal M'(\nu_N)$. Then, for every $q\in\R^2\times\R$,
     \begin{align}
-        \underline h_{\mathcal M}(q;y)
+        \underline h(q;y',\mathcal M')
         \le
-        \underline h_{\mathcal M'}(q;y')
+        \underline h(q;y,\mathcal M)
         \le
-        h_{\mathcal W(\nu_N)}(q)
+        h_{\X(\nu_N)}(q)
         \le
-        \overline h_{\mathcal M'}(q;y')
+        \overline h(q;y,\mathcal M)
         \le
-        \overline h_{\mathcal M}(q;y).
+        \overline h(q;y',\mathcal M'),
     \end{align}
-    This applies in particular to $\nu_N=\nu_N^\star$ when $y'=\mathcal M'(\nu_N^\star)$.
-\end{lemma}
+    and $\X^-(y',\mathcal M')\subseteq\X^-(y,\mathcal M)\subseteq\X(\nu_N)\subseteq\X^+(y,\mathcal M)\subseteq\X^+(y',\mathcal M')$.
+    This applies in particular to the true measure $\nu_N^\star$.
+\end{theorem}
 \begin{proof}
-    An infimum (resp. supremum) over a smaller set is larger (resp. smaller).
+    $\nu_N\in\Pi_{\mathcal M}(y)\subseteq\Pi_{\mathcal M'}(y')$. An infimum (resp. supremum, intersection, union) over a smaller family is larger (resp. smaller, larger, smaller).
 \end{proof}
 
-\begin{remark}[\textcolor{red}{To clarify with Yann}]
+\begin{remark}[Attainment]
 \label{rem:closures}
-    The bounds~\eqref{eq:general_nonlinear_lower}--\eqref{eq:general_nonlinear_upper} are defined as an infimum and a supremum. When they are attained is not fully clear to me yet. 
-    Points to clarify:
-    \begin{enumerate}[label=(\alph*)]
-        \item Are there generic conditions under which bounds are provably attained (and does it actually matter for our results) or do we need to prove it separately in each case ?
-        \item For taxel measurements, $\phi_i=\mathbf 1_{P_i}$ is discontinuous. My intuition is that extremal measures tend to put mass on taxel boundaries, which may belong to neighboring taxels. So I make the assumption that the measures are defined on the taxel closure (with boundary). Is this right? cf. Remark~\ref{rem:why_lemmas}
-    \end{enumerate}
+    The bounds are defined as an infimum and a supremum, and we do not need them to be attained: only their values enter the tests of Remark~\ref{rem:use_bounds} and the
+    monotonicity of Theorem~\ref{lem:monotone}. For the taxel measurements, the finite-dimensional formulas below are attained by measures that may put force on a taxel boundary
+    owned by a neighboring taxel; Lemma~\ref{lem:half_open} shows that they are nevertheless the exact values of the bounds.
 \end{remark}
 
 Table~\ref{tab:measurement_cases} summarizes the measurement operators studied in the remainder of the report and the structure of the resulting problems,
