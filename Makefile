@@ -14,8 +14,11 @@ figures:
 	cd $(CODE) && for t in $(EXAMPLE_TASKS); do PFB_DOC_FIG=$(FIG) pixi run $$t || exit 1; done
 	cd $(CODE) && for t in $(SIM_TASKS); do PFB_DOC_FIG=$(FIG) pixi run -e sim $$t || exit 1; done
 
+# code commit, with -dirty if code differs from it (regenerated previews in examples/figures/ do not count)
 version:
-	printf '\\newcommand{\\codeversion}{%s}\n' "$$(git -C $(CODE) describe --always --dirty)" > doc/code_version.tex
+	v=$$(git -C $(CODE) rev-parse --short HEAD); \
+	git -C $(CODE) diff --quiet HEAD -- . ':(exclude)examples/figures' || v=$$v-dirty; \
+	printf '\\newcommand{\\codeversion}{%s}\n' "$$v" > doc/code_version.tex
 
 pdf: version
 	cd doc && latexmk -pdf -interaction=nonstopmode main.tex && latexmk -pdf -interaction=nonstopmode experiments.tex

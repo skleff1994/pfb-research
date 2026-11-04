@@ -5,5 +5,6 @@ case "$2" in merge|squash) exit 0 ;; esac
 grep -q '^Code-Commit:' "$1" && exit 0
 code_dir="$(git rev-parse --show-toplevel)/.."
 sha=$(git -C "$code_dir" rev-parse --short=12 HEAD 2>/dev/null) || exit 0
-git -C "$code_dir" diff --quiet HEAD 2>/dev/null || sha="$sha-dirty"
+# regenerated figure previews (examples/figures/) are outputs, not code changes
+git -C "$code_dir" diff --quiet HEAD -- . ":(exclude)examples/figures" 2>/dev/null || sha="$sha-dirty"
 git interpret-trailers --in-place --trailer "Code-Commit: $sha" "$1"
