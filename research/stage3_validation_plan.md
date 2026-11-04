@@ -13,10 +13,10 @@ This file holds the plan and its status only. Results and their analysis are in 
 ## 1. What must be validated
 | Claim | Validated by | Status |
 |---|---|---|
-| C1 formulation (fixed frame); F/T never certifies torsion about the CoP | Theory (Cor 4.3, Remark 9.3); F1 | ✅ (F1 rerun pending, §5.1) |
+| C1 formulation (fixed frame); F/T never certifies torsion about the CoP | Theory (Cor 4.3, Remark 9.3); F1 | ✅ |
 | C2 exact taxel bounds (M_F closed form; M_T SOCP/LP) | Theory (Thms 6.1, 7.1, 7.2); exact vs grid-LP checks; tests | ✅ |
-| C3 certified and upper load factors (SOCPs, tight, multi-contact; hold / slip / undecided) | Prop 9.2 (proof sketch in main.tex); `pfb/certify.py` tests; runtime | ✅ theory and tests; ☐ s_up in the report (§5.1); full proof write-up to do |
-| C4 resolution law (gap bound, first-order rate) and value of the CoP | Props 8.1–8.3, Thm 8.4; F2; load-factor study | ✅ theory; ⚠ F2 rerun pending (§5.1) |
+| C3 certified and upper load factors (SOCPs, tight, multi-contact; hold / slip / undecided) | Prop 9.2 (proof sketch in main.tex); `pfb/certify.py` tests; runtime | ✅ theory, tests and report (s_up in §4.4); full proof write-up to do |
+| C4 resolution law (gap bound, first-order rate) and value of the CoP | Props 8.1–8.3, Thm 8.4; F2; load-factor study | ✅ |
 | C5 certification vs plug-in | F3; load-factor study | ✅ |
 | C6 closed-loop soundness and its price | Drake S2, S3 | ✅ in simulation; ☐ hardware demos (H6) |
 | C7 robust extension | Theory + F4 | ☐ |
@@ -63,18 +63,18 @@ Definitions are in Report §3.
 ## 5. Numerical studies (strategy A/B, analytic fields)
 | Item | Content | Status | Report | Main finding |
 |---|---|---|---|---|
-| Verification | Reduced SOCP/LP vs grid LPs; orderings; counterexample; unit tests | ✅ ⚠ rerun pending (§5.1) | §4.1 | Reduced bounds agree with the grid LPs and orderings hold. Same total force and CoP, torsional support 0 vs 0.5. |
+| Verification | Reduced SOCP/LP vs grid LPs; orderings; counterexample; unit tests | ✅ (rerun 11-04) | §4.1 | Exact forms agree with the grid LPs, and the orderings hold; 113 tests. Same total force and CoP: support 0 vs 0.5 for the rotation about the CoP. |
 | Field population | 7 contact-mechanics families × 3 fields (Hertz, Xydas–Kao, flat punch, ramp, partial, line, asperities) | ✅ | §4.2 | Replaces the synthetic Gaussian loads of 2026-10-16 |
-| F1 wrench sets | Inner/outer sets of M0 / M_F / M_T on a partial tilted contact | ✅ ⚠ rerun pending (§5.1) | §4.3 | M0 inner set is a force segment (no torsion). The taxel sets close in on W(ν) with resolution. |
-| F2 resolution and value of the CoP | Bound/true vs k×k, M_F vs M_T, gap vs Prop 8.3 | ✅ ⚠ rerun pending (§5.1) | §4.4 | Gap ∝ taxel diameter, nearly attaining the Prop 8.3 bound. Torsion lower/true 0.30 (2×2) → 0.84 (16×16) → 0.94 (32×32). The CoP gains 2–13% up to 16×16 and 26–30% at 32×32. |
-| F3 certification vs plug-in | Plug-in/true vs certified/true | ✅ ⚠ rerun pending (§5.1) | §4.5 | Plug-in is above the truth for all 21 fields at every resolution (worst ×2.5 at 2×2, ×1.03 at 16×16). The certificate is never above the truth. |
-| Load factor + runtime (example 10) | Certified/true load factor, plug-in, solve time | ✅ ⚠ rerun pending (§5.1) | §4.6 | Median certified/true pure-torque capacity 0.23 (2×2), 0.84 (16×16), 0.94 (32×32). One pad: 10–24 ms up to 16×16, ~80 ms at 32×32. |
+| F1 wrench sets | Inner/outer sets of M0 / M_F / M_T on a partial tilted contact | ✅ (rerun 11-04) | §4.3 | The M0 guaranteed set is a force segment (no torsion about the CoP). The taxel sets close in with resolution; M_T is 3.3–3.5× narrower than M_F. |
+| F2 resolution and value of the CoP | Bound/true vs k×k, M_F vs M_T, gap vs Prop 8.3 | ✅ (rerun 11-04) | §4.4 | Gap halves per dyadic step (median ratio 0.50 from 4×4; ≤ 0.505 at 16→32), 0.86–0.90 of the bound. Torsion lower/true 0.30 (2×2) → 0.83 (16×16) → 0.92 (32×32). The CoP gains 2–12% for the rotation about the CoP and 30–34% for the mixed twist at every k ≥ 2. |
+| F3 certification vs plug-in | Plug-in/true vs certified/true | ✅ (rerun 11-04) | §4.5 | Plug-in above the truth for all fields at every resolution, except 95% at 2×2 for the mixed twist (worst ×2.6 at 2×2, ×1.03 at 16×16). The certificate is never above the truth. |
+| Load factor + runtime (example 10) | Certified/true load factor, plug-in, solve time | ✅ (rerun 11-04) | §4.6 | Median certified/true pure-torque capacity 0.24 (2×2), 0.83 (16×16), 0.92 (32×32); upper/true 2.46, 1.19, 1.09. One pad: 10–24 ms up to 16×16, ~75 ms at 32×32. |
 | F4 resolution vs noise | Taxel intervals from pixel noise; an interior optimal resolution is expected | ☐ | §7.1 | Needs the robust solver |
 | F5 hardware gate | Certified minimal press force vs resolution on recorded GelSight maps of the demo objects | ☐ | §7.2 | Phase H5 (simulated analogue in S3) |
 | F6 runtime table | SOCP/LP times, r = 4 … 1024 | ⏳ | §4.6 | Load-factor times measured; the full table is not done |
 | F7 M_F sandwich (optional) | Sweep ≤ exact ≤ Prop 7.4 vs resolution | ✗ | — | Dropped 2026-11-04: in the fixed frame the M_F bounds are exact closed forms, and the sweep and Prop 7.4 are removed. |
 
-## 5.1 Impact of the fixed-frame reformulation (audit of 2026-11-04) ⏳ awaiting the user's decision
+## 5.1 Impact of the fixed-frame reformulation (audit of 2026-11-04) ✅ approved and applied the same day
 Theory and code changed after Yann's review (`note_fixed_frame.md`; code commit `f59525f`). This audit lists what each reported result depends on, what changes, and what a rerun costs.
 - **Method.** The full F2/F3 study and the load-factor study were rerun with the new code into a scratch directory. No report file and no committed figure was touched.
 - **Notes.**
@@ -100,10 +100,17 @@ Theory and code changed after Yann's review (`note_fixed_frame.md`; code commit 
 
 **Optional, not proposed now:** add s_up as a "certain slip" alarm to the S3/S4 policies (Drake reruns, hours). The studies would answer whether the alarm fires before slips in mode M. Decide after the report update.
 
-**Recommendation.**
+**Recommendation (approved).**
 1. Rerun examples 07–10 (under a minute in total) and the figures through `make figures`.
 2. Update the report sections above.
 3. No Drake rerun.
+
+**Applied** (code `ca83b74`; report rebuilt).
+- **Support-grid artifact.** While doing this, the population studies were found to be limited by their 65×65 support grid at 32×32 taxels (2 grid spacings per taxel). On a 129×129 grid:
+  - the torsional CoP gain at 32×32 is 8%, not 30%; the earlier report's "CoP becomes binding at 32×32" was mostly this artifact;
+  - the M_T gap ratio at 16→32 is 0.47, not 0.38;
+  - the 32×32 medians drop slightly, e.g. M_T rotation lower 0.92 vs 0.94, and the load factor 0.92 vs 0.94.
+- Examples 08–10 now use 129×129. Lower resolutions and the mixed-twist gain (30–34%) are unaffected.
 
 ## 6. Drake simulation (strategy B)
 The scope, decided 2026-10-21, is to test the pipeline (sensing → certificate → command → outcome) and the effects the theory does not model. The friction law is not tested: Drake implements Coulomb friction per contact face (Masterjohn et al. 2022).
@@ -129,6 +136,7 @@ The scope, decided 2026-10-21, is to test the pipeline (sensing → certificate 
   - M_F becomes an exact closed form. The new results are the upper load factor s_up (hold / slip / undecided) and the first-order rate of tightening.
   - Audit in §5.1: S1–S4 and s_lo are unchanged. The F2/F3 M_F columns change, and the value of the CoP is larger for mixed twists.
   - F7 dropped.
+  - Approved and applied the same day: examples 07–10 rerun, report updated, no Drake rerun. Population studies moved to a 129×129 support grid (the 65×65 grid inflated the 32×32 CoP gain).
 - **2026-10-20** — Field population replaces Gaussian blobs. Drake is optional; tactile simulators are dropped.
 - **2026-10-21, stress test (ChatGPT review, each point checked):**
   - Capacity along a load is the *load factor*, not a support value, so F2/F3 were relabelled.

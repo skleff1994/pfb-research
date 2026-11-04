@@ -25,6 +25,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\M}{\mathcal M}
 \newcommand{\W}{\mathcal W}
+\newcommand{\X}{\mathcal X}
 \newcommand{\T}[1]{\ref{T-#1}}                       % number of a main.tex result
 \newcommand{\code}[1]{\texttt{#1}}
 
@@ -38,9 +39,12 @@
 \begin{abstract}
 This report collects the numerical and simulation evidence for the theory of the companion document ``Torsional friction in planar contact''
 (below: \emph{the theory}; result numbers such as Theorem~\T{thm:coarse_lower} refer to it). The theory bounds the frictional capacity of a planar
-contact patch over all normal-pressure fields compatible with a measurement, and turns the bounds into a certified load factor. We test it in
+contact patch over all normal-pressure fields compatible with a measurement, with torques about a fixed point, and turns the bounds into a certified
+and an upper load factor. We test it in
 two steps. First, on a population of analytic contact-mechanics pressure fields, we measure how tight the bounds and the certificate are, how
-they depend on taxel resolution and on measuring the centre of pressure (CoP), and how they compare with plug-in estimates. Second, in Drake
+they depend on taxel resolution and on measuring the centre of pressure (CoP), and how they compare with plug-in estimates: the gap halves with
+each dyadic refinement, and measuring the CoP in addition to the taxel forces narrows the bounds by about 30\% for mixed shear--torsion loads.
+Second, in Drake
 hydroelastic simulations of a bar held between two compliant pads, we close the loop: a grip controller squeezes just enough to keep the
 demanded load certified. Certified policies never slipped without warning in 2160 episodes, at 1.16--1.18 times the squeeze of an oracle with
 $16\times16$ taxels, while nominal estimators tuned on one set of contacts slipped when the contact geometry changed. A sensing-delay study
@@ -56,11 +60,12 @@ requires a separate temporal margin. The report ends with the planned robust ext
 
 \paragraph{Story.} A tactile sensor reports how hard each region of a contact is pressed, never the exact pressure field. The tangential force
 and torsion that a contact can hold depend on that field: pressure near the rim resists twisting, pressure concentrated at one point does not.
-The theory bounds the admissible tangential wrench set $\W(\nu_N)$ (Proposition~\T{prop:support}) over all normal-force measures $\nu_N$
-compatible with a measurement $y$: the \emph{guaranteed} (inner) set $\W^-(y)$ and the \emph{possible} (outer) set $\W^+(y)$
-(Definition~\T{def:measurement_support_bounds}, Remark~\T{rem:inner_outer}). Three measurement models are considered: $\M_0$ (total normal force and
-CoP, i.e.\ an F/T sensor), $\M_F$ (taxel forces) and $\M_T$ (taxel forces and CoP). For control, the certified load factor
-(Proposition~\T{prop:load_factor}) gives the largest scaling of a load that every compatible contact carries; it is two SOCPs.
+The theory bounds the admissible tangential wrench set $\X(\nu_N)$, with the torque about a fixed point (Proposition~\T{prop:support}), over all
+normal-force measures $\nu_N$ compatible with a measurement $y$: the \emph{guaranteed} (inner) set $\X^-(y)$ and the \emph{possible} (outer) set
+$\X^+(y)$, which is convex (Definition~\T{def:measurement_support_bounds}, Proposition~\T{prop:inner_outer}). Three measurement models are considered:
+$\M_0$ (total normal force and CoP, i.e.\ an F/T sensor), $\M_F$ (taxel forces) and $\M_T$ (taxel forces and CoP). For control, the certified load
+factor (Proposition~\T{prop:load_factor}) gives the largest scaling of a load that every compatible contact carries (two SOCPs), and the upper load
+factor the scaling beyond which no compatible contact carries it (one SOCP): a load is surely held, surely not held, or undecided.
 
 \paragraph{Questions.} The studies answer six questions.
 \begin{enumerate}[label=\textbf{Q\arabic*}]
@@ -117,15 +122,18 @@ the purpose of the planned hardware study (Section~\ref{sec:hardware}).
 
 \paragraph{Support values and load factors.} Two kinds of quantities are reported.
 \begin{itemize}
-    \item \emph{Support values} $h_{\W(\nu_N)}(q)$ in a fixed direction $q=(a,b)$, with their bounds $\underline h_\M(q;y)\le h\le\overline h_\M(q;y)$
-    (Definition~\T{def:measurement_support_bounds}). They describe the sets; F1--F3 use them.
-    \item \emph{Load factors} $s^\star_o(\nu_N;w)=\max\{s\ge0:sw\in\W_o(\nu_N)\}$ (Definition~\T{def:load_factor}), the capacity along a load $w$
-    expressed about a fixed point $o$, and the certified load factor $\underline s_\M(w;y)$. For a pure torque $w=(0,0,1)$ this is the maximal
-    torque $\inf_a h((a,1))$, which is at most $h((0,0,1))$. Load factors are what a controller needs; the load-factor study and S2--S4 use them.
+    \item \emph{Support values} $h_{\X(\nu_N)}(q)$ for a twist $q=(a,b)$, with their bounds $\underline h(q;y,\M)\le h\le\overline h(q;y,\M)$
+    (Definition~\T{def:measurement_support_bounds}). A twist is a physical object, written about a stated point: in F2 and F3, $q=(0,0,1)$ is the
+    unit rotation about the true CoP of each field, a fixed twist for every compatible measure. Support values describe the sets; F1--F3 use them.
+    \item \emph{Load factors} $s^\star_o(\nu_N;w)=\max\{s\ge0:sw\in\X_o(\nu_N)\}$ (Definition~\T{def:load_factor}), the capacity along a load $w$
+    expressed about a fixed point $o$, with the certified (lower) and upper load factors $\underline s(w;y,\M)\le s^\star_o\le\overline s(w;y,\M)$.
+    For a pure torque $w=(0,0,1)$ this is the maximal torque $\inf_a h((a,1))$, which is at most $h((0,0,1))$. Load factors are what a controller
+    needs; the load-factor study and S2--S4 use them.
 \end{itemize}
 
-\paragraph{Ground truth.} For an analytic field sampled on a grid, the true support value is the quadrature $\mu\sum_jp_jA_j\,g(x_j;q,c)$ with the
-integrand of Lemma~\T{lem:integrand}. In Drake, each contact-surface face is a Coulomb point contact at its centroid with force
+\paragraph{Ground truth.} For an analytic field sampled on a grid, the true support value is the quadrature $\mu\sum_jp_jA_j\,g(x_j;q)$ with the
+integrand of Lemma~\T{lem:integrand}. The population studies use a $129\times129$ support grid on the unit pad (4 grid spacings per taxel at
+$32\times32$). In Drake, each contact-surface face is a Coulomb point contact at its centroid with force
 $A_fp_f$ \citep{masterjohn2022velocity}, so the true capacity of a simulated contact is exactly the support function of the discrete measure
 $\sum_fA_fp_f\,\delta_{x_f}$, and its load factor is computed exactly by \code{pfb.certify.load\_factor\_true}.
 
@@ -142,10 +150,10 @@ truth is \emph{unsafe}: it predicts that a load is held when it may slip.
 \emph{Effort} is the mean squeeze of an episode relative to the oracle on the same seed. Medians over successes are biased toward easy seeds
 when the success rate is low, so the main comparisons use \emph{matched seeds}: the seeds where every compared policy succeeds.
 
-\paragraph{Implementation.} The library \code{pfb} implements the reductions of the theory: the $\M_T$/$\M_F$ lower bounds as SOCPs
-(Theorems~\T{thm:combined_lower}, \T{thm:taxel_lower}), the upper bounds as LPs (Theorem~\T{thm:combined_upper}; a sweep over the compatible CoPs for
-Theorem~\T{thm:taxel_upper}), the cellwise and fixed-reference bounds (Propositions~\T{prop:cellwise}, \T{prop:fixed_ref}) and the certified load
-factor (Proposition~\T{prop:load_factor}, two SOCPs after the substitution $u_i=bc_i$). Conic programs are solved with CVXPY/Clarabel and the
+\paragraph{Implementation.} The library \code{pfb} implements the exact forms of the theory, with torques and twists about a fixed point: the
+$\M_F$ bounds in closed form (Theorem~\T{thm:MF}), the $\M_T$ lower bound as an SOCP in the local first moments (Theorem~\T{thm:combined_lower}), the
+$\M_T$ and $\M_0$ upper bounds as corner LPs (Theorem~\T{thm:combined_upper}, Corollary~\T{cor:coarse_upper_polygon}), the certified load factor (two SOCPs
+after the substitution $u_i=bc_i$) and the upper load factor (one SOCP; Proposition~\T{prop:load_factor}). Conic programs are solved with CVXPY/Clarabel and the
 brute-force grid LPs with HiGHS. Lengths are in pad sides for the analytic studies, and $\mu=1$ there ($\mu=0.8$ in Drake).
 
 % =====================================================================================================
@@ -159,12 +167,12 @@ into the same controller (Section~\ref{sec:S3}).
     \item[Oracle.] The true capacity of the current contact, computed from Drake's contact faces. It is not available in practice; it
     defines the minimal squeeze and calibrates the dynamic margin of the loop.
     \item[Certified $\M_T$ ($k\times k$ taxels).] The certified load factor of Proposition~\T{prop:load_factor}(ii) from $k\times k$ taxel forces and
-    the CoP on each pad, summed over the two pads (Proposition~\T{prop:load_factor}(iv)). $k\in\{2,4,8,16\}$ on a $32\times32$\,mm footprint per pad.
+    the CoP on each pad, summed over the two pads (Proposition~\T{prop:load_factor}(vi)). $k\in\{2,4,8,16\}$ on a $32\times32$\,mm footprint per pad.
     \item[Certified $\M_F$ ($16\times16$).] The same without the CoP.
     \item[Certified, one pad sensed.] $\M_T$ $16\times16$ on one pad; the other pad is unsensed except for its normal force, and contributes its
     worst case over the pad, $\mu f_N\min_{x\in P_2}\|a+bJ(x-o)\|$. This is the hardware configuration (one GelSight finger).
     \item[$\M_0$ bounds.] Total force and CoP only (Section~\T{sec:M0}); they are the bounds of \citet{peshkin1988motion} and \citet{huang2017exact}
-    for capacity. Their guaranteed torsion is zero (Theorem~\T{thm:coarse_lower}).
+    for capacity. Their guaranteed torsion about the CoP is zero (Corollary~\T{cor:coarse_inner}).
     \item[Plug-in ($k\times k$).] Each taxel force spread uniformly over its taxel, and the capacity of that field taken as exact
     (\code{pfb.plugin\_uniform}). This is the classical use of tactile-array pressure \citep{bicchi1988integrated,howe1996practical}.
     \item[F/T + contact mask.] The measured total force spread uniformly over the measured contact area (the contact faces, weighted by area),
@@ -192,22 +200,24 @@ calibrated physical pad; the first is planned as a hardware baseline (Section~\r
 \paragraph{Question.} Do the reductions of the theory compute what they claim (Q1)?
 \paragraph{Protocol.}
 \begin{itemize}
-    \item The reduced SOCP/LP bounds (\code{pfb.reduced}) are compared with brute-force grid LPs over all measures on a fine grid with the same
-    measurement constraints (\code{pfb.bounds}), on directions over the whole sphere; the script
-    (\code{examples/02\_bounds\_vs\_truth.py}) also checks the orderings of Proposition~\T{prop:taxel_refinement} and the cellwise and certified bounds.
+    \item The exact forms (\code{pfb.reduced}) are compared with brute-force grid LPs over all measures on a fine grid with the same
+    measurement constraints (\code{pfb.bounds}), on twists over the whole sphere about the pad centre; the script
+    (\code{examples/02\_bounds\_vs\_truth.py}) also checks the orderings of Proposition~\T{prop:taxel_refinement}.
     \item The script \code{examples/01\_counterexample.py} evaluates the non-identifiability example (Example~\T{ex:segment}).
-    \item Unit tests (\code{pixi run test}) check, among others: the certified load factor against finite direction grids and a brute-force
-    minimum over point loads; its tightness (Proposition~\T{prop:load_factor}(iii)) for one and two pads; the analytic $\M_0$ case of
-    Remark~\T{rem:load_factor}; the field generators.
+    \item Unit tests (\code{pixi run test}), one per statement of the theory: the change of reference point, linearity, convexity of the possible set,
+    the closed forms of $\M_0$ and $\M_F$, monotonicity along dyadic grid chains, the gap bounds and the first-order rate (Theorem~\T{thm:rate}), the
+    certified load factor against finite direction grids and a brute-force minimum over point loads, its tightness (Proposition~\T{prop:load_factor}(iv))
+    for one and two pads, the upper load factor (primal and dual programs, attained by a corner measure), the analytic $\M_0$ case of
+    Remark~\T{rem:load_factor}, and the field generators.
 \end{itemize}
-\paragraph{Results.} On one field with $4\times4$ taxels and directions over the whole sphere, all orderings hold:
-$\underline h_{\M_0}\le\underline h_{\M_F}\le\underline h_{\M_T}\le h\le\overline h_{\M_T}\le\min(\overline h_{\M_0},\overline h_{\M_F})$
-(Proposition~\T{prop:taxel_refinement}); the cellwise bounds bracket $\M_T$ (Proposition~\T{prop:cellwise}) and the certified fixed-reference
-bounds bracket $\M_F$ (Proposition~\T{prop:fixed_ref}). The brute-force grid LPs lie inside the reduced bounds, with differences of
-$10^{-15}$ ($\M_0$), $1.5\cdot10^{-3}$ ($\M_T$) and $9.2\cdot10^{-3}$ ($\M_F$), the discretization error of the grid; the mean bound widths are
-0.129 ($\M_0$), 0.051 ($\M_F$), 0.048 ($\M_T$) and 0.189 (cellwise). Example~\T{ex:segment}: two measures with the same total force and CoP
-have torsional supports 0 and 0.5 ($=\mu f_NL/2$), and the $\M_0$ bounds are $[0,0.5]$. The unit tests pass (59 tests at the last run).
-\paragraph{Interpretation.} The reductions are exact where the theory says so, and the certified load factor is attained by a compatible measure.
+\paragraph{Results.} On one field with $4\times4$ taxels and twists over the whole sphere, all orderings hold:
+$\max(\underline h_{\M_0},\underline h_{\M_F})\le\underline h_{\M_T}\le h\le\overline h_{\M_T}\le\min(\overline h_{\M_0},\overline h_{\M_F})$
+(Proposition~\T{prop:taxel_refinement}). The brute-force grid LPs lie inside the exact bounds, with differences of
+$7\cdot10^{-11}$ ($\M_0$), $1.6\cdot10^{-3}$ ($\M_T$) and $5.0\cdot10^{-3}$ ($\M_F$), the discretization error of the grid (half-open cells,
+Lemma~\T{lem:half_open}); the mean bound widths are 0.128 ($\M_0$), 0.190 ($\M_F$) and 0.048 ($\M_T$). Example~\T{ex:segment}: two measures with the
+same total force and CoP have supports 0 and 0.5 ($=\mu f_NL/2$) for the rotation about the CoP, and the $\M_0$ bounds are $[0,0.5]$. The 113 unit
+tests pass.
+\paragraph{Interpretation.} The exact forms are exact where the theory says so, and both load factors are attained by compatible measures.
 A direction grid, by contrast, \emph{over}-certifies: minimizing $\underline h$ over finitely many directions gives a value above the true
 certified load factor, by up to about 7\% with 1500 directions (Remark~\T{rem:load_factor}, first item). This is why the certificate is
 computed as a joint convex program rather than on a grid.
@@ -229,17 +239,19 @@ contact (cylinder); and two asperities. The last four lie outside the axisymmetr
 \subsection{F1: guaranteed and possible wrench sets}
 \label{sec:F1}
 \paragraph{Question.} What do the three measurement models guarantee and allow on a contact outside the parametric families (Q2, Q3)?
-\paragraph{Protocol.} A partial, tilted contact (ramp clipped by the pad edge). The $(f_{T,1},\tau_N)$ slice of the true set $\W(\nu_N)$ is compared
-with $\W^-$ and $\W^+$ for $\M_0$, $\M_F$, $\M_T$ at $4\times4$ and $16\times16$ taxels (\code{examples/07\_wrench\_sets.py}).
-\paragraph{Result.} Figure~\ref{fig:F1}. The $\M_0$ inner set is the force segment: no torsion is guaranteed (Theorem~\T{thm:coarse_lower}), and its
-outer set is wide. Taxel measurements give inner sets with nonzero torsion, which close in on the true set at $16\times16$; $\M_T$ is tighter
-than $\M_F$.
+\paragraph{Protocol.} A partial, tilted contact (ramp clipped by the pad edge). The $(f_{T,1},\tau)$ slice of the true set $\X(\nu_N)$ is compared
+with $\X^-$ and $\X^+$ for $\M_0$, $\M_F$, $\M_T$ at $4\times4$ and $16\times16$ taxels, with the torque about the true CoP for all three models
+(\code{examples/07\_wrench\_sets.py}).
+\paragraph{Result.} Figure~\ref{fig:F1}. The $\M_0$ guaranteed set is the force segment: no torsion about the CoP is guaranteed
+(Corollary~\T{cor:coarse_inner}), and its possible set is wide. Taxel measurements give guaranteed sets with nonzero torsion, which close in on the
+true set at $16\times16$. $\M_T$ is much tighter than $\M_F$: mean widths 0.129 ($\M_F$) and 0.039 ($\M_T$) at $4\times4$, 0.032 and 0.009 at
+$16\times16$ (0.107 for $\M_0$).
 
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\linewidth]{wrench_sets.pdf}
-\caption{F1. True $\W(\nu_N)$ (grey), possible set $\W^+$ (solid) and guaranteed set $\W^-$ (dashed) for $\M_0$, $\M_F$, $\M_T$ on a partial tilted
-contact; rows: $4\times4$ and $16\times16$ taxels.}
+\caption{F1. True $\X(\nu_N)$ (grey), possible set $\X^+$ (solid) and guaranteed set $\X^-$ (dashed) for $\M_0$, $\M_F$, $\M_T$ on a partial tilted
+contact, torque about the true CoP; rows: $4\times4$ and $16\times16$ taxels.}
 \label{fig:F1}
 \end{figure}
 \paragraph{Interpretation.} An F/T sensor cannot support a torsional grasp decision, however accurate it is; distributed sensing is necessary,
@@ -248,42 +260,42 @@ and resolution decides how much of the true capacity can be used.
 \subsection{F2: resolution and the value of measuring the CoP}
 \label{sec:F2}
 \paragraph{Question.} How do the bounds tighten with resolution, and what does the CoP add (Q2, Q3)?
-\paragraph{Protocol.} Population of 21 fields, $k\times k$ taxels with $k=1,\dots,32$, two directions: pure torsion $q=(0,0,1)$ and a mixed
-direction $q\propto(1,0,1/0.2)$ that balances force and torque at a lever of 0.2 pad sides (\code{examples/08\_resolution.py}). The $\M_F$ upper curve
-is the sweep over compatible CoPs (a value below the exact bound of Theorem~\T{thm:taxel_upper}); the certified fixed-reference upper bound
-(Proposition~\T{prop:fixed_ref}) is shown dashed. The gap is compared with Proposition~\T{prop:taxel_resolution_MT}.
+\paragraph{Protocol.} Population of 21 fields, $k\times k$ taxels with $k=1,2,4,\dots,32$ (a dyadic chain, so the bounds tighten monotonically,
+Proposition~\T{prop:taxel_refinement_MF}), two twists about the true CoP of each field: the unit rotation $q=(0,0,1)$ and a mixed twist
+$q\propto(1,0,1/0.2)$ that balances force and torque at a lever of 0.2 pad sides (\code{examples/08\_resolution.py}). All bounds are exact. The gap
+is compared with Proposition~\T{prop:taxel_resolution_MT} and Theorem~\T{thm:rate}.
 \paragraph{Result.} Table~\ref{tab:F2} and Figure~\ref{fig:F2}.
 \begin{itemize}
-    \item In pure torsion, the median certified lower bound rises from 0 (one taxel: Theorem~\T{thm:coarse_lower}) to 0.30 of the true support at
-    $2\times2$, 0.68 at $8\times8$, 0.84 at $16\times16$ and 0.94 at $32\times32$ for $\M_T$; the upper bound falls from about 3 to 1.07.
-    \item In the mixed direction the shear part is always guaranteed, so the lower bound starts at 0.72 and reaches 0.97 at $32\times32$.
-    \item The gap $(\overline h-\underline h)/(\mu|b|f_N)$ decreases linearly with the maximal taxel diameter (slope about 1 on the log--log plot)
-    and stays below the bound of Proposition~\T{prop:taxel_resolution_MT}, which the median $\M_T$ gap nearly attains: the $O(\operatorname{diam})$ rate
-    is sharp. The $\M_F$ gap stays well below its bound (twice the $\M_T$ bound).
-    \item $\M_F$ is close to $\M_T$ at intermediate resolutions; the relative gain in width from measuring the CoP is 2--13\% up to $16\times16$ and
-    25--30\% at $32\times32$. At $2\times2$ the $\M_F$ lower bound in torsion is still 0, while $\M_T$ guarantees 0.30.
-    \item The certified fixed-reference upper bound of Proposition~\T{prop:fixed_ref} is much looser than the sweep at low resolution (median 4.3 vs
-    2.5 times the truth at $2\times2$, 1.39 vs 1.19 at $16\times16$).
+    \item For the rotation about the CoP, the median $\M_T$ lower bound rises from 0 (one taxel: Corollary~\T{cor:coarse_inner}) to 0.30 of the true
+    support at $2\times2$, 0.68 at $8\times8$, 0.83 at $16\times16$ and 0.92 at $32\times32$; the upper bound falls from about 3 to 1.09.
+    \item For the mixed twist, $\M_T$ guarantees 0.72 already with one taxel, and 0.96 at $32\times32$. $\M_F$ guarantees nothing with one taxel and only
+    0.31 at $2\times2$: without the CoP, the center of rotation of the twist may lie under the load.
+    \item The gap $(\overline h-\underline h)/(\mu|b|f_N)$ decreases linearly with the maximal taxel diameter and stays below the bound of
+    Proposition~\T{prop:taxel_resolution_MT}, which holds for both models. From $4\times4$ on, each refinement divides the median $\M_F$ gap by
+    $1.97$--$2.00$ (largest ratio over the fields 0.57, 0.53 and 0.505 for the three steps), as predicted by Theorem~\T{thm:rate}, and the median $\M_F$ gap is
+    0.86--0.90 of the bound, inside the predicted range $[1/\sqrt2,1]$. The $\M_T$ gap shrinks at the same rate (median ratios 0.47--0.52).
+    \item For the rotation about the CoP, measuring the CoP narrows the bounds by 12\% at $2\times2$ and by 2--8\% from $4\times4$ on. For the mixed
+    twist it narrows them by 30--34\% at every resolution from $2\times2$ to $32\times32$ (46\% with one taxel).
 \end{itemize}
 
 \begin{table}[tbp]
 \centering\small
 \begin{adjustbox}{max width=\linewidth}\begin{tabular}{@{}lcccccc@{}}
 \toprule
-& \multicolumn{3}{c}{pure torsion $q=(0,0,1)$} & \multicolumn{3}{c}{mixed $q\propto(1,0,1/0.2)$} \\
+& \multicolumn{3}{c}{rotation about the CoP, $q=(0,0,1)$} & \multicolumn{3}{c}{mixed $q\propto(1,0,1/0.2)$ about the CoP} \\
 \cmidrule(lr){2-4}\cmidrule(l){5-7}
 taxels & $\M_T$ lower / upper & $\M_F$ lower / upper & CoP gain & $\M_T$ lower / upper & $\M_F$ lower / upper & CoP gain \\
 \midrule
-$1\times1$ & 0.00 / 2.97 & 0.00 / 3.23 & 4\% & 0.72 / 2.33 & 0.72 / 2.61 & 5\% \\
-$2\times2$ & 0.30 / 2.47 & 0.00 / 2.50 & 13\% & 0.75 / 1.97 & 0.72 / 1.97 & 4\% \\
-$4\times4$ & 0.48 / 1.78 & 0.46 / 1.80 & 2\% & 0.78 / 1.53 & 0.76 / 1.53 & 4\% \\
-$8\times8$ & 0.68 / 1.38 & 0.68 / 1.39 & 2\% & 0.86 / 1.23 & 0.85 / 1.24 & 5\% \\
-$16\times16$ & 0.84 / 1.18 & 0.83 / 1.19 & 8\% & 0.93 / 1.11 & 0.91 / 1.11 & 9\% \\
-$32\times32$ & 0.94 / 1.07 & 0.91 / 1.09 & 30\% & 0.97 / 1.04 & 0.95 / 1.06 & 26\% \\
+$1\times1$ & 0.00 / 2.97 & 0.00 / 3.94 & 23\% & 0.72 / 2.33 & 0.00 / 3.13 & 46\% \\
+$2\times2$ & 0.30 / 2.48 & 0.18 / 2.74 & 12\% & 0.75 / 1.99 & 0.31 / 2.28 & 31\% \\
+$4\times4$ & 0.48 / 1.78 & 0.48 / 1.81 & 3\% & 0.78 / 1.52 & 0.54 / 1.62 & 30\% \\
+$8\times8$ & 0.68 / 1.39 & 0.68 / 1.39 & 2\% & 0.85 / 1.23 & 0.73 / 1.30 & 31\% \\
+$16\times16$ & 0.83 / 1.19 & 0.83 / 1.19 & 2\% & 0.92 / 1.11 & 0.86 / 1.14 & 31\% \\
+$32\times32$ & 0.92 / 1.09 & 0.91 / 1.09 & 8\% & 0.96 / 1.05 & 0.92 / 1.07 & 33\% \\
 \bottomrule
 \end{tabular}\end{adjustbox}
-\caption{F2: median bound / true support over 21 fields. The $\M_F$ upper value is the sweep of Theorem~\T{thm:taxel_upper} (a lower estimate of
-the exact bound). CoP gain: median of $(\text{width}_{\M_F}-\text{width}_{\M_T})/\text{width}_{\M_F}$.}
+\caption{F2: median bound / true support over 21 fields (exact bounds). CoP gain: median of
+$(\text{width}_{\M_F}-\text{width}_{\M_T})/\text{width}_{\M_F}$.}
 \label{tab:F2}
 \end{table}
 
@@ -291,22 +303,29 @@ the exact bound). CoP gain: median of $(\text{width}_{\M_F}-\text{width}_{\M_T})
 \centering
 \includegraphics[width=\linewidth]{resolution.pdf}
 \caption{F2. Bound / true support against resolution for $\M_T$ and $\M_F$ (median and interquartile band over the population), and the gap against
-the maximal taxel diameter with the bounds of Proposition~\T{prop:taxel_resolution_MT}.}
+the maximal taxel diameter with the bound of Proposition~\T{prop:taxel_resolution_MT} (both models).}
 \label{fig:F2}
 \end{figure}
 \paragraph{Interpretation.} Resolution is what makes torsion certifiable: from a guaranteed zero with an F/T sensor to more than 80\% of the true torsional
-support at $16\times16$. The rate is the one predicted by Proposition~\T{prop:taxel_resolution_MT}, and it is attained, so the bound is a usable design
-rule for sensor resolution. Measuring the CoP matters at very low resolution (where $\M_F$ cannot locate the load at all) and at very high
-resolution (where the CoP constraint becomes the binding information), and little in between.
+support at $16\times16$. The rate is the one predicted by Theorem~\T{thm:rate}: each halving of the taxel size halves the gap, and the bound of
+Proposition~\T{prop:taxel_resolution_MT} is attained up to the factor of the theorem, so it is a usable design rule for sensor resolution. The value
+of the CoP depends on the twist. For a rotation about the CoP itself, the taxel forces already locate the load well, and the CoP adds little beyond
+$2\times2$. For a twist that combines force and torque, the CoP fixes the lever arm, and measuring it removes about a third of the width at every
+resolution.
+\paragraph{Changes from the previous version of this report.} The previous version took torques about the CoP of each candidate measure. Its $\M_T$
+and $\M_0$ values are unchanged (they are the same quantities, by Lemma~\T{lem:varignon}), but its $\M_F$ columns bounded a twist that moved with each
+candidate's CoP; they were tighter for the mixed twist (lower bound 0.72 at one taxel) and suggested that the CoP adds little at intermediate
+resolution. That formulation is no longer used (Remark~\T{rem:MF_cop}). The previous study also used a $65\times65$ support grid; its 25--30\% CoP
+gain at $32\times32$ was largely an effect of that grid (2 grid spacings per taxel), which the $129\times129$ grid removes.
 
 \subsection{F3: certification versus plug-in estimation}
 \label{sec:F3}
 \paragraph{Question.} Is a plug-in estimate safe (Q4)?
 \paragraph{Protocol.} Same population and directions (\code{examples/09\_plugin.py}): plug-in / true, and certified lower bound / true for $\M_T$ and $\M_F$.
-\paragraph{Result.} Figure~\ref{fig:F3}. On this population the plug-in support value exceeds the truth for \emph{every} field, at every resolution and in both
-directions. The worst overestimate in torsion is $\times2.5$ at $2\times2$, $\times1.48$ at $4\times4$, $\times1.11$ at $8\times8$ and $\times1.03$ at
-$16\times16$ (mixed direction: $\times1.71$, 1.15, 1.04, 1.01). The certified lower bounds are below the truth by construction (medians as in
-Table~\ref{tab:F2}).
+\paragraph{Result.} Figure~\ref{fig:F3}. The plug-in support value, evaluated at the same twist, exceeds the truth for every field at every
+resolution for the rotation about the CoP, and for all but one field (95\%) at $2\times2$ for the mixed twist. The worst overestimate for the rotation
+is $\times2.6$ at $2\times2$, $\times1.47$ at $4\times4$, $\times1.11$ at $8\times8$ and $\times1.03$ at $16\times16$ (mixed twist: $\times1.87$, 1.15,
+1.04, 1.01). The certified lower bounds are below the truth by construction (medians as in Table~\ref{tab:F2}).
 
 \begin{figure}[tbp]
 \centering
@@ -318,35 +337,36 @@ fields where the plug-in overestimates.}
 \paragraph{Interpretation.} The integrand $g$ is convex in $x$ (Lemma~\T{lem:integrand}), so load spread out carries more torsion than the same
 load concentrated at its centroid. A plug-in estimate spreads each taxel force over the whole cell, including parts the real contact does not
 touch (the contact edge, partial contacts), and is therefore biased toward overestimation, most strongly in torsion and at coarse resolution.
-The bias shrinks with resolution but did not change sign on this population, so a plug-in estimate needs a margin tuned on data; the
+The bias shrinks with resolution and changed sign in one case only, so a plug-in estimate needs a margin tuned on data; the
 certificate needs none. This is the comparison the closed loop repeats (Section~\ref{sec:S3}).
 
 \subsection{Certified load factor and runtime}
 \label{sec:loadfactor}
-\paragraph{Question.} Support values describe the sets; a controller needs the capacity along a load. How tight and how fast is the certified
-load factor (Q2--Q4)?
-\paragraph{Protocol.} Same population; loads $w$ = pure torque and a force at lever 0.2; $\underline s_\M/s^\star$ for $\M_T$ and $\M_F$, the plug-in
-load factor, and the solve time of one certificate (\code{examples/10\_load\_factor.py}).
+\paragraph{Question.} Support values describe the sets; a controller needs the capacity along a load. How tight and how fast are the certified
+and upper load factors (Q2--Q4)?
+\paragraph{Protocol.} Same population; loads $w$ about the pad centre: a pure torque and a force at lever 0.2; $\underline s/s^\star$ and
+$\overline s/s^\star$ for $\M_T$ and $\M_F$, the plug-in load factor, and the solve time of one certificate (\code{examples/10\_load\_factor.py}).
 \paragraph{Result.} Table~\ref{tab:LF} and Figure~\ref{fig:loadfactor}.
 
 \begin{table}[tbp]
 \centering\small
-\begin{adjustbox}{max width=\linewidth}\begin{tabular}{@{}lcccccc@{}}
+\begin{adjustbox}{max width=\linewidth}\begin{tabular}{@{}lcccccccc@{}}
 \toprule
-& \multicolumn{3}{c}{pure torque $w=(0,0,1)$} & \multicolumn{3}{c}{force at lever 0.2, $w=(1,0,0.2)$} \\
-\cmidrule(lr){2-4}\cmidrule(l){5-7}
-taxels & $\M_T$ & $\M_F$ & plug-in (share $>1$) & $\M_T$ & $\M_F$ & plug-in (share $>1$) \\
+& \multicolumn{4}{c}{pure torque $w=(0,0,1)$} & \multicolumn{4}{c}{force at lever 0.2, $w=(1,0,0.2)$} \\
+\cmidrule(lr){2-5}\cmidrule(l){6-9}
+taxels & $\M_T$ & $\M_F$ & $\M_T$ upper & plug-in (share $>1$) & $\M_T$ & $\M_F$ & $\M_T$ upper & plug-in (share $>1$) \\
 \midrule
-$1\times1$ & 0.00 & 0.00 & 1.75 (100\%) & 0.00 & 0.00 & 1.23 (81\%) \\
-$2\times2$ & 0.23 & 0.00 & 1.39 (100\%) & 0.39 & 0.00 & 1.15 (95\%) \\
-$4\times4$ & 0.45 & 0.41 & 1.15 (100\%) & 0.62 & 0.47 & 1.07 (95\%) \\
-$8\times8$ & 0.68 & 0.68 & 1.04 (100\%) & 0.81 & 0.74 & 1.02 (95\%) \\
-$16\times16$ & 0.84 & 0.83 & 1.01 (100\%) & 0.92 & 0.86 & 1.01 (95\%) \\
-$32\times32$ & 0.94 & 0.91 & 1.00 (100\%) & 0.97 & 0.92 & 1.00 (95\%) \\
+$1\times1$ & 0.00 & 0.00 & 2.93 & 1.75 (100\%) & 0.00 & 0.00 & 1.34 & 1.22 (81\%) \\
+$2\times2$ & 0.24 & 0.00 & 2.46 & 1.39 (100\%) & 0.39 & 0.00 & 1.33 & 1.15 (95\%) \\
+$4\times4$ & 0.46 & 0.43 & 1.79 & 1.14 (100\%) & 0.61 & 0.47 & 1.21 & 1.06 (95\%) \\
+$8\times8$ & 0.68 & 0.68 & 1.38 & 1.04 (100\%) & 0.80 & 0.75 & 1.14 & 1.02 (95\%) \\
+$16\times16$ & 0.83 & 0.83 & 1.19 & 1.01 (100\%) & 0.91 & 0.87 & 1.08 & 1.01 (95\%) \\
+$32\times32$ & 0.92 & 0.91 & 1.09 & 1.00 (100\%) & 0.96 & 0.93 & 1.04 & 1.00 (95\%) \\
 \bottomrule
 \end{tabular}\end{adjustbox}
-\caption{Load factor: median certified / true load factor and plug-in / true over 21 fields, with the share of fields where the plug-in
-overestimates. Solve time of one certificate (one pad): 9--10\,ms up to $4\times4$, 13\,ms at $8\times8$, 23--24\,ms at $16\times16$, 76--83\,ms at
+\caption{Load factors: median certified / true and upper / true load factor ($\M_T$; $\M_F$ upper: 3.23, 2.46, 1.80, 1.38, 1.19, 1.09 for the torque and
+1.44, 1.44, 1.37, 1.23, 1.12, 1.06 for the lever load), and plug-in / true over 21 fields, with the share of fields where the plug-in overestimates.
+Solve time of one certificate (one pad): 9--11\,ms up to $4\times4$, 12--13\,ms at $8\times8$, 22--24\,ms at $16\times16$, 74--77\,ms at
 $32\times32$.}
 \label{tab:LF}
 \end{table}
@@ -354,16 +374,23 @@ $32\times32$.}
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\linewidth]{load_factor.pdf}
-\caption{Certified load factor / true load factor for $\M_T$ and $\M_F$ against resolution (median and interquartile range), plug-in / true, and
-solve time of one certificate.}
+\caption{Certified (solid) and upper (dashed) load factor / true load factor for $\M_T$ and $\M_F$ against resolution (median and interquartile range),
+plug-in / true, and solve time of one certificate.}
 \label{fig:loadfactor}
 \end{figure}
-\paragraph{Interpretation.} The certified load factor behaves like the support bounds: from zero guaranteed torque with an F/T sensor to 84\% of the true
+\paragraph{Interpretation.} The certified load factor behaves like the support bounds: from zero guaranteed torque with an F/T sensor to 83\% of the true
 torque capacity at $16\times16$, within tens of milliseconds, fast enough for a 20\,Hz control loop. With a force at a lever arm the one-taxel
 certificate is also zero, because the load contains a torque about $o$. Without the CoP ($\M_F$) the certificate is zero at $2\times2$ and lags $\M_T$
-by up to 15 points for loads with a force component, where the unknown CoP shifts the lever arm. The plug-in load factor overestimates in all
-fields for a pure torque and in 81--95\% for the lever load. Pure-torque capacity is $\inf_ah((a,1))$, slightly below the support value
-$h((0,0,1))$ of F2, which is why the load-factor ratios at $2\times2$ (0.23) are below the support ratios (0.30).
+by up to 14 points for loads with a force component, where the unknown CoP shifts the lever arm. The plug-in load factor overestimates in all
+fields for a pure torque and in 81--95\% for the lever load. The values are those of the previous version of this report up to the finer support
+grid (the certified load factor did not change with the fixed-frame formulation, which it already used). Pure-torque capacity is $\inf_ah((a,1))$, slightly below the support value
+$h((0,0,1))$ of F2, which is why the load-factor ratios at $2\times2$ (0.24) are below the support ratios (0.30).
+\paragraph{Decision band.} The two factors bracket the true capacity: a load is surely held below $\underline s$ and surely lost above $\overline s$
+(Proposition~\T{prop:load_factor}(v)). For a pure torque with $\M_T$, the undecided band shrinks from $[0.24,2.46]$ times the true capacity at
+$2\times2$ to $[0.83,1.19]$ at $16\times16$ and $[0.92,1.09]$ at $32\times32$. A controller can therefore also detect, from the measurement alone, that a
+demanded load exceeds what any compatible contact could carry: for the median field at $16\times16$, any pure torque more than 19\% above the true
+capacity. In the closed loop of S3 and S4
+only the certified factor was used.
 
 % =====================================================================================================
 \section{Drake simulation studies}
@@ -390,7 +417,8 @@ lumped coefficient with no pressure field.
 taxel forces are the sums over the faces whose centroids fall in each taxel of a $k\times k$ grid on a $32\times32$\,mm footprint centred at the
 reference point $o$; the CoP is the force-weighted mean. Faces on non-parallel side walls are excluded and monitored; states with more than
 0.5\% of the force on side walls or outside the footprint are rejected. All wrenches are expressed in the grasp plane in common coordinates
-$u=(z,x)$, torques about the grip axis $y$, reference $o=0$, loads $w=(f_z,f_x,\tau_y)$.
+$u=(z,x)$, torques about the grip axis $y$, reference $o=0$, loads $w=(f_z,f_x,\tau_y)$. The certificates of S2--S4 were always computed about this
+fixed point, so the fixed-frame formulation of the theory leaves S1--S4 unchanged.
 
 \subsection{S1: contact read-out}
 \label{sec:S1}
@@ -434,7 +462,7 @@ similar, stiction $10^{-6}$ & 1.001 & 0.915 \\
 \begin{itemize}
     \item With the lagged or similar solvers and a stiction tolerance of at most $10^{-5}$\,m/s, the bar breaks away within 1\% of the ideal Coulomb
     capacity, insensitive to time step, ramp rate, mesh and stiffness, and the certificate stays below it (0.915--0.923 at $16\times16$; about
-    0.5 with one pad unsensed). Two-pad additivity (Proposition~\T{prop:load_factor}(iv)) holds in this setting.
+    0.5 with one pad unsensed). Two-pad additivity (Proposition~\T{prop:load_factor}(vi)) holds in this setting.
     \item Drake's default tolerance makes points near the rotation centre creep below full friction, so the bar breaks away at 89\% of its
     capacity and a sound certificate \emph{appears} violated. SAP holds 36\% above the Coulomb capacity although its normal forces match the
     pressure field within 0.6\%; the cause is unexplained and SAP is excluded.
@@ -476,7 +504,7 @@ semi-thickness (18--76\,N), and an episode is \emph{flagged} at the first cycle 
 
 \paragraph{Free object.} In a pilot with a free bar, pads whose normal-force centres did not line up created a couple about an in-plane axis that
 opposite tangential forces at the two faces had to balance; the oracle slipped at a 5\% margin with a bar tilt of about 1.6$^\circ$. The planar
-certificate does not account for this internal load: Proposition~\T{prop:load_factor}(iv) assumes the out-of-plane components are balanced without
+certificate does not account for this internal load: Proposition~\T{prop:load_factor}(vi) assumes the out-of-plane components are balanced without
 friction. The planar joint enforces that assumption in the study; with a real free object it is a limitation (Remark~\T{rem:load_factor}).
 
 \paragraph{Design.} 30 seeds $\times$ 2 scenarios $\times$ (3 oracle margins + 10 methods $\times$ 6 margins,
@@ -692,7 +720,7 @@ onset, just under the failure threshold, then holds once the squeeze catches up.
     \item \textbf{The dynamic margin calibrated with preview does not transfer to a measured load.} $m_{\rm dyn}=0.05$ covered the loop with preview
     only.
     \item \textbf{Conservatism acts as an implicit temporal margin.} This is conservatism, not a merit of certification: the guarantee concerns the
-    sensed state, $w(t-\Delta)\in\W^-(y(t-\Delta))$, and says nothing about $w(t)$.
+    sensed state, $w(t-\Delta)\in\X^-(y(t-\Delta))$, and says nothing about $w(t)$.
     \item \textbf{A static certificate needs a separate temporal term} covering the load change over the delay plus the loop lag. For a ramp from
     zero it cannot be a multiplicative margin, since the relative growth is unbounded at onset; it must be a load preview, an additive or
     rate-based term on the certified load (e.g.\ $D+\dot D\,L$ for a lag $L$), or a squeeze floor sized for the first cycles. None of these was
@@ -711,10 +739,10 @@ onset, just under the failure threshold, then holds once the squeeze catches up.
 \toprule
 Claim & Evidence & Status \\
 \midrule
-F/T + CoP never certifies torsion & Thm~\T{thm:coarse_lower}; F1; S3 (uniform over pad fails at $m=1$) & proven; illustrated \\
-Exact, tractable taxel bounds & Thms~\T{thm:combined_lower}, \T{thm:combined_upper}, \T{thm:taxel_lower}; verification & proven; verified \\
-Certified load factor, tight, multi-contact & Prop.~\T{prop:load_factor}; tests; S2 & proven (sketch); verified \\
-Tightness improves with resolution; value of the CoP & Props.~\T{prop:taxel_refinement}--\T{prop:taxel_resolution_MT}; F2; load factor; S3 & proven; quantified \\
+F/T + CoP never certifies torsion about the CoP & Cor.~\T{cor:coarse_inner}; F1; S3 (uniform over pad fails at $m=1$) & proven; illustrated \\
+Exact, tractable taxel bounds ($\M_F$ closed form, $\M_T$ SOCP/LP) & Thms~\T{thm:MF}, \T{thm:combined_lower}, \T{thm:combined_upper}; verification & proven; verified \\
+Certified and upper load factors, tight, multi-contact; hold / slip / undecided & Prop.~\T{prop:load_factor}; tests; load factor; S2 & proven (sketch); verified \\
+Gap halves per dyadic refinement; value of the CoP for mixed loads & Props.~\T{prop:taxel_refinement}--\T{prop:taxel_resolution_MT}, Thm~\T{thm:rate}; F2; load factor; S3 & proven; quantified \\
 Plug-in estimates are unsafe & F3; load factor; S3 & numerical, simulation \\
 Certificate sound in closed loop; price & S3 & simulation (Drake, planar joint) \\
 Value is robustness, not efficiency & S3 tuned-margin transfer & simulation \\
@@ -748,9 +776,10 @@ The outcomes of the following studies are open; this section states what they wi
 \paragraph{Motivation.} Real taxel forces are noisy, and vision-based tactile sensors provide pressure only through an elastic reconstruction, so the
 measurement is an interval rather than a value. The friction coefficient is also uncertain.
 \paragraph{Theory.} Bounds and the certified load factor for interval taxel forces $F_i\in[F_i^-,F_i^+]$ (with consistent totals and, for $\M_T$, a
-convex set of CoPs) and $\mu\in[\mu_{\rm lo},\mu_{\rm hi}]$. The friction coefficient only scales the bounds. For the taxel forces, the open
-question is convexity: with $F_i$ a variable, $F_i$ multiplies the direction $a$, so the substitution $u_i=bc_i$ of Proposition~\T{prop:load_factor}
-may not keep the problem jointly convex, and another formulation or a relaxation with a certified gap may be needed.
+convex set of CoPs) and $\mu\in[\mu_{\rm lo},\mu_{\rm hi}]$. The friction coefficient only scales the bounds. For a fixed twist, the $\M_T$ lower
+bound stays an SOCP with interval taxel forces, since it is jointly convex in the forces and the local first moments (Theorem~\T{thm:combined_lower}).
+For the load factor, the twist is a variable and $F_i$ multiplies the direction $a$, so the substitution $u_i=bc_i$ of Proposition~\T{prop:load_factor}
+may not keep the problem jointly convex; another formulation or a relaxation with a certified gap may be needed.
 \paragraph{Numerical study (F4: resolution against noise).} Pixel noise aggregated into taxel intervals. The nominal gap shrinks like $1/k$
 (Proposition~\T{prop:taxel_resolution_MT}) while the sum of the interval widths grows like $\sqrt r$ for $r=k^2$ independent taxels, so an interior
 optimal resolution is plausible; the study will test whether it exists and where.
@@ -775,8 +804,8 @@ Objects touch the gel through small flat-topped bosses, so that the whole contac
     speed and dwell time, and the drift.
 \end{itemize}
 \paragraph{Model-adequacy tests (single contact, indenter clamped to the table).} T1: steady sliding at an imposed twist $q$, set by the instantaneous
-centre of rotation. Maximum dissipation gives $\langle w_{\rm meas},q\rangle=h(q)$, which is compared with $[\underline h(q),\overline h(q)]$ for $\M_0$, $\M_F$ and
-$\M_T$ at each resolution. T2: a tangential wrench ramped along a fixed $w$ until gross slip, with $s_{\rm obs}$ compared with $[\underline s,\overline s]$, as
+centre of rotation. Maximum dissipation gives $\langle w_{\rm meas},q\rangle=h(q)$, with the wrench and the twist written about the same point (the ATI reference),
+which is compared with $[\underline h(q),\overline h(q)]$ for $\M_0$, $\M_F$ and $\M_T$ at each resolution. T2: a tangential wrench ramped along a fixed $w$ until gross slip, with $s_{\rm obs}$ compared with $[\underline s,\overline s]$, as
 in S2. The plug-ins, the contact-mask method and the parametric model of \citet{costanzo2020two} are evaluated on the same frames. Short slides with
 filleted bosses and an automatic abort protect the gel.
 \paragraph{Demonstrations.}
