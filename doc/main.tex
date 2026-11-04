@@ -988,183 +988,143 @@ The taxel constraints act on each taxel separately, but the first-moment constra
 \section{Comparison of measurements and tightening under refinement}
 \label{sec:refinement}
 
-All results of this section follow from Lemma~\ref{lem:monotone} (inclusion of compatible families) and from the Lipschitz
-property of Lemma~\ref{lem:integrand}(ii).
+All results of this section follow from Theorem~\ref{lem:monotone}, the information chains of Proposition~\ref{prop:grid_chain}, and the closed forms of Theorem~\ref{thm:MF}.
 
 \begin{proposition}[Comparison of coarse, taxel and combined measurements]
 \label{prop:taxel_refinement}
-The compatible measure family associated with the combined measurement is
-\begin{align}
-\Pi_{\mathcal M_T}(y_T)
-=
-\Pi_{\mathcal M_0}(y_0)
-\cap
-\Pi_{\mathcal M_F}(y_F).
-\end{align}
-Consequently, for every wrench direction
-$q\in\mathbb R^2\times\mathbb R$,
+For every twist $q=(a,b)\in\mathbb R^2\times\mathbb R$,
 \begin{align}
 \boxed{
-\mu f_N\|a\|_2
-=
-\underline h_{\mathcal M_0}(q;y_0)
+\max\left\{\underline h(q;y_0,\mathcal M_0),\,\underline h(q;y_F,\mathcal M_F)\right\}
 \le
-\underline h_{\mathcal M_F}(q;y_F)
+\underline h(q;y_T,\mathcal M_T)
 \le
-\underline h_{\mathcal M_T}(q;y_T)
+h_{\X(\nu_N^\star)}(q)
 \le
-h_{\mathcal W(\nu_N^\star)}(q)
-}
-\end{align}
-and
-\begin{align}
-\boxed{
-h_{\mathcal W(\nu_N^\star)}(q)
-\le
-\overline h_{\mathcal M_T}(q;y_T)
+\overline h(q;y_T,\mathcal M_T)
 \le
 \min\left\{
-\overline h_{\mathcal M_0}(q;y_0),
-\overline h_{\mathcal M_F}(q;y_F)
-\right\}.
-}
+\overline h(q;y_0,\mathcal M_0),\,
+\overline h(q;y_F,\mathcal M_F)
+\right\},}
 \end{align}
-Thus, $\mathcal M_T$ provides bounds that are at least as tight as those
-obtained from either $\mathcal M_0$ or $\mathcal M_F$ alone. The lower bounds of $\mathcal M_0$ and $\mathcal M_F$ are ordered,
-whereas their upper bounds are not in general ordered.
+with $\underline h(q;y_0,\mathcal M_0)=\mu\|f_Na+bJm_1\|_2$. The bounds of $\mathcal M_0$ and $\mathcal M_F$ are not ordered in general, in either direction.
 \end{proposition}
 \begin{proof}
-    The identity follows from $y_T=(y_0,y_F)$, and the inequalities involving $\mathcal M_T$ from Lemma~\ref{lem:monotone}.
-    Every $\nu_N\in\Pi_{\mathcal M_F}(y_F)$ has total mass $f_N$, so \eqref{eq:universal_lower} gives $\underline h_{\mathcal M_F}(q;y_F)\ge\mu f_N\|a\|_2=\underline h_{\mathcal M_0}(q;y_0)$
-    (Theorem~\ref{thm:coarse_lower}). For the upper bounds, with a single taxel $\Pi_{\mathcal M_F}(y_F)\supseteq\Pi_{\mathcal M_0}(y_0)$, so $\overline h_{\mathcal M_F}\ge\overline h_{\mathcal M_0}$.
-    For fine partitions, $\overline h_{\mathcal M_F}\to h_{\mathcal W(\nu_N^\star)}$ by Proposition~\ref{prop:taxel_resolution_MT}, which is generally smaller than $\overline h_{\mathcal M_0}$ (Corollary~\ref{cor:M0_not_identifying}).
+    $\mathcal M_T=\mathcal M_0\vee\mathcal M_F$, Proposition~\ref{prop:preorder}(iii) and Theorem~\ref{lem:monotone}. For the last claim: with a single taxel, $\mathcal M_F$ measures only $f_N$, and its
+    bounds are wider than those of $\mathcal M_0$ (e.g.\ $\underline h(q;y_F,\mathcal M_F)=\mu f_N|b|\operatorname{dist}(p,P)<\underline h(q;y_0,\mathcal M_0)=\mu f_N|b|\|c-p\|_2$ when the CoP $c$
+    is not the point of $P$ closest to $p$). With fine taxels, the $\mathcal M_F$ bounds converge to the truth (Proposition~\ref{prop:taxel_resolution_MT}), while the $\mathcal M_0$ bounds
+    do not in general (Example~\ref{ex:segment}).
 \end{proof}
 
 \begin{proposition}[Tightening under taxel refinement]
 \label{prop:taxel_refinement_MF}
-Let $\mathcal M_F'$ and $\mathcal M_T'$ denote the taxel-force and combined measurements associated with a
-partition $\{P_j'\}$ that refines the partition $\{P_i\}$ associated with $\mathcal M_F$ and $\mathcal M_T$
-(each $P_i$ is a union of cells $P_j'$), and let
-\begin{align}
-y_F=\mathcal M_F(\nu_N^\star),
-\quad
-y_F'=\mathcal M_F'(\nu_N^\star),
-\quad
-y_T=\mathcal M_T(\nu_N^\star),
-\quad
-y_T'=\mathcal M_T'(\nu_N^\star).
-\end{align}
-Then
-\begin{align}
-\Pi_{\mathcal M_F'}(y_F')
-\subseteq
-\Pi_{\mathcal M_F}(y_F),
-\qquad
-\Pi_{\mathcal M_T'}(y_T')
-\subseteq
-\Pi_{\mathcal M_T}(y_T),
-\qquad
-\mathcal C_{\mathcal M_F'}(y_F')
-\subseteq
-\mathcal C_{\mathcal M_F}(y_F).
-\end{align}
-Consequently, for every $q\in\mathbb R^2\times\mathbb R$ and $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$, with $y$ and $y'$ the corresponding observations,
+Let $\mathcal M_F'$ and $\mathcal M_T'$ be the taxel-force and combined measurements of a partition $\{P_j'\}$ that refines $\{P_i\}$, e.g.\ $G(p_x',p_y')$ and $G(p_x,p_y)$ with
+$p_x'\ge p_x$, $p_y'\ge p_y$. Then, for every $q$ and $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$, with $y=\mathcal M(\nu_N^\star)$ and $y'=\mathcal M'(\nu_N^\star)$,
 \begin{align}
 \boxed{
-\underline h_{\mathcal M}(q;y)
+\underline h(q;y,\mathcal M)
 \le
-\underline h_{\mathcal M'}(q;y')
+\underline h(q;y',\mathcal M')
 \le
-h_{\mathcal W(\nu_N^\star)}(q)
+h_{\X(\nu_N^\star)}(q)
 \le
-\overline h_{\mathcal M'}(q;y')
+\overline h(q;y',\mathcal M')
 \le
-\overline h_{\mathcal M}(q;y).
-}
+\overline h(q;y,\mathcal M),}
 \end{align}
+and the guaranteed sets grow and the possible sets shrink.
 \end{proposition}
 \begin{proof}
-    If $\nu_N=\sum_j\nu_j'\in\Pi_{\mathcal M_F'}(y_F')$, grouping the pieces inside each taxel, $\nu_i=\sum_{j:P_j'\subseteq P_i}\nu_j'$, gives measures supported on
-    $\overline{P_i}$ with mass $\sum_{j:P_j'\subseteq P_i}\nu_N^\star(P_j')=F_i$, so $\nu_N\in\Pi_{\mathcal M_F}(y_F)$.
-    Intersecting with $\Pi_{\mathcal M_0}(y_0)$ gives the inclusion for $\mathcal M_T$ (Proposition~\ref{prop:taxel_refinement}). Conclude with Lemma~\ref{lem:monotone}.
+    Proposition~\ref{prop:grid_chain}(i) and Theorem~\ref{lem:monotone}.
 \end{proof}
-
-The monotonicity above is associated with \textit{partition refinement}, not
-with the number of taxels $r$ alone. The convergence below, on the other hand, only requires the taxel diameters to vanish.
+The monotonicity is associated with nested partitions, not with the number of taxels $r$: a $3\times3$ and a $4\times4$ grid carry different information
+(Proposition~\ref{prop:grid_chain}(iii)), and nothing guarantees that the second gives tighter bounds. The gap bounds below, on the other hand, only require small taxel diameters.
 
 \begin{proposition}[Resolution-dependent gap bounds]
 \label{prop:taxel_resolution_MT}
-For every $q=(a,b)\in\mathbb R^2\times\mathbb R$,
+For every $q=(a,b)\in\mathbb R^2\times\mathbb R$ and $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$,
 \begin{align}
 \boxed{
 0
 \le
-\overline h_{\mathcal M_T}(q;y_T)
+\overline h(q;y,\mathcal M)
 -
-\underline h_{\mathcal M_T}(q;y_T)
+\underline h(q;y,\mathcal M)
+\le
+\mu\sum_{i=1}^rF_i\left(\max_{\overline{P_i}}g(\cdot;q)-\min_{\overline{P_i}}g(\cdot;q)\right)
 \le
 \mu |b|
 \sum_{i=1}^r
 F_i\operatorname{diam}(P_i)
 \le
 \mu |b| f_N
-\max_i\operatorname{diam}(P_i),
-}
+\max_i\operatorname{diam}(P_i),}
 \end{align}
-\begin{align}
-\boxed{
-0
-\le
-\overline h_{\mathcal M_F}(q;y_F)
--
-\underline h_{\mathcal M_F}(q;y_F)
-\le
-2\mu |b|
-\sum_{i=1}^r
-F_i\operatorname{diam}(P_i)
-\le
-2\mu |b| f_N
-\max_i\operatorname{diam}(P_i).
-}
-\end{align}
-Hence, along any sequence of taxel partitions with
-$\max_i\operatorname{diam}(P_i)\rightarrow0$,
-\begin{align}
-\underline h_{\mathcal M_F}(q;y_F),\
-\underline h_{\mathcal M_T}(q;y_T),\
-\overline h_{\mathcal M_T}(q;y_T),\
-\overline h_{\mathcal M_F}(q;y_F)
-\rightarrow
-h_{\mathcal W(\nu_N^\star)}(q).
-\end{align}
+with equality in the first inequality for $\mathcal M_F$. Hence, along any sequence of taxel partitions with
+$\max_i\operatorname{diam}(P_i)\rightarrow0$, the four bounds of $\mathcal M_F$ and $\mathcal M_T$ converge to $h_{\X(\nu_N^\star)}(q)$.
 \end{proposition}
 \begin{proof}
-    $\mathcal M_T$: by \eqref{eq:cellwise_MT}, the gap is at most $\mu\sum_iF_i(g_i^{\max}-g_i^{\min})(q;c^\star)$, and
-    $g_i^{\max}-g_i^{\min}\le|b|\operatorname{diam}(P_i)$ by Lemma~\ref{lem:integrand}(ii).
-    $\mathcal M_F$: let $\nu_N,\nu_N'\in\Pi_{\mathcal M_F}(y_F)$, with CoPs $c,c'\in\mathcal C_{\mathcal M_F}(y_F)$. For $x,x'\in\overline{P_i}$, Lemma~\ref{lem:integrand}(ii) gives
-    $g(x;q,c)-g(x';q,c')\le|b|\left(\operatorname{diam}(P_i)+\operatorname{diam}\mathcal C_{\mathcal M_F}(y_F)\right)$. Integrating against the pieces of $\nu_N$ and $\nu_N'$ on each taxel,
+    For $\mathcal M_F$ the gap is the difference of the two closed forms of Theorem~\ref{thm:MF}; for $\mathcal M_T$ it is smaller, by~\eqref{eq:cellwise_MT}. By Lemma~\ref{lem:integrand}(ii),
+    $\max_{\overline{P_i}}g-\min_{\overline{P_i}}g\le|b|\operatorname{diam}(P_i)$. Convergence follows since $h_{\X(\nu_N^\star)}(q)$ lies between the bounds.
+\end{proof}
+With the torque taken about the CoP of each candidate measure, the corresponding bound for $\mathcal M_F$ had an additional factor $2$, which came from the unknown reference point.
+
+The next result answers how much one refinement step tightens the bounds. For a twist with $b\neq0$, let $p=Ja/b$ be its instantaneous center of rotation and
+$u(x)=(x-p)/\|x-p\|_2$ the unit radial direction at $x\neq p$.
+
+\begin{theorem}[First-order rate of tightening]
+\label{thm:rate}
+    Let $P$ be a rectangle partitioned into a uniform grid of closed-open cells of size $w_x\times w_y$ (e.g.\ $G(p_x,p_y)$), with cell diameter $D=\sqrt{w_x^2+w_y^2}$, and let $\nu_N^\star$ have a
+    density $\rho_N\le\bar\rho$ with respect to area. Then, for every twist $q=(a,b)$ with $b\neq0$,
     \begin{align}
-        h_{\mathcal W(\nu_N)}(q)-h_{\mathcal W(\nu_N')}(q)
+        \label{eq:rate}
+        \left|\,
+        \overline h(q;y_F,\mathcal M_F)-\underline h(q;y_F,\mathcal M_F)
+        -\mu|b|\int_P\left(|u_1(x)|\,w_x+|u_2(x)|\,w_y\right)d\nu_N^\star(x)
+        \right|
         \le
-        \mu|b|\left(\sum_{i=1}^rF_i\operatorname{diam}(P_i)+f_N\operatorname{diam}\mathcal C_{\mathcal M_F}(y_F)\right)
-        \le
-        2\mu|b|\sum_{i=1}^rF_i\operatorname{diam}(P_i),
+        \mu|b|\,\bar\rho\,D^2\left(\tfrac{15}{4}\sqrt{\pi|P|}+\tfrac{9\pi}{4}D\right),
     \end{align}
-    by Proposition~\ref{prop:cop_taxel}. Take the supremum over $\nu_N$ and the infimum over $\nu_N'$.
-    Convergence follows since $h_{\mathcal W(\nu_N^\star)}(q)$ lies between the bounds (Lemma~\ref{lem:monotone}).
+    where $|P|$ is the area of $P$. In particular, for square cells of side $h$,
+    \begin{align}
+        \overline h(q;y_F,\mathcal M_F)-\underline h(q;y_F,\mathcal M_F)=\mu|b|\,C_{\nu}(p)\,h+O(h^2),
+        \qquad
+        C_\nu(p)\triangleq\int_P\left(|u_1|+|u_2|\right)d\nu_N^\star\in\left[f_N,\sqrt2f_N\right],
+    \end{align}
+    so that, if $f_N>0$, each joint dyadic refinement $G(p,p)\to G(p+1,p+1)$ divides the $\mathcal M_F$ gap by $2+O(h)$.
+\end{theorem}
+\begin{proof}
+    By Theorem~\ref{thm:MF}, the gap is $\mu|b|\sum_CF_Ce_C$, where the sum is over the cells, $F_C=\nu_N^\star(C)$, and $e_C=\max_{\overline C}d-\min_{\overline C}d$ with $d(x)=\|x-p\|_2$.
+    Let $m$ be the center of a cell $C$, $z=m-p$, and $\ell_C\triangleq|u_1(m)|w_x+|u_2(m)|w_y$, which is the range of the linear function $x\mapsto\langle u(m),x\rangle$ over $\overline C$.
+
+    \emph{Far cells} ($\|z\|_2\ge D$). For $x\in\overline C$, write $y=x-p$ and $d(x)=\langle u(m),y\rangle+r(x)$. Since the component of $y$ orthogonal to $u(m)$ is that of $x-m$,
+    $0\le r(x)=\frac{\|y\|_2^2-\langle u(m),y\rangle^2}{\|y\|_2+\langle u(m),y\rangle}\le\frac{(D/2)^2}{\|z\|_2}$, because $\|x-m\|_2\le D/2$ and $\|y\|_2,\langle u(m),y\rangle\ge\|z\|_2-D/2\ge\|z\|_2/2$.
+    The maximum and the minimum of $d$ over $\overline C$ are therefore within $D^2/(4\|z\|_2)$ of those of the linear part, so $|e_C-\ell_C|\le D^2/(4\|z\|_2)$. Moreover, for $x\in C$,
+    $\|u(x)-u(m)\|_2\le2\|x-m\|_2/\|z\|_2\le D/\|z\|_2$, so $|\ell_C-\ell(x)|\le D^2/\|z\|_2$, with $\ell(x)\triangleq|u_1(x)|w_x+|u_2(x)|w_y$, and $\|z\|_2\ge\frac23\|x-p\|_2$.
+    Hence $|F_Ce_C-\int_C\ell\,d\nu_N^\star|\le\frac{15}{8}D^2\int_C\frac{d\nu_N^\star(x)}{\|x-p\|_2}$.
+
+    \emph{Near cells} ($\|z\|_2<D$). Both $e_C$ and $\ell(x)$ lie in $[0,D]$ (Lemma~\ref{lem:integrand}(ii) and Cauchy--Schwarz), so $|F_Ce_C-\int_C\ell\,d\nu_N^\star|\le DF_C$. These cells lie in the disk
+    $B(p,\tfrac32D)$, which carries at most $\bar\rho\,\frac{9\pi}{4}D^2$.
+
+    Summing, the left-hand side of~\eqref{eq:rate} is at most $\mu|b|\left(\frac{15}{8}D^2\bar\rho\int_P\frac{dA}{\|x-p\|_2}+\frac{9\pi}{4}\bar\rho D^3\right)$, and
+    $\int_P\frac{dA}{\|x-p\|_2}\le2\sqrt{\pi|P|}$, the value for the disk of area $|P|$ centered at $p$. For square cells, $\ell(x)=h(|u_1|+|u_2|)$ and $1\le|u_1|+|u_2|\le\sqrt2$ for a unit vector.
+    The ratio of two consecutive gaps is $\frac{C_\nu(p)h/2+O(h^2)}{C_\nu(p)h+O(h^2)}$ with $C_\nu(p)\ge f_N>0$.
 \end{proof}
 
-% \subsection{Current issues and open questions}
-
-% The three cases differ in the role played by the CoP. With $\mathcal M_0$ and
-% $\mathcal M_T$, the CoP is measured. The bounds are GMPs with explicit finite-dimensional forms: a convex lower bound and,
-% for polygonal taxels, an LP upper bound. With $\mathcal M_F$, the CoP is an unknown confined to the compatible set
-% $\mathcal C_{\mathcal M_F}(y_F)$, which contracts as the taxel partition is refined. The lower bound remains a single convex
-% program, but the upper bound requires a nonconvex outer search over $\mathcal C_{\mathcal M_F}(y_F)$ of $\mathcal M_T$ linear programs.
-% The main remaining questions concern
-% (i) efficient global solution of the $\mathcal M_F$ upper bound, i.e. the structure of $c\mapsto\overline h_{\mathcal M_T}(q;y_T(c))$;
-% (ii) the sharpness of the resolution-dependent bounds above (numerically, the gaps decrease linearly with $\max_i\operatorname{diam}(P_i)$, with constants below the bounds);
-% and (iii) the additional tightening provided by the CoP constraint in $\mathcal M_T$ relative to $\mathcal M_F$, which appears small in numerical experiments.
+\begin{remark}[Reading the rate]
+\label{rem:rate}
+    \begin{itemize}
+        \item In terms of the diameter $D=\sqrt2h$ of square cells, the $\mathcal M_F$ gap is $\frac{C_\nu(p)}{\sqrt2f_N}\,\mu|b|f_ND+O(D^2)$, between $\frac1{\sqrt2}$ and $1$ times the bound of
+        Proposition~\ref{prop:taxel_resolution_MT}: that bound is sharp up to a factor at most $\sqrt2$. The constant $C_\nu(p)$ depends on how the load is distributed around the center of rotation,
+        and is largest when the load is seen from $p$ along the diagonals of the grid.
+        \item Refining in one direction only, $G(p_x,p_y)\to G(p_x+1,p_y)$, halves the term $\int|u_1|\,d\nu\,w_x$ only: the gain depends on the direction of the load seen from $p$.
+        \item The bounded density excludes point loads; for measures with concentrated loads near the cell boundaries, one refinement step can leave the gap almost unchanged at coarse
+        resolution.
+        \item The same first-order term bounds the $\mathcal M_T$ gap from above, by~\eqref{eq:cellwise_MT}. How much the first-moment constraint reduces the gap at high resolution, i.e., the value of
+        measuring the CoP in addition to the taxel forces, is left open here and quantified numerically in the experimental report.
+    \end{itemize}
+\end{remark}
 
 \section{Certified load factor}
 \label{sec:load_factor}
