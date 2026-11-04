@@ -1,4 +1,4 @@
-# Stage 4: Longer-term research roadmap (2026-10-16)
+# Stage 4: Longer-term research roadmap (2026-10-16, updated 2026-11-04)
 
 **Added prior art:** Caron, Pham & Nakamura, ICRA 2015 (arXiv 1501.04719). Closed-form contact wrench cone for a rectangular support, from corner friction cones, with yaw-torque bounds that depend on the ZMP. This is the "possible" set of M0 for rectangles.
 - Locomotion uses "possible" semantics, because the controller shapes the pressure distribution.
@@ -16,6 +16,19 @@
 | P6 | Guaranteed yaw capacity for legged feet | Guaranteed contact wrench cone from foot-pressure sensing | P1 | Hardware or simulation access | 4–6 months / Humanoids or RA-L | Domain transfer |
 | P7 | Learned capacity with physics envelopes | Projection onto [lower, upper] | P1 | Mostly empirical | 3–4 months / CoRL or RA-L | Deprioritized |
 
+## Theory items opened by Yann's review (2026-11-04)
+These are side questions of P1, unless one grows into P5.
+- **Algebra of measurement operators.** Yann sketched a space of operators with concatenation, a quotient by information equivalence, and the preorder of main.tex Def 3.14.
+  - Only the preorder and its pointwise-span characterization are in P1.
+  - Open: is the quotient useful, e.g. for optimal sensor design (P5) as a lattice of information?
+  - Correction to keep: equivalence is pointwise, not almost everywhere.
+- **Sharp rates.**
+  - Thm 8.4 gives the first-order M_F gap.
+  - Open: the M_T gap at high resolution, i.e. how much the CoP constraint removes; one-directional refinement; non-uniform grids (P5).
+- **Membership tests for general operators.** Frank–Wolfe on the convex possible set, using a support oracle, for measurement operators without closed forms (moment–SOS relaxations of the GMP).
+- **Robust extension (P1, C7).** In homogeneous coordinates, the fixed-q bounds stay convex under interval taxel forces. The load factor remains bilinear in (a, F_i).
+- **P3 link.** In the fixed frame the possible set X⁺ is convex. An observed slip under a known load then cuts the compatible family by a supporting-hyperplane condition, which is P3's set-membership update.
+
 ## Recommended order
 1. **P1, then P2, within about 6 months.**
 2. **P3 as the scientific centerpiece.** Start its exploratory theory during P2.
@@ -23,6 +36,6 @@
 4. **P5 and P6 are optional; P7 only with a learning collaborator.**
 
 ## Coordination
-- **Yann.** M0 (his D(a)) is background in P1; P4 is the natural joint paper. Decide authorship of P1 early.
+- **Yann.** M0 (his D(a)) is background in P1, and his review reshaped its formulation; P4 is the natural joint paper. Decide authorship of P1 early.
 - **Hardware.** GelSight + F/T covers P1–P3. P4 needs a two-finger tactile gripper. P6 needs legged hardware or simulation.
-- **Software.** The open-source `pfb` library from P1 (robust solvers, fixed frame, Drake pipeline) is reused in every later project.
+- **Software.** The open-source `pfb` library from P1 (fixed frame since 2026-11-04; robust solvers to come; Drake pipeline) is reused in every later project.

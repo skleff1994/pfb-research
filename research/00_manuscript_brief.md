@@ -1,51 +1,59 @@
-# Manuscript brief: "Torsional friction in planar contact" (doc/main.tex, Oct 2026)
+# Manuscript brief: "Torsional friction in planar contact" (doc/main.tex, rewritten 2026-11-04)
 
-Shared context for the Stage 1 literature review. This summary is extracted from the manuscript; it is not a claim of novelty.
+Shared context for literature and review work. This summary is extracted from the manuscript; it is not a claim of
+novelty. The October version took torques about the CoP of each measure; after Yann's review they are taken about a
+fixed point (`note_fixed_frame.md`).
 
 ## Setting
-- Single rigid planar contact patch P ⊂ R², compact and convex.
-- Normal load is a nonnegative Radon measure ν_N on P, so point and line loads are allowed. f_N = ν_N(P) > 0, CoP c = ∫x dν_N / f_N.
+- A single rigid planar contact patch P ⊂ R² (compact; convex where stated), in a fixed frame (O, B).
+- The normal load is a nonnegative Radon measure ν_N on P, so point and line loads are allowed. Homogeneous coordinates: f_N = ν_N(P) ≥ 0 and m_1 = ∫x dν_N; the CoP is c = m_1/f_N when f_N > 0.
 - Quasi-static isotropic Coulomb friction in measure form: dν_T = γ_T dν_N with ‖γ_T‖ ≤ μ.
-- Object of interest: the admissible tangential wrench set W(ν_N) = {(f_T, τ_N)}, i.e. tangential force and torsion about the CoP.
-  - This is the limit-surface-bounded set of Goyal–Ruina, written about the CoP.
-  - Its support function is h(q) = μ ∫ ‖a + bJ(x − c)‖ dν_N(x), with q = (a, b) and J the 90° rotation.
-  - Equivalently h(q) = μ|b| ∫ ‖x − p‖ dν_N, where p = c + Ja/b is the instantaneous center of rotation.
+- Object of interest: the admissible tangential wrench set X(ν_N) = {(f_T, τ)}, the tangential force and the torsional moment **about the origin**.
+  - Its support function is h(q) = μ ∫ ‖a + bJx‖ dν_N(x): the maximal power friction can dissipate under the planar twist q = (a, b) about O. Equivalently h(q) = μ|b| ∫ ‖x − p‖ dν_N, where p = Ja/b is the instantaneous center of rotation.
+  - Varignon's formula moves the reference point. The CoP-referenced set W(ν) = X_{c[ν]}(ν) is recovered whenever the CoP is measured.
+  - h is linear in ν_N, so X(ν_1 + ν_2) = X(ν_1) ⊕ X(ν_2).
 
 ## Question
-Given a partial measurement y of ν_N, bound h over all ν_N compatible with y:
-- lower bound h̲(q; y) = inf over compatible measures (a guaranteed capacity, an inner wrench set);
-- upper bound h̄(q; y) = sup over compatible measures (possible capacity, an outer set).
+Given a measurement y = M(ν_N) (linear integral measurements), bound h over all ν_N compatible with y:
+- lower bound h̲(q; y, M) = inf over compatible measures; the guaranteed set X⁻ = ∩ X(ν);
+- upper bound h̄(q; y, M) = sup over compatible measures; the possible set X⁺ = ∪ X(ν), which is convex with support h̄.
 
-These are generalized moment problems. Because c depends on ν_N, they are nonlinear when the CoP is unknown.
+All of these are generalized moment problems. Measurement operators are compared by an information preorder (M ≽ M′ iff M′ is a linear function of M, pointwise), under which the bounds are monotone.
 
 ## Measurement models
-- **M0:** f_N and CoP (zeroth and first moments).
-- **M_F:** taxel forces F_i, i.e. the masses of a partition {P_i} (rectangular cells in practice). The CoP is unknown.
-  The compatible set lets a load on a shared edge count for either taxel (pieces supported on the closures).
-- **M_T:** M0 combined with M_F (taxel masses plus global mean).
+- **M0:** f_N and m_1 (zeroth and first moments).
+- **M_F:** the taxel forces F_i on a half-open partition, in practice the dyadic grids G(p_x, p_y). The CoP is unknown.
+- **M_T = M0 ∨ M_F:** both.
+- Nested grids form chains in the preorder; non-nested grids (3×3 vs 4×4) are not comparable.
 
 ## Main results
-1. **M0 lower bound** (Thm 4.3): h̲ = μ f_N ‖a‖, by Jensen, attained by f_N δ_c. Coarse data guarantee zero torsion.
-2. **M0 upper bound** (Thm 4.5, Cor 4.6): the sup is attained by a measure with ≤ 3 atoms (Carathéodory / moment-set extreme points). For a polygonal P it is an LP over vertex weights with a fixed mean, i.e. an Edmundson–Madansky-type vertex bound.
-   This coincides with Prop. 4.4 of Y. de Mont-Marin's unpublished draft "Contact patch" (support function of the patch friction model D(a)).
-3. **Non-identifiability** (Cor 4.8): (f_N, c) determines W only if c is an extreme point of P.
-4. **M_T lower bound** (Thm 6.1): a convex SOCP min over one point per taxel, Σ F_i ‖a + bJ(c_i − c)‖, s.t. c_i ∈ P̄_i and Σ F_i c_i = f_N c.
-5. **M_T upper bound** (Thm 6.2): an LP over taxel corner weights with per-taxel masses and the global mean. At most r+2 nonzeros. Proof by LP duality: an affine roof per taxel.
-6. **Cellwise bounds** (Prop 6.4): Σ F_i min/max over P_i of g, in closed form via distances to the ICR.
-7. **Compatible CoP set under M_F** (Prop 5.6): the Minkowski sum Σ (F_i/f_N) P̄_i, with diameter ≤ max taxel diameter.
-8. **M_F** (Prop 7.1, Thm 7.2, Thm 7.3): M_F equals M_T optimized over the unknown CoP.
-   - Lower bound: a single joint convex SOCP.
-   - Upper bound: a nonconvex max over c ∈ C_MF of M_T LPs.
-   - Certified fixed-reference bounds (Prop 7.4).
-   - Remark 7.5: the nonconvexity comes from measuring torque about the unknown CoP; about a fixed point the problem decouples.
-9. **Comparison and refinement** (Props 8.1–8.3):
-   - M0 ⊆ … information ordering.
-   - Monotone tightening under partition refinement.
-   - Gap ≤ μ|b| Σ F_i diam(P_i) (M_T), and 2× that (M_F); convergence as the taxel size goes to 0.
+1. **M0** (Thm 4.2, Cor 4.3, Thm 4.4, Cor 4.5):
+   - h̲ = μ‖f_N a + bJm_1‖ (triangle inequality), attained by f_N δ_c.
+   - The guaranteed set is exactly {(f, c × f) : ‖f‖ ≤ μ f_N}, so there is no guaranteed torsion about the CoP.
+   - h̄ is attained by ≤ 3 atoms. For a polygon it is a vertex LP, equal to the maximum over the vertex triangles containing c. This is Yann's Prop 4.4.
+2. **Concentration and spreading** (Lemma 5.7):
+   - concentrating each taxel's force at its local CoP shrinks the wrench set;
+   - spreading it to the taxel corners enlarges it;
+   - half-open taxels give the closure values (Lemma 5.6).
+3. **M_F** (Thm 6.1): exact closed forms μ Σ F_i min / max over each taxel of ‖a + bJx‖, given by the distance from the ICR to the taxel and to its farthest corner.
+4. **M_T** (Thms 7.1, 7.2):
+   - an SOCP lower bound in the local first moments u_i ∈ F_i P̄_i with Σ u_i = m_1;
+   - an LP upper bound over the corner weights with at most r + 2 nonzeros;
+   - both lie inside the M_F bounds.
+5. **Comparison and refinement** (Props 8.1–8.3, Thm 8.4):
+   - M_T is tighter than both M0 and M_F; M0 and M_F are not ordered.
+   - The bounds tighten monotonically along nested refinements, and the gap is ≤ μ|b| Σ F_i diam P_i for M_F and M_T.
+   - First order: the M_F gap is μ|b| ∫ (|u_1| w_x + |u_2| w_y) dν, so it halves with each dyadic refinement (bounded density).
+6. **Load factors** (Prop 9.2):
+   - the certified factor s_lo = inf over ⟨q, w⟩ = 1 of h̲, two SOCPs, attained by a compatible measure;
+   - the upper factor s_up = inf of h̄, one SOCP (primal: a most favourable corner measure);
+   - the rule: hold if s_lo ≥ 1, slip if s_up < 1, otherwise undecided;
+   - multi-contact versions; Frank–Wolfe as the generic membership test.
 
 ## Numerics (Python library `pfb`)
-- Grid LPs as ground truth, compared with the reduced SOCP/LP.
-- Refinement studies up to 32×32 taxels. The CoP-measurement gain of M_T over M_F grows with resolution, to about 30% in pure torsion.
+- Grid LPs as ground truth, compared with the exact forms.
+- Population studies up to 32×32 taxels, now in seconds (no outer search).
+- The value of measuring the CoP is larger than the October report stated for mixed twists (audit in `stage3_validation_plan.md` §5.1).
 
 ## Assumptions to scrutinize
 - Rigid planar patch, quasi-static Coulomb friction, uniform μ.

@@ -47,8 +47,8 @@ The first pass (Stage 1) was abstract-level. The high-priority papers were then 
    - Huang et al. (RSS 2017) build the "moment envelope" conv G(R), which is our K = conv Φ(P).
    - Caron et al. 2015 spread pressure to the vertices.
    - The mathematics is Jensen plus Edmundson–Madansky / Gassmann–Ziemba vertex bounds.
-   - So Thm 4.3, Thm 4.5 and Cor 4.6 are known results in a new notation.
-2. **The support function of the admissible wrench set is the Coulomb dissipation.** This is Alexander–Maddocks eqs. 7 and 10, and Goyal et al. §8. Prop 3.2 is background.
+   - So Thm 4.2, Thm 4.4 and Cor 4.5 (numbering of the 2026-11-04 rewrite) are known results in a new notation.
+2. **The support function of the admissible wrench set is the Coulomb dissipation.** This is Alexander–Maddocks eqs. 7 and 10, and Goyal et al. §8. Prop 3.2 is background. Since the 2026-11-04 rewrite, torques are taken about a fixed point, as in these references.
 3. **The taxel cases are not in the literature, but their structure is classical.**
    - M_T generalizes the partition bounds with *known* cell means (Gassmann–Ziemba Prop 5.1; Birge–Wets Prop 4.1) to *unknown* cell means with a known global mean.
    - It stays exact and tractable (one SOCP, one LP) even though taxel partitions violate the nesting condition of Wiesemann–Kuhn–Sim. Without that condition, WKS show the general problem is NP-hard.
@@ -81,13 +81,13 @@ Priority: **★★ high** (overlaps a result, or is the expected reviewer citati
 
 | Paper | Access | What it establishes (location) | Relation to our results | Threat | Priority |
 |---|---|---|---|---|---|
-| **Peshkin & Sanderson 1988**, IEEE J-RA 4(6) | PART: §2.7–2.9, §4.5 | Pressure in a disk of radius a around the CM, with the centroid at the CM (§2.7). d_r ranges over [r, √(r²+a²)]: the minimum has the load at the centroid (eq. 18), the maximum is an opposite-ends dipod (eq. 19). | The disk case of Thm 4.3 / 4.5 [thm:coarse_lower, prop:coarse_upper_atomic] | high (M0) | ★★ |
+| **Peshkin & Sanderson 1988**, IEEE J-RA 4(6) | PART: §2.7–2.9, §4.5 | Pressure in a disk of radius a around the CM, with the centroid at the CM (§2.7). d_r ranges over [r, √(r²+a²)]: the minimum has the load at the centroid (eq. 18), the maximum is an opposite-ends dipod (eq. 19). | The disk case of Thm 4.2 / 4.4 [thm:coarse_lower, prop:coarse_upper_atomic] | high (M0) | ★★ |
 | **Huang, Bhatia, Boots, Mason 2017**, RSS XIII | FULL (text; figures not viewed) | Moment envelope {∫G p̂} = conv G(R) (§III-B, eqs. 13–14). Thm 2 holds for any convex pressure class with known CoP. Discretized LP feasibility test (eq. 25), with an optional cap 0 ≤ p ≤ U (eq. 26). Motion feasibility (Def. 1) uses g = ∂_ω‖Av‖ (eq. 12). No taxels, no unknown CoP. | Proof technique of Thm 4.5: the class is exactly M0. Our grid LP for M_T is LP (25) with taxel equalities added and the integrand changed. | high (technique) | ★★ |
 | **Alexander & Maddocks 1993**, IJRR 12(3) | FULL (text; displayed equations viewed on pp. 235, 236, 242) | Dissipation D(v) = ∫‖A(x)v‖dμ (eq. 7); gradient condition (eq. 10); ICR set over all measures (eq. 20). Thm 6: unipods inside plus bipods on the boundary generate all ICRs, *because* the first moment is not prescribed; with it, Mason gets tripods (p. 233, §7 p. 246). §7: the bounds are weak because of "extreme and perhaps pathologic" measures. | Prop 3.2 is their dissipation identity. The ≤3-atom count of Thm 4.5 is known. Section 6 below gives the details. | high (M0 atoms) | ★★ |
 | **Caron, Pham, Nakamura 2015**, ICRA | PART: §3 (Prop 1 with proof), §4 (Prop 2) | Prop 1 spreads pressure to the vertices with barycentric weights. Prop 2 (eqs. 15–20) gives yaw bounds of the *possible* set, with linearized cones; the converse is "out of scope". | The vertex step of Cor 4.6 / Lemma 5.8 for a single patch. Locomotion uses "possible" semantics; manipulation needs "guaranteed". | high (vertex step) | ★★ |
-| **Costanzo, De Maria, Natale 2020**, T-RO 36(1) | FULL (text pp. 157–172; Tables I–II and figures not viewed) | 5×5 taxels with CoP = taxel centroid (eqs. 1–2). Axisymmetric pressure (A4) in the Xydas–Kao family (eq. 25), ρ = δf_n^γ (eq. 24), τ_max = 2μξ_kν_kδf_n^(γ+1) (eq. 33). "Pressure almost irrelevant" (§I, §III-A), but the sensitivity is tested *within* the family: ξ_kν_k ∈ [0.3036, 0.3214], k ∈ [2.48, 4.82], ≤ 2% error at k = 4 (eq. 36, §III-C). Hand-chosen margins μ/α_s and α_d = 1.1–1.4 (eq. 57, §III-E). Gripper capacity = Σ per-finger g_i (eq. 42). Static limit-surface control slips under fast loads (§V-C, Fig. 17). Needs an accurate μ (§VI). | The closest tactile-capacity method and the expected reviewer counter-citation. Plug-in two-finger additivity is theirs; *certified* additivity (Prop 9.4(iv)) is ours. Its rate effect motivates our S4. | medium (objection), high (hardware) | ★★ |
+| **Costanzo, De Maria, Natale 2020**, T-RO 36(1) | FULL (text pp. 157–172; Tables I–II and figures not viewed) | 5×5 taxels with CoP = taxel centroid (eqs. 1–2). Axisymmetric pressure (A4) in the Xydas–Kao family (eq. 25), ρ = δf_n^γ (eq. 24), τ_max = 2μξ_kν_kδf_n^(γ+1) (eq. 33). "Pressure almost irrelevant" (§I, §III-A), but the sensitivity is tested *within* the family: ξ_kν_k ∈ [0.3036, 0.3214], k ∈ [2.48, 4.82], ≤ 2% error at k = 4 (eq. 36, §III-C). Hand-chosen margins μ/α_s and α_d = 1.1–1.4 (eq. 57, §III-E). Gripper capacity = Σ per-finger g_i (eq. 42). Static limit-surface control slips under fast loads (§V-C, Fig. 17). Needs an accurate μ (§VI). | The closest tactile-capacity method and the expected reviewer counter-citation. Plug-in two-finger additivity is theirs; *certified* additivity (Prop 9.2(vi)) is ours. Its rate effect motivates our S4. | medium (objection), high (hardware) | ★★ |
 | **Howe & Cutkosky 1996**, IJRR 15(6) | FULL (scanned; text pp. 1–20, figures pp. 24–26) | Pressure assumed known (§2.1). m_max = 0.589 / 0.667 / 0.951 μf_N R for Hertz / uniform / annular (Table 1). Translational capacity is μf_N for any pressure (§2.3). Lee 1991: equilibrium-equivalent point supports give a conservative limit surface (§2.5 p. 11). Tactile-array pressure used as a plug-in (Table 2 p. 16). The ellipsoid is not conservative (p. 17). **Silicone and rubber fingertips slip below the Coulomb limit-surface prediction under combined loads (§3 p. 12).** Bicchi et al. 1988 cited on p. 14. | The plug-in baseline. The "concentrate" step at known centroids (via Lee). The pure-shear filter: bounds matter only for torsion. The main hardware risk. | medium (concentrate step), high (hardware) | ★★ |
-| **Madansky 1959**, Ann. Math. Statist. 30(3) | SEC (Yates 1996, Ch. III) | Jensen lower bound, plus an LP over the 2^r rectangle vertices with fixed mean | Thm 4.3 and Cor 4.6 for rectangles | high (M0) | ★★ |
+| **Madansky 1959**, Ann. Math. Statist. 30(3) | SEC (Yates 1996, Ch. III) | Jensen lower bound, plus an LP over the 2^r rectangle vertices with fixed mean | Thm 4.2 and Cor 4.5 for rectangles | high (M0) | ★★ |
 | **Gassmann & Ziemba 1986**, Math. Prog. Study 27 | SEC (Yates 1996, Ch. V) | Thm 5.1: polyhedral vertex LP with known mean. Prop 5.1: partition bounds with known cell probabilities *and* cell means. | Cor 4.6. M_T with the local CoPs c_i fixed is their Prop 5.1; ours leaves the c_i free. | medium (M_T) | ★★ |
 | **Birge & Wets 1983/86**, IIASA WP-83-111 | PART: §§3, 4, 6 | Partition Jensen with cell means (Prop 3.1 / 4.1). Monotone, convergent refinement (Convergence 3.7 / 4.6). At most M+1 atoms (Thm 6.9). | Props 8.1–8.3 in the known-cell-means case; the atom counts | medium | ★★ |
 | **Wiesemann, Kuhn, Sim 2014**, Oper. Res. 62(6) | FULL (audit agent) | Exact tractability of distributionally robust problems needs the nesting condition (N) (p. 9). Without (N), even non-emptiness is strongly NP-hard (Thm 2). A norm loss needs ellipsoidal C_i and no mean constraint (e-companion Table 1). | Taxel closures violate (N), so Thms 6.1 / 6.2 are not special cases. Their exactness is a point in our favour. | medium (framing) | ★★ |
@@ -111,7 +111,7 @@ Priority: **★★ high** (overlaps a result, or is the expected reviewer citati
 | Park et al. 2026, Adv. Intell. Syst. | PART | Tactile safety margin TSM = (F_max − F_fric)/F_max, translational only (§2.1, 2.4) | No torsion | none–low | · |
 | Shirai, Jha, Raghunathan 2024, T-RO | PART | Worst-case margins over mass, CoM, μ and finger position, with point contacts (§IV) | Robust, but point contacts | low | · |
 | Fazeli, Tedrake, Rodriguez 2018, ISRR | PART | Identifiability with point contacts | No patch | none | · |
-| de Mont-Marin et al. 2025, arXiv 2509.25999 | PART (intro + friction scan) | Conic complementarity of planar contacts; friction left as future work | Related patch modelling (Yann). Our M0 upper bound coincides with Prop 4.4 of his unpublished draft (Remark 4.7 [rem:demontmarin]). | coordination | ★ |
+| de Mont-Marin et al. 2025, arXiv 2509.25999 | PART (intro + friction scan) | Conic complementarity of planar contacts; friction left as future work | Related patch modelling (Yann). Our M0 upper bound coincides with Prop 4.4 of his unpublished draft (Remark 4.6 [rem:demontmarin]). | coordination | ★ |
 | Yuan 2015; Dong; Kolamuri 2021; Veiga 2018; Chen 2018 (review); Romeo 2020 (survey); Ueda 2005; Shahidzadeh 2025 (FeelAnyForce) | ABS or CIT | Slip detection or prediction, force regression | Context for the four-way distinction. FeelAnyForce is our hardware force regressor (resultant only). | none | · |
 | Fearing–Hollerbach 1985; Bicchi–Salisbury–Brock 1993; Ma et al. 2019; Sferrazza–D'Andrea 2019 | ABS | Single-state pressure or force reconstruction | Feed plug-in estimates | none | · |
 | Lynch–Mason 1996; Zhou et al. 2016/18; Mason 1986/2001 | ABS or CIT | Stable pushing; convex polynomial force–motion models; mechanics textbook | Background | none | · |
@@ -124,27 +124,32 @@ Categories:
 - **generalization:** classical structure extended;
 - **new:** none found.
 
-| Result (main.tex) | Category | Closest prior art | Threat |
+| Result (main.tex, fixed-frame rewrite of 2026-11-04) | Category | Closest prior art | Threat |
 |---|---|---|---|
-| Prop 3.2 [prop:support]: support function; ICR form of the integrand | known | Alexander–Maddocks eqs. 7, 10; Goyal §8 eq. 5, §11, §12.3; Peshkin–Sanderson d_r | high: background |
-| Thm 4.3 [thm:coarse_lower]: Jensen, zero guaranteed torsion | known | Peshkin–Sanderson min d_r = r; Madansky | high |
-| Thm 4.5, Cor 4.6 [prop:coarse_upper_atomic, cor:coarse_upper_polygon]: ≤ 3 atoms, vertex LP | known / equivalent | Huang §III-B and LP (25); Peshkin–Sanderson eq. 19; Alexander–Maddocks Thm 6 and p. 233; Caron Prop 1; Madansky; Gassmann–Ziemba Thm 5.1; Birge–Wets Thm 6.9 | high |
-| Example 4.8 [ex:segment]: (f_N, CoP) does not determine W | folklore | Statically indeterminate supports | medium |
-| Prop 5.6 [prop:cop_taxel]: compatible CoP set as a Minkowski sum | elementary | — | low |
-| Lemma 5.8 [lem:vertex_reduction]: vertex reduction | equivalent (single patch) | Caron Prop 1; Lee 1991 (concentrate step) | medium |
-| Thm 6.1 / 6.2 [thm:combined_lower, thm:combined_upper]: M_T SOCP / LP with ≤ r+2 atoms | generalization | Gassmann–Ziemba Prop 5.1 and Birge–Wets Prop 4.1 assume known cell means. WKS (N) is violated, so these are not special cases. | medium |
-| Prop 6.4 [prop:cellwise]: cellwise bounds | elementary | — | — |
-| Prop 7.1, Thm 7.2 / 7.3 [prop:MF_as_MT, thm:taxel_lower, thm:taxel_upper]: M_F, CoP-referenced | possibly new math | none found | low. The upper bound is nonconvex; see `note_fixed_frame.md`. |
-| Prop 7.4 [prop:fixed_ref]: certified fixed-reference bounds | elementary given Lemma 3.10 | — | low |
+| Prop 3.2 [prop:support]: support function about a fixed point = maximal dissipated power; ICR form of the integrand | known | Alexander–Maddocks eqs. 7, 10; Goyal §8 eq. 5, §11, §12.3; Peshkin–Sanderson d_r | high: background |
+| Lemma 3.4 [lem:varignon]: change of reference point | known | Varignon; Goyal §12(3) | background |
+| Lemma 3.6, Prop 3.11 [lem:linearity, prop:inner_outer]: Minkowski additivity in ν; possible set X⁺ convex with support h̄; concavity/convexity of the bounds in y | elementary / generalization | Yann's Prop 4.4 (concavity of a ↦ s_D(a), the M0 case) | low |
+| Def 3.14, Prop 3.15, Thm 3.16 [def:preorder, prop:preorder, lem:monotone]: information preorder on measurement operators (pointwise-span characterization), monotonicity | elementary (from Yann's review) | Blackwell-type comparison of experiments is the analogous idea in statistics (not checked against a source; do not cite without one) | low |
+| Thm 4.2, Cor 4.3 [thm:coarse_lower, cor:coarse_inner]: lower bound μ‖f_N a + bJm_1‖; exact guaranteed set; zero guaranteed torsion about the CoP | known | Peshkin–Sanderson min d_r = r; Madansky; uniform field as in Yann's Remark 4.2 | high |
+| Thm 4.4, Cor 4.5 [prop:coarse_upper_atomic, cor:coarse_upper_polygon]: ≤ 3 atoms, vertex LP, triangle form | known / equivalent | Huang §III-B and LP (25); Peshkin–Sanderson eq. 19; Alexander–Maddocks Thm 6 and p. 233; Caron Prop 1; Madansky; Gassmann–Ziemba Thm 5.1; Birge–Wets Thm 6.9; Yann's Prop 4.4 (identical, same frame) | high |
+| Example 4.7 [ex:segment]: (f_N, CoP) does not determine the wrench set | folklore | Statically indeterminate supports | medium |
+| Lemma 5.7 [lem:concentrate_spread]: concentration shrinks and spreading enlarges the wrench set (set inclusions) | equivalent (single patch) | Caron Prop 1; Yann's eq. (33) (extreme points); Lee 1991 (concentrate step) | medium |
+| Lemma 5.6 [lem:half_open]: half-open taxels give the closure values | elementary | — | low |
+| Remark 5.9 [rem:cop_taxel]: compatible CoPs as a Minkowski average | elementary | — | low |
+| Thm 6.1 [thm:MF]: exact closed-form M_F bounds (sum over taxels of min / max of the speed) | elementary once the frame is fixed | Partition bounds with known cell probabilities only; the HZB / Frauendorfer / Kall abstracts may contain the analogue (open item) | low–medium |
+| Thm 7.1 / 7.2 [thm:combined_lower, thm:combined_upper]: M_T SOCP (local first moments) / LP with ≤ r+2 atoms | generalization | Gassmann–Ziemba Prop 5.1 and Birge–Wets Prop 4.1 assume known cell means. WKS (N) is violated, so these are not special cases. | medium |
 | Props 8.1–8.3 [prop:taxel_refinement, prop:taxel_refinement_MF, prop:taxel_resolution_MT]: ordering, refinement, O(diam) gap | classical analogue (known-cell-means case) | Birge–Wets Convergence 3.7 / 4.6; Frauendorfer and HZB (abstracts only) | medium |
-| Lemma 9.2 [lem:fixed_ref_lower]: fixed-reference lower bounds | generalization | Fixed-frame M_F bounds are elementary (cell masses only) | low |
-| Prop 9.4 [prop:load_factor] (i): load factor = inf over ⟨q,w⟩ = 1 | known tool | Ray/support duality (Rockafellar §13) | — |
-| Prop 9.4 (ii)–(iii): two SOCPs via u_i = b·c_i; attained by a compatible measure | new application of a standard substitution | Perspective substitution (standard). Applied to the intersection over compatible measures; no precedent found. | low–medium |
-| Prop 9.4 (iv): certified multi-contact load factor | new (certified form) | The plug-in sum is in Costanzo 2020 eq. 42 | low |
-| Growth of the CoP-sensing gain with resolution (numerical) | new empirical result | — | — |
+| Thm 8.4 [thm:rate]: first-order rate of the M_F gap, halving per dyadic step, explicit constant | new (none found) | Second-order error terms of partition bounds in stochastic programming may be related; not checked | low |
+| Prop 9.2 [prop:load_factor] (i): load factors = inf over ⟨q,w⟩ = 1 | known tool | Ray/support duality (Rockafellar §13) | — |
+| Prop 9.2 (ii), (iv): certified factor, two SOCPs via u_i = b·c_i; attained by a compatible measure | new application of a standard substitution | Perspective substitution (standard). Applied to the intersection over compatible measures; no precedent found. | low–medium |
+| Prop 9.2 (iii), (v): upper load factor (one SOCP, primal and dual) and the hold / slip / undecided rule | new application | Frank–Wolfe membership via a support oracle is standard (not cited yet) | low |
+| Prop 9.2 (vi): multi-contact certified and upper factors | new (certified form) | The plug-in sum is in Costanzo 2020 eq. 42 | low |
+| Value of the CoP (M_T vs M_F) in the fixed frame (numerical) | new empirical result | — | — |
+
+The CoP-referenced M_F results of the October draft (Prop 7.1, Thms 7.2 / 7.3, Prop 7.4) were removed in the rewrite; see `note_fixed_frame.md`.
 
 **Do not claim as new:**
-- Prop 3.2, Thm 4.3, Thm 4.5, Cor 4.6, Example 4.8;
+- Prop 3.2, Lemma 3.4, Thm 4.2, Cor 4.3, Thm 4.4, Cor 4.5, Example 4.7;
 - refinement monotonicity and the atom counts;
 - vertex spreading for one patch;
 - the concentrate step at known centroids;
@@ -161,16 +166,16 @@ This section checks five claims from the user's reading, with ChatGPT, against t
 
 | # | Claim | Verdict | Evidence |
 |---|---|---|---|
-| 1 | The support function of W is the Coulomb dissipation; W = ∂D(0); −w_fric ∈ ∂D(v) | **Correct, and established** | AM eq. 7: D(v) = ∫‖A(x)v‖dμ, with dμ = μ(x)P(x)dx. AM eq. 10: the gradient condition. Huang eq. 7 is the same with uniform μ. W = ∂D(0) because D is sublinear (Moreau 1979, cited by AM; Goyal §8). Prop 3.2 is the case dμ = μ dν_N with the reference at the CoP. |
+| 1 | The support function of W is the Coulomb dissipation; W = ∂D(0); −w_fric ∈ ∂D(v) | **Correct, and established** | AM eq. 7: D(v) = ∫‖A(x)v‖dμ, with dμ = μ(x)P(x)dx. AM eq. 10: the gradient condition. Huang eq. 7 is the same with uniform μ. W = ∂D(0) because D is sublinear (Moreau 1979, cited by AM; Goyal §8). Prop 3.2 is the case dμ = μ dν_N, about a fixed reference point. |
 | 2 | They bound motions; we bound extremal dissipation | **Correct** | AM eq. 20 gives the ICR set over all measures. Huang Def. 1: ω is feasible if some pressure with the known CoP gives zero moment. Huang's g = ∂_ω‖Av‖ (eq. 12), so the motion test is the same class of moment problem, with the derivative integrand. The extremes of D do not determine its argmin set. |
 | 3 | Huang ≈ M0 with extra convex constraints | **Mostly correct** | The class is exactly M0, over a discretized R. Thm 2 holds for any convex class with known CoP. The experiments use only 0 ≤ p_i ≤ U (eq. 26). |
 | 4 | AM's bipods concern motions; our three atoms concern support values | **Conclusion correct, attribution partly wrong** | AM Thm 6 holds *because* the first moment is free; with it, Mason gets tripods. AM need a point inside a convex hull, where a connectedness version of Carathéodory (Lemma 8) lowers the count. We need a boundary value, where it does not. Three atoms can be necessary: an equilateral triangle with the CoP at the centroid under pure torsion. The unique maximizer is the 3-vertex measure, with value R·f_N, versus ≤ (2/3)R·f_N for any two-point load through the centroid. |
-| 5 | Under M_F, CoP-referenced envelopes are not envelopes of one velocity field | **Correct** | (a, b) referenced at c[ν] gives a different velocity field for each ν. Changing the frame shears the integrand: g(x; q, o) = g(x; (a + bJ(c − o), b), c) (Goyal §12(3)). With c known (M0, M_T) the frames are equivalent; under M_F they are not. This is why Section 9 of main.tex uses a fixed reference (`note_fixed_frame.md`). |
+| 5 | Under M_F, CoP-referenced envelopes are not envelopes of one velocity field | **Correct** | (a, b) referenced at c[ν] gives a different velocity field for each ν. Changing the frame shears the integrand: g(x; q, o) = g(x; (a + bJ(c − o), b), c) (Goyal §12(3)). With c known (M0, M_T) the frames are equivalent; under M_F they are not. Yann's review of 2026-11-04 made the fixed reference primary throughout (`note_fixed_frame.md`). |
 
 **What AM and Huang do not imply:**
-- continuum-exact taxel reductions (Thms 6.1 / 6.2) with the closure model;
-- the unknown-CoP results (Section 7);
-- the certified load factor (Section 9);
+- continuum-exact taxel reductions (Thms 6.1, 7.1, 7.2) with half-open taxels;
+- the information preorder and the first-order rate of tightening (Section 8);
+- the certified and upper load factors (Section 9);
 - the robust extension.
 
 These use standard moment-problem arguments, so the novelty rests on exactness and tractability, not on new tools.
@@ -189,7 +194,7 @@ These use standard moment-problem arguments, so the novelty rests on exactness a
 **For**
 - The gap is clear and verified on full texts. Tactile pipelines reconstruct one pressure state or fit a parametric limit surface, and then use the capacity as if it were exact. None states what the measurement guarantees.
 - The guaranteed (lower) bound is what a safety decision needs. The literature uses hand-chosen margins instead (Costanzo α_s, α_d = 1.1–1.4).
-- F/T plus contact geometry (M0) provably certifies no torsion (Thm 4.3). Distributed sensing is necessary, which gives a sensor-design argument.
+- F/T plus contact geometry (M0) provably certifies no torsion about the CoP (Cor 4.3). Distributed sensing is necessary, which gives a sensor-design argument.
 - Exactness despite violating the WKS nesting condition is a clean mathematical point.
 - The computation is cheap (one SOCP or LP per bound, two SOCPs per load factor).
 
@@ -202,8 +207,9 @@ These use standard moment-problem arguments, so the novelty rests on exactness a
 The evidence answering these points (numerics, Drake closed loop) is in `doc/experiments.tex`. The reviewer-response table is in `stage2_contributions.md`.
 
 ## 8. Open literature items
-- Full texts of Huang–Ziemba–Ben-Tal 1977, Frauendorfer 1988 and Kall 1991. Could any give partition bounds from cell probabilities only (an M_F-like case)?
+- Full texts of Huang–Ziemba–Ben-Tal 1977, Frauendorfer 1988 and Kall 1991. Could any give partition bounds from cell probabilities only (the analogue of Thm 6.1 [thm:MF]), or second-order error terms (the analogue of Thm 8.4 [thm:rate])?
 - Lee 1991 (thesis) and Lee–Cutkosky 1991: verify the concentrate step directly.
 - Two unverified leads: a "6D friction" paper (2019) and a study of limit surfaces under pressure skew.
 - Tactile simulator names (TACTO, Taxim, Tacchi, DiffTactile, TacIPC, TacSL) are from memory. Verify them before citing.
-- Coordination with Yann de Mont-Marin about his unpublished D(a) result (Remark 4.7).
+- Coordination with Yann de Mont-Marin about his unpublished D(a) result (Remark 4.6). His review of 2026-11-04 is reflected in `note_fixed_frame.md`; his K = 3 closed form is pending.
+- Frank–Wolfe (support-oracle membership, Prop 9.2 remark): add a verified reference before citing.
