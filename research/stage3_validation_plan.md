@@ -72,7 +72,7 @@ Definitions are in Report §3.
 | F4 resolution vs noise | Taxel intervals from pixel noise; an interior optimal resolution is expected | ☐ | §7.1 | Needs the robust solver |
 | F5 hardware gate | Certified minimal press force vs resolution on recorded GelSight maps of the demo objects | ☐ | §7.2 | Phase H5 (simulated analogue in S3) |
 | F6 runtime table | SOCP/LP times, r = 4 … 1024 | ⏳ | §4.6 | Load-factor times measured; the full table is not done |
-| F7 M_F sandwich (optional) | Sweep ≤ exact ≤ Prop 7.4 vs resolution | ⏳ | `note_MF_reference_frame.md` | Gaussian-load check only (Prop 7.4 is 1.21–1.61× the sweep). Depends on the reference-frame decision. |
+| F7 M_F sandwich (optional) | Sweep ≤ exact ≤ Prop 7.4 vs resolution | ⏳ | `note_fixed_frame.md` | Gaussian-load check only (Prop 7.4 is 1.21–1.61× the sweep). Depends on the reference-frame decision. |
 
 ## 6. Drake simulation (strategy B)
 The scope, decided 2026-10-21, is to test the pipeline (sensing → certificate → command → outcome) and the effects the theory does not model. The friction law is not tested: Drake implements Coulomb friction per contact face (Masterjohn et al. 2022).

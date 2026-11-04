@@ -5,7 +5,7 @@
 - the theory: `doc/main.tex`, Sections 3–9, including the certified load factor;
 - the numerical and Drake evidence: `doc/experiments.tex` ("Report §x" below).
 
-The M_F / reference-frame discussion is moved to `note_MF_reference_frame.md`.
+The M_F / reference-frame discussion is moved to `note_fixed_frame.md`.
 
 **Decisions so far**
 - The user chose the certification framing (A).
