@@ -53,7 +53,7 @@
 
 
 \begin{abstract}
-Tactile sensors are widely used to detect slip, but much less is known about what can actually be inferred about frictional contact limits from tactile measurements. This question matters because detecting that slip is occurring or imminent is not the same as knowing which tangential and torsional loads the contact can still support. That distinction is important for control design. In this report, we study this question for a single planar contact patch under quasi-static Coulomb friction. We first show that coarse normal force information, consisting of the total normal force and center of pressure, is generally insufficient to determine the admissible tangential wrench set: two contacts can have the same total normal force and CoP while supporting different combinations of tangential force and torsional moment. We then study what can still be inferred from partial measurements. In particular, we derive upper and lower bounds on the admissible wrench set from coarse measurements and from spatially distributed taxel-wise normal forces. The latter provide tighter bounds by reducing the ambiguity on how the normal force is distributed over the contact patch.
+Tactile sensors are widely used to detect slip, but much less is known about what can actually be inferred about frictional contact limits from tactile measurements. This question matters because detecting that slip is occurring or imminent is not the same as knowing which tangential and torsional loads the contact can still support. That distinction is important for control design. In this report, we study this question for a single planar contact patch under quasi-static Coulomb friction. We first show that coarse normal force information, consisting of the total normal force and center of pressure, is generally insufficient to determine the admissible tangential wrench set: two contacts can have the same total normal force and CoP while supporting different combinations of tangential force and torsional moment. We then study what can still be inferred from partial measurements. In particular, we derive upper and lower bounds on the admissible wrench set from coarse measurements and from spatially distributed taxel-wise normal forces. The latter provide tighter bounds by reducing the ambiguity on how the normal force is distributed over the contact patch. Taking the torques about a fixed point makes every bound a generalized moment problem: the bounds from taxel forces have closed forms, those combining taxel forces and CoP are an SOCP and an LP, and the gap between them halves, to first order, with each dyadic refinement of the taxel grid. Along a given load, the guaranteed and the possible wrench sets give a certified and an upper load factor, each a convex program, which decide whether the load is surely carried, surely not carried, or undecided by the measurement.
 \end{abstract}
 
 \section{Introduction}
@@ -779,9 +779,8 @@ Because the taxels are half-open, a measure that puts force on the boundary of a
 that may put force on a corner owned by a neighboring taxel. We therefore introduce the \textit{closure model}
 \begin{align}
     \label{eq:PiMF}
-    \overline\Pi_{\mathcal M_F}(y_F)\triangleq\Bigl\{\nu_N=\sum_{i=1}^r\nu_i:\ \nu_i\in\mathcal M_+(P)\text{ supported on }\overline{P_i},\ \nu_i(\overline{P_i})=F_i\Bigr\},
-    \qquad
-    \overline\Pi_{\mathcal M_T}(y_T)\triangleq\overline\Pi_{\mathcal M_F}(y_F)\cap\Pi_{\mathcal M_0}(y_0),
+    \overline\Pi_{\mathcal M_F}(y_F)&\triangleq\Bigl\{\nu_N=\sum_{i=1}^r\nu_i:\ \nu_i\in\mathcal M_+(P)\text{ supported on }\overline{P_i},\ \nu_i(\overline{P_i})=F_i\Bigr\},\\
+    \overline\Pi_{\mathcal M_T}(y_T)&\triangleq\overline\Pi_{\mathcal M_F}(y_F)\cap\Pi_{\mathcal M_0}(y_0),
 \end{align}
 which contains the compatible families (take $\nu_i$ the restriction of $\nu_N$ to $P_i$), and show that it gives the same bounds.
 
@@ -885,9 +884,8 @@ Without the first-moment constraint, the taxels decouple and both bounds have cl
     For a rectangular taxel with center $m_i$ and sides $w_x\times w_y$, and $\Delta=m_i-p$,
     \begin{align}
         \label{eq:MF_rectangle}
-        \min_{x\in\overline{P_i}}\|x-p\|_2=\left\|\left(\left(|\Delta_1|-\tfrac{w_x}{2}\right)_+,\left(|\Delta_2|-\tfrac{w_y}{2}\right)_+\right)\right\|_2,
-        \qquad
-        \max_{x\in\overline{P_i}}\|x-p\|_2=\left\|\left(|\Delta_1|+\tfrac{w_x}{2},|\Delta_2|+\tfrac{w_y}{2}\right)\right\|_2.
+        \min_{x\in\overline{P_i}}\|x-p\|_2&=\left\|\left(\left(|\Delta_1|-\tfrac{w_x}{2}\right)_+,\left(|\Delta_2|-\tfrac{w_y}{2}\right)_+\right)\right\|_2,\\
+        \max_{x\in\overline{P_i}}\|x-p\|_2&=\left\|\left(|\Delta_1|+\tfrac{w_x}{2},|\Delta_2|+\tfrac{w_y}{2}\right)\right\|_2.
     \end{align}
     For $b=0$ both bounds equal $\mu f_N\|a\|_2$.
 \end{theorem}
@@ -995,18 +993,21 @@ All results of this section follow from Theorem~\ref{lem:monotone}, the informat
 For every twist $q=(a,b)\in\mathbb R^2\times\mathbb R$,
 \begin{align}
 \boxed{
+\begin{aligned}
 \max\left\{\underline h(q;y_0,\mathcal M_0),\,\underline h(q;y_F,\mathcal M_F)\right\}
-\le
+&\le
 \underline h(q;y_T,\mathcal M_T)
 \le
+h_{\X(\nu_N^\star)}(q),\\
 h_{\X(\nu_N^\star)}(q)
-\le
+&\le
 \overline h(q;y_T,\mathcal M_T)
 \le
 \min\left\{
 \overline h(q;y_0,\mathcal M_0),\,
 \overline h(q;y_F,\mathcal M_F)
-\right\},}
+\right\},
+\end{aligned}}
 \end{align}
 with $\underline h(q;y_0,\mathcal M_0)=\mu\|f_Na+bJm_1\|_2$. The bounds of $\mathcal M_0$ and $\mathcal M_F$ are not ordered in general, in either direction.
 \end{proposition}
@@ -1046,20 +1047,22 @@ The monotonicity is associated with nested partitions, not with the number of ta
 For every $q=(a,b)\in\mathbb R^2\times\mathbb R$ and $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$,
 \begin{align}
 \boxed{
+\begin{aligned}
 0
 \le
 \overline h(q;y,\mathcal M)
 -
 \underline h(q;y,\mathcal M)
-\le
-\mu\sum_{i=1}^rF_i\left(\max_{\overline{P_i}}g(\cdot;q)-\min_{\overline{P_i}}g(\cdot;q)\right)
-\le
+&\le
+\mu\sum_{i=1}^rF_i\left(\max_{\overline{P_i}}g(\cdot;q)-\min_{\overline{P_i}}g(\cdot;q)\right)\\
+&\le
 \mu |b|
 \sum_{i=1}^r
 F_i\operatorname{diam}(P_i)
 \le
 \mu |b| f_N
-\max_i\operatorname{diam}(P_i),}
+\max_i\operatorname{diam}(P_i),
+\end{aligned}}
 \end{align}
 with equality in the first inequality for $\mathcal M_F$. Hence, along any sequence of taxel partitions with
 $\max_i\operatorname{diam}(P_i)\rightarrow0$, the four bounds of $\mathcal M_F$ and $\mathcal M_T$ converge to $h_{\X(\nu_N^\star)}(q)$.
@@ -1083,13 +1086,12 @@ $u(x)=(x-p)/\|x-p\|_2$ the unit radial direction at $x\neq p$.
         \overline h(q;y_F,\mathcal M_F)-\underline h(q;y_F,\mathcal M_F)
         -\mu|b|\int_P\left(|u_1(x)|\,w_x+|u_2(x)|\,w_y\right)d\nu_N^\star(x)
         \right|
-        \le
-        \mu|b|\,\bar\rho\,D^2\left(\tfrac{15}{4}\sqrt{\pi|P|}+\tfrac{9\pi}{4}D\right),
+        &\le\\
+        \mu|b|\,\bar\rho\,D^2\left(\tfrac{15}{4}\sqrt{\pi|P|}+\tfrac{9\pi}{4}D\right),&
     \end{align}
     where $|P|$ is the area of $P$. In particular, for square cells of side $h$,
     \begin{align}
-        \overline h(q;y_F,\mathcal M_F)-\underline h(q;y_F,\mathcal M_F)=\mu|b|\,C_{\nu}(p)\,h+O(h^2),
-        \qquad
+        \overline h(q;y_F,\mathcal M_F)-\underline h(q;y_F,\mathcal M_F)=\mu|b|\,C_{\nu}(p)\,h+O(h^2),\\
         C_\nu(p)\triangleq\int_P\left(|u_1|+|u_2|\right)d\nu_N^\star\in\left[f_N,\sqrt2f_N\right],
     \end{align}
     so that, if $f_N>0$, each joint dyadic refinement $G(p,p)\to G(p+1,p+1)$ divides the $\mathcal M_F$ gap by $2+O(h)$.
@@ -1129,72 +1131,40 @@ $u(x)=(x-p)/\|x-p\|_2$ the unit radial direction at $x\neq p$.
 \section{Certified load factor}
 \label{sec:load_factor}
 
-A controller does not need the bounds direction by direction. It needs to know whether a given load $w$ can be carried and, if not, by how much
-the contact should be strengthened (e.g., by squeezing harder). This is a question about the ray $\{sw:s\ge0\}$: how far along it the guaranteed
-set extends. This section shows that the answer is one convex program for the taxel measurements, without constructing the guaranteed set.
+A controller does not need the bounds direction by direction. It needs to know whether a given load $w$ can be carried, whether it certainly cannot, and by how much
+the contact should be strengthened (e.g., by squeezing harder). This is a question about the ray $\{sw:s\ge0\}$: how far along it the guaranteed and the possible
+sets extend. This section shows that both answers are convex programs for the taxel measurements, without constructing the sets.
 
-\paragraph{Fixed reference.}
-The load acting on a grasped object is known about a point $o$ fixed to the object (or to the hand), not about the CoP, which is unknown under
-$\mathcal M_F$. We therefore take the torque about a fixed point $o\in\R^2$.
+\paragraph{Reference point of the load.}
+The load acting on a grasped object is known about a point $o$ fixed to the object or to the hand. By Lemma~\ref{lem:varignon}, $sw\in\X_o(\nu_N)$ if and only if $sT_o^{-1}w\in\X(\nu_N)$,
+so a load about $o$ can always be moved to the origin. We keep $o$ explicit below, since the programs are written most simply with it; the support functions about $o$ are
+$h_{\X_o(\nu_N)}(q)=\mu\int_P\|a+bJ(x-o)\|_2\,d\nu_N$ and we write $\underline h_o$, $\overline h_o$, $\X_o^\pm$ for the corresponding bounds and sets.
 
-\begin{definition}[Admissible tangential wrench set about a fixed point]
-\label{def:wrench_fixed_ref}
-    For $\nu_N\in\mathcal M_+(P)$ and $o\in\R^2$, let $\mathcal W_o(\nu_N)$ be the set of $(f_T,\tau_o)$ with
-    $f_T=\int_P\gamma_T\,d\nu_N$ and $\tau_o=\int_P(x-o)\times\gamma_T(x)\,d\nu_N(x)$, over all measurable $\gamma_T$ with $\|\gamma_T\|_2\le\mu$ $\nu_N$-a.e.
-    Since $\tau_o=\tau_N+(c[\nu_N]-o)\times f_T$, $\mathcal W_o(\nu_N)$ is the image of $\mathcal W(\nu_N)$ by an invertible linear map; in particular it is
-    convex, compact and contains $0$, and $\mathcal W_{c[\nu_N]}(\nu_N)=\mathcal W(\nu_N)$. The proof of Proposition~\ref{prop:support}, with $c[\nu_N]$
-    replaced by $o$, gives its support function
-    \begin{align}
-        h_{\mathcal W_o(\nu_N)}(q)=\mu\int_Pg(x;q,o)\,d\nu_N(x).
-    \end{align}
-    As in Definition~\ref{def:measurement_support_bounds} and Remark~\ref{rem:inner_outer}, we write
-    \begin{align}
-        \underline h^{\,o}_{\mathcal M}(q;y)\triangleq\inf_{\nu_N\in\Pi_{\mathcal M}(y)}h_{\mathcal W_o(\nu_N)}(q),
-        \qquad
-        \mathcal W_o^-(y)\triangleq\bigcap_{\nu_N\in\Pi_{\mathcal M}(y)}\mathcal W_o(\nu_N).
-    \end{align}
-\end{definition}
-
-The integrand $g(x;q,o)$ does not depend on the CoP of $\nu_N$. The lower bounds are therefore GMPs for every measurement, and no outer
-optimization over the compatible CoPs is needed (compare Proposition~\ref{prop:MF_as_MT}). Under $\mathcal M_T$, taking $o=c^\star$ gives back the
-bounds of Section~\ref{sec:MT}.
-
-\begin{lemma}[Fixed-reference lower bounds for taxel measurements]
-\label{lem:fixed_ref_lower}
-    Under Assumption~\ref{ass:taxels}, for every $q=(a,b)$ and $o\in\R^2$,
-    \begin{align}
-        \underline h^{\,o}_{\mathcal M_F}(q;y_F)=\mu\min_{\substack{c_i\in\overline{P_i}\\i=1,\ldots,r}}\sum_{i=1}^rF_i\left\|a+bJ(c_i-o)\right\|_2,
-    \end{align}
-    and $\underline h^{\,o}_{\mathcal M_T}(q;y_T)$ is the same minimum with the additional constraint $\sum_{i=1}^rF_ic_i=f_Nc$.
-\end{lemma}
-\begin{proof}
-    ($\ge$) For a compatible $\nu_N$, its local CoPs are feasible (Lemma~\ref{lem:taxel_barycenters}(i)--(ii)), and
-    Lemma~\ref{lem:taxel_barycenters}(iii) with $c=o$ bounds $\int_Pg(x;q,o)\,d\nu_N$ from below by the objective.
-    ($\le$) For feasible $c_i$, $\sum_iF_i\delta_{c_i}$ is compatible and attains the objective (converse part of Lemma~\ref{lem:taxel_barycenters}).
-    The minimum exists, since the feasible set is compact and nonempty ($c\in\mathcal C_{\mathcal M_F}(y_F)$ for $\mathcal M_T$) and the objective continuous.
-\end{proof}
-
-\begin{definition}[Load factor]
+\begin{definition}[Load factors]
 \label{def:load_factor}
     For a nonzero load $w=(f,\tau)\in\R^2\times\R$, expressed about $o$, the \textit{load factor} of $\nu_N$ is
-    $s^\star_o(\nu_N;w)\triangleq\max\{s\ge0:\,sw\in\mathcal W_o(\nu_N)\}$, and the \textit{certified load factor} is
+    $s^\star_o(\nu_N;w)\triangleq\max\{s\ge0:\,sw\in\X_o(\nu_N)\}$. The \textit{certified} (lower) and the \textit{upper} load factors are
     \begin{align}
-        \underline s_{\mathcal M}(w;y)\triangleq\inf_{\nu_N\in\Pi_{\mathcal M}(y)}s^\star_o(\nu_N;w).
+        \underline s(w;y,\mathcal M)\triangleq\inf_{\nu_N\in\Pi_{\mathcal M}(y)}s^\star_o(\nu_N;w),\\
+        \overline s(w;y,\mathcal M)\triangleq\max\left\{s\ge0:\,sw\in\operatorname{cl}\X_o^+(y,\mathcal M)\right\}\ \ge\ \sup_{\nu_N\in\Pi_{\mathcal M}(y)}s^\star_o(\nu_N;w).
     \end{align}
-    The load $w$ is carried by every compatible measure if and only if $\underline s_{\mathcal M}(w;y)\ge1$. More generally, a contact whose normal
-    force is scaled by $\lambda$ carries $w$ if $\lambda\,\underline s_{\mathcal M}(w;y)\ge1$, since $\mathcal W_o(\lambda\nu_N)=\lambda\mathcal W_o(\nu_N)$.
+    The load $w$ is carried by every compatible measure if $\underline s(w;y,\mathcal M)\ge1$, and by none if $\overline s(w;y,\mathcal M)<1$.
+    Since $\X_o(\lambda\nu_N)=\lambda\X_o(\nu_N)$, a contact whose normal force is scaled by $\lambda$ has load factors scaled by $\lambda$.
 \end{definition}
 
-\begin{proposition}[Certified load factor]
+\begin{proposition}[Certified and upper load factors]
 \label{prop:load_factor}
     Let $w=(f,\tau)\neq0$ and $o\in\R^2$.
     \begin{enumerate}[label=(\roman*)]
-        \item For every measurement operator,
+        \item For every measurement operator satisfying Assumption~\ref{ass:mass_control},
         \begin{align}
             \boxed{
-            \underline s_{\mathcal M}(w;y)
-            =\max\left\{s\ge0:\,sw\in\mathcal W_o^-(y)\right\}
-            =\inf_{q:\,\langle q,w\rangle=1}\underline h^{\,o}_{\mathcal M}(q;y).}
+            \begin{aligned}
+            \underline s(w;y,\mathcal M)
+            &=\max\left\{s\ge0:\,sw\in\X_o^-(y,\mathcal M)\right\}
+            =\inf_{q:\,\langle q,w\rangle=1}\underline h_o(q;y,\mathcal M),\\
+            \overline s(w;y,\mathcal M)&=\inf_{q:\,\langle q,w\rangle=1}\overline h_o(q;y,\mathcal M).
+            \end{aligned}}
         \end{align}
         \item Under Assumption~\ref{ass:taxels} with polygonal closures $\overline{P_i}=\{x:A_ix\le d_i\}$, for $\sigma\in\{-1,+1\}$ let
         \begin{align}
@@ -1203,62 +1173,100 @@ bounds of Section~\ref{sec:MT}.
             V_\sigma\triangleq\mu\inf_{a\in\R^2,\,b\in\R,\,u_i\in\R^2}\quad&\sum_{i=1}^rF_i\left\|a+J(u_i-b\,o)\right\|_2\\
             \text{subject to}\quad&a^\top f+b\tau=1,\qquad\sigma b\ge0,\\
             &\sigma\left(A_iu_i-b\,d_i\right)\le0,\qquad i=1,\ldots,r,\\
-            &\textstyle\sum_{i=1}^rF_iu_i=b\,f_Nc\qquad(\mathcal M_T\text{ only}),
+            &\textstyle\sum_{i=1}^rF_iu_i=b\,m_1\qquad(\mathcal M_T\text{ only}),
             \end{aligned}}
         \end{align}
-        with $V_\sigma=+\infty$ if infeasible. Then $\underline s_{\mathcal M}(w;y)=\min\{V_{+1},V_{-1}\}$ for $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$,
+        with $V_\sigma=+\infty$ if infeasible. Then $\underline s(w;y,\mathcal M)=\min\{V_{+1},V_{-1}\}$ for $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$,
         and each $V_\sigma$ is an SOCP.
-        \item If $(a^\star,b^\star,u^\star)$ is optimal for the smaller of the two programs, let $c_i=u_i^\star/b^\star$ if $b^\star\neq0$, and let
-        $(c_i)$ be any feasible point of Lemma~\ref{lem:fixed_ref_lower} otherwise. Then $\hat\nu_N=\sum_iF_i\delta_{c_i}$ is compatible and
-        $s^\star_o(\hat\nu_N;w)=\underline s_{\mathcal M}(w;y)$: the certificate is attained by a compatible measure.
+        \item Under the same assumptions, with vertices $v_{ik}$, the upper load factor is the SOCP
+        \begin{align}
+            \boxed{
+            \begin{aligned}
+            \overline s(w;y,\mathcal M_F)&=\min_{a,b,t}\ \mu\sum_{i=1}^rF_it_i
+            \quad\text{s.t.}\ \ a^\top f+b\tau=1,\ \ t_i\ge\|a+bJ(v_{ik}-o)\|_2\ \ \forall i,k,\\
+            \overline s(w;y,\mathcal M_T)&=\min_{a,b,y,z}\ \sum_{i=1}^rF_iy_i+z^\top m_1\\
+            &\qquad\text{s.t.}\ \ a^\top f+b\tau=1,\ \ y_i+z^\top v_{ik}\ge\mu\|a+bJ(v_{ik}-o)\|_2\ \ \forall i,k,
+            \end{aligned}}
+        \end{align}
+        and equivalently the primal SOCP
+        \begin{align}
+            \overline s(w;y,\mathcal M)=\max_{s,\,\lambda_{ik}\ge0,\,\rho_{ik}\in\R^2}\ s\quad\text{s.t.}\quad
+            &\textstyle\sum_k\lambda_{ik}=F_i,\quad\|\rho_{ik}\|_2\le\mu\lambda_{ik},\\
+            &\textstyle\sum_{i,k}\rho_{ik}=sf,\quad\sum_{i,k}(v_{ik}-o)\times\rho_{ik}=s\tau,\\
+            &\textstyle\sum_{i,k}\lambda_{ik}v_{ik}=m_1\quad(\mathcal M_T\text{ only}),
+        \end{align}
+        whose optimal $\lambda$ is a most favorable compatible measure (in the closure model), with friction forces $\rho_{ik}$ at its corners.
+        \item If $(a^\star,b^\star,u^\star)$ is optimal for the smaller of the two programs in (ii), let $c_i=u_i^\star/b^\star$ if $b^\star\neq0$, and let
+        $(c_i)$ be any point loads with $c_i\in\overline{P_i}$ (and $\sum_iF_ic_i=m_1$ for $\mathcal M_T$) otherwise. Then $\hat\nu_N=\sum_iF_i\delta_{c_i}$ is compatible and
+        $s^\star_o(\hat\nu_N;w)=\underline s(w;y,\mathcal M)$: the certificate is attained by a compatible measure.
+        \item (Decision rule.) If $\underline s\ge1$, every compatible normal force measure carries $w$. If $\overline s<1$, none does: whatever the actual distribution, no admissible friction
+        field balances $w$, and the contact slips (quasi-statically). If $\underline s<1\le\overline s$, the measurement does not decide. If $\mathcal M\succeq\mathcal M'$, then
+        $\underline s(w;y',\mathcal M')\le\underline s(w;y,\mathcal M)\le s_o^\star(\nu_N^\star;w)\le\overline s(w;y,\mathcal M)\le\overline s(w;y',\mathcal M')$.
         \item (Several contacts.) Let $K$ contacts act on the same rigid object, with independent measurements $y_k$ of their normal force measures
         $\nu^k_N$, the same $\mu$, and patches identified with subsets of a common plane (common coordinates $x$, torques about the common normal). Assume
-        that the wrench components out of this plane are balanced without friction. The load $w$ is then carried if $w\in\mathcal W_o(\nu^1_N)\oplus\cdots\oplus\mathcal W_o(\nu^K_N)$
-        (Minkowski sum). The certified load factor of the grasp, the infimum over all compatible $(\nu^1_N,\ldots,\nu^K_N)$ of $\max\{s\ge0:sw\in\bigoplus_k\mathcal W_o(\nu^k_N)\}$, is
+        that the wrench components out of this plane are balanced without friction. The load $w$ is then carried if $w\in\X_o(\nu^1_N)\oplus\cdots\oplus\X_o(\nu^K_N)$
+        (Minkowski sum). The certified and upper load factors of the grasp are
         \begin{align}
-            \boxed{\underline s_{\mathrm{grasp}}(w)=\inf_{q:\,\langle q,w\rangle=1}\sum_{k=1}^K\underline h^{\,o}_{\mathcal M^k}(q;y_k),}
+            \boxed{\underline s_{\mathrm{grasp}}(w)=\inf_{q:\,\langle q,w\rangle=1}\sum_{k=1}^K\underline h_o(q;y_k,\mathcal M^k),
+            \qquad
+            \overline s_{\mathrm{grasp}}(w)=\inf_{q:\,\langle q,w\rangle=1}\sum_{k=1}^K\overline h_o(q;y_k,\mathcal M^k),}
         \end{align}
-        and (ii) holds with the objectives of the $K$ contacts summed, a shared $(a,b)$, and separate variables $u^k_i$.
-        Since $\bigoplus_k\mathcal W^-_o(y_k)\subseteq\bigcap_{(\nu^k_N)}\bigoplus_k\mathcal W_o(\nu^k_N)$, this is at least the load factor of the sum of the
+        and (ii)--(iii) hold with the objectives of the $K$ contacts summed, a shared $(a,b)$, and separate variables per contact.
+        Since $\bigoplus_k\X^-_o(y_k)\subseteq\bigcap_{(\nu^k_N)}\bigoplus_k\X_o(\nu^k_N)$, $\underline s_{\mathrm{grasp}}$ is at least the load factor of the sum of the
         guaranteed sets of the individual contacts.
     \end{enumerate}
 \end{proposition}
 \begin{proof}[Proof sketch]
-    (i) Fix $\nu_N$. Since $\mathcal W_o(\nu_N)$ is convex, compact and contains $0$, $\{s\ge0:sw\in\mathcal W_o(\nu_N)\}=[0,s^\star_o(\nu_N;w)]$ with
-    $s^\star_o<\infty$. Hence $sw\in\mathcal W_o^-(y)$ if and only if $s\le s^\star_o(\nu_N;w)$ for all compatible $\nu_N$, which gives the first equality.
+    (i) Fix $\nu_N$. Since $\X_o(\nu_N)$ is convex, compact and contains $0$, $\{s\ge0:sw\in\X_o(\nu_N)\}=[0,s^\star_o(\nu_N;w)]$ with
+    $s^\star_o<\infty$. Hence $sw\in\X_o^-(y)$ if and only if $s\le s^\star_o(\nu_N;w)$ for all compatible $\nu_N$, which gives the first equality.
     A closed convex set is the set of points satisfying $\langle q,\cdot\rangle\le h(q)$ for all $q$ \cite[Section~13]{rockafellar1970convex}. For
-    $\langle q,w\rangle\le0$ this holds for every $s\ge0$, since $h_{\mathcal W_o(\nu_N)}\ge0$. Therefore
-    $s^\star_o(\nu_N;w)=\inf_{\langle q,w\rangle>0}h_{\mathcal W_o(\nu_N)}(q)/\langle q,w\rangle=\inf_{\langle q,w\rangle=1}h_{\mathcal W_o(\nu_N)}(q)$ by positive homogeneity
+    $\langle q,w\rangle\le0$ this holds for every $s\ge0$, since $h_{\X_o(\nu_N)}\ge0$. Therefore
+    $s^\star_o(\nu_N;w)=\inf_{\langle q,w\rangle>0}h_{\X_o(\nu_N)}(q)/\langle q,w\rangle=\inf_{\langle q,w\rangle=1}h_{\X_o(\nu_N)}(q)$ by positive homogeneity
     (the constraint set is nonempty since $w\neq0$). Exchanging the infima over $\nu_N$ and over $q$ gives the second equality.
+    For $\overline s$, the same argument applies to the closed convex set $\operatorname{cl}\X_o^+(y)$, which contains $0$, is bounded by Assumption~\ref{ass:mass_control}, and has support function
+    $\overline h_o$ (Proposition~\ref{prop:inner_outer}(i)).
 
-    (ii) By (i) and Lemma~\ref{lem:fixed_ref_lower}, $\underline s_{\mathcal M}(w;y)$ is the infimum of $\mu\sum_iF_i\|a+bJ(c_i-o)\|_2$ jointly over $(a,b)$
-    with $a^\top f+b\tau=1$ and over the feasible $c_i$. The objective is bilinear in $(b,c_i)$. Split the feasible set by the sign of $b$ and substitute $u_i=bc_i$.
+    (ii) By (i) and Theorems~\ref{thm:MF} and~\ref{thm:combined_lower}, $\underline s(w;y,\mathcal M)$ is the infimum of $\mu\sum_iF_i\|a+bJ(c_i-o)\|_2$ jointly over $(a,b)$
+    with $a^\top f+b\tau=1$ and over point loads $c_i\in\overline{P_i}$ (with $\sum_iF_ic_i=m_1$ for $\mathcal M_T$); for $\mathcal M_F$ the minimum over $c_i$ is attained at the closed-form minimizers of
+    Theorem~\ref{thm:MF}. The objective is bilinear in $(b,c_i)$. Split the feasible set by the sign of $b$ and substitute $u_i=bc_i$.
     For $\sigma b>0$, this is a bijection between the feasible $c_i$ and the $u_i$ with $u_i/b\in\overline{P_i}$, i.e., $\sigma(A_iu_i-b\,d_i)\le0$, and
-    $\sum_iF_iu_i=b\,f_Nc$. Moreover $bJ(c_i-o)=J(u_i-b\,o)$, so the objective is preserved. For $b=0$, the original objective is $\mu f_N\|a\|_2$ for every
+    $\sum_iF_iu_i=b\,m_1$. Moreover $bJ(c_i-o)=J(u_i-b\,o)$, so the objective is preserved. For $b=0$, the original objective is $\mu f_N\|a\|_2$ for every
     feasible $(c_i)$, and feasible points exist. In the new variables, $\sigma A_iu_i\le0$ forces $u_i=0$ because $\overline{P_i}$ is bounded, and the
     objective is again $\mu f_N\|a\|_2$. The objective is a sum of norms of affine functions and the constraints are linear, so epigraph variables give an SOCP.
 
-    (iii) $\hat\nu_N$ is compatible (converse part of Lemma~\ref{lem:taxel_barycenters}). With $q^\star=(a^\star,b^\star)$, by (i),
-    $s^\star_o(\hat\nu_N;w)\le h_{\mathcal W_o(\hat\nu_N)}(q^\star)=\mu\sum_iF_i\|a^\star+b^\star J(c_i-o)\|_2=\underline s_{\mathcal M}(w;y)\le s^\star_o(\hat\nu_N;w)$.
+    (iii) By (i) and Theorem~\ref{thm:MF}, for $\mathcal M_F$, $\overline s=\inf\mu\sum_iF_i\max_k\|a+bJ(v_{ik}-o)\|_2$ over $\langle q,w\rangle=1$, which is the stated program in epigraph form.
+    For $\mathcal M_T$, the LP of Theorem~\ref{thm:combined_upper} (with $g(v_{ik};q)$ replaced by $\|a+bJ(v_{ik}-o)\|_2$) is feasible and bounded, so by LP duality
+    $\overline h_o(q)=\min\{\sum_iF_iy_i+z^\top m_1:\ y_i+z^\top v_{ik}\ge\mu\|a+bJ(v_{ik}-o)\|_2\}$; minimizing jointly over $(q,y,z)$ gives the stated program, whose constraints are second-order cones.
+    For the primal form: by Lemmas~\ref{lem:half_open} and~\ref{lem:concentrate_spread}(ii), $\operatorname{cl}\X_o^+(y)$ is the union of the sets $\X_o$ of the corner-supported compatible measures,
+    i.e., the projection of the (compact, convex) feasible set of $(\lambda,\rho)$ onto the wrench $(\sum\rho,\sum(v-o)\times\rho)$.
 
-    (iv) For fixed measures, $\bigoplus_k\mathcal W_o(\nu^k_N)$ is convex, compact, contains $0$, and has support function $\sum_kh_{\mathcal W_o(\nu^k_N)}$.
+    (iv) $\hat\nu_N$ is compatible (Lemma~\ref{lem:concentrate_spread}(i) and its converse). With $q^\star=(a^\star,b^\star)$, by (i),
+    $s^\star_o(\hat\nu_N;w)\le h_{\X_o(\hat\nu_N)}(q^\star)=\mu\sum_iF_i\|a^\star+b^\star J(c_i-o)\|_2=\underline s(w;y,\mathcal M)\le s^\star_o(\hat\nu_N;w)$.
+
+    (v) Definitions, and Theorem~\ref{lem:monotone} for the sets.
+
+    (vi) For fixed measures, $\bigoplus_k\X_o(\nu^k_N)$ is convex, compact, contains $0$, and has support function $\sum_kh_{\X_o(\nu^k_N)}$.
     The argument of (i) applies. The compatible family is a product of the individual families, and the $k$-th term of the sum depends only on $\nu^k_N$,
-    so for fixed $q$ the infimum of the sum is the sum of the infima. For the inclusion, if $w_k\in\mathcal W^-_o(y_k)$ for each $k$, then
-    $w_k\in\mathcal W_o(\nu^k_N)$ for every compatible $\nu^k_N$, so $\sum_kw_k\in\bigoplus_k\mathcal W_o(\nu^k_N)$.
+    so for fixed $q$ the infimum (resp. supremum) of the sum is the sum of the infima (resp. suprema). For the inclusion, if $w_k\in\X^-_o(y_k)$ for each $k$, then
+    $w_k\in\X_o(\nu^k_N)$ for every compatible $\nu^k_N$, so $\sum_kw_k\in\bigoplus_k\X_o(\nu^k_N)$.
 \end{proof}
 
 \begin{remark}[On Proposition~\ref{prop:load_factor}]
 \label{rem:load_factor}
     \begin{itemize}
-        \item \textit{Why not a grid of directions.} $\underline h^{\,o}_{\mathcal M}(\cdot;y)$ is an infimum of convex functions of $q$, and is not convex in general.
-        Minimizing it over a finite set of directions gives a value $\ge\underline s_{\mathcal M}(w;y)$, which may certify a load that is not guaranteed.
-        Minimizing jointly over $q$ and the $c_i$, after the change of variables $u_i=bc_i$, gives the exact value as a convex program.
+        \item \textit{Why not a grid of directions.} $\underline h_o(\cdot;y)$ is an infimum of convex functions of $q$, and is not convex in general.
+        Minimizing it over a finite set of directions gives a value $\ge\underline s(w;y,\mathcal M)$, which may certify a load that is not guaranteed.
+        Minimizing jointly over $q$ and the point loads, after the change of variables $u_i=bc_i$, gives the exact value as a convex program.
+        The upper bound $\overline h_o(\cdot;y)$ is convex (a support function), so $\overline s$ is a convex minimization from the start.
         \item \textit{Coarse case.} With a single taxel and $o=c$ ($\mathcal M_0$), the constraint forces $c_1=c$, and (ii) gives $\underline s=\mu f_N/\|f\|_2$
-        if $\tau=0$ and $\underline s=0$ if $\tau\neq0$ (take $a=0$, $b=1/\tau$). The coarse measurement never certifies a torsional load (Theorem~\ref{thm:coarse_lower}).
-        \item \textit{Taxel boundaries.} The value is exact for the compatible family~\eqref{eq:PiMF}, defined with the taxel closures. For the stricter
-        preimage $\mathcal M_F^{-1}(y_F)$ it is a valid, possibly conservative, certificate (Lemma~\ref{lem:monotone}).
+        if $\tau=0$ and $\underline s=0$ if $\tau\neq0$ (take $a=0$, $b=1/\tau$). The coarse measurement never certifies a torsional load about the CoP (Corollary~\ref{cor:coarse_inner}).
+        \item \textit{Membership tests for general operators.} When $\overline h$ can be evaluated with a maximizing wrench (a support point of $\X^+$) but no closed form is available, e.g., through
+        moment relaxations of the GMP, the distance from $w$ to $\operatorname{cl}\X^+$ can be computed by the Frank--Wolfe method, whose linear minimization oracle is exactly this support
+        point. For the taxel measurements, (iii) is exact and cheaper.
+        \item \textit{Taxel boundaries.} The values are exact for the half-open taxels of dyadic grids (Lemma~\ref{lem:half_open}). For other partitions they are exact for the closure model and valid,
+        possibly conservative, for the half-open one (Theorem~\ref{lem:monotone}).
         \item \textit{Scope.} The certificate is quasi-static and applies to the measured state. In a feedback loop the load and the contact change between
-        decisions, which requires a separate margin. In (iv), the assumption on the out-of-plane components matters: with a free object, offset normal
+        decisions, which requires a separate margin. In (vi), the assumption on the out-of-plane components matters: with a free object, offset normal
         forces at opposing contacts create a couple about an in-plane axis that must be balanced by friction, which the planar model does not account for.
     \end{itemize}
 \end{remark}
