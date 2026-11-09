@@ -353,7 +353,9 @@ The goal is to investigate what can be known about the support of $\X(\nu_N^\sta
     \end{bmatrix},\qquad \forall \nu_N \in \mathcal M_+(P),
     \end{align}
     where the prescribed bounded Borel functions
-    $\phi_j:P\rightarrow\mathbb R$ are called the \textit{measurement functions}.
+    $\phi_j:P\rightarrow\mathbb R$ are called the \textit{measurement functions}. For example, $\phi=1$ measures the resultant normal force
+    $f_N$, $\phi(x)=x_1$ and $\phi(x)=x_2$ its first moment $m_1=f_Nc$ (the CoP in homogeneous coordinates), and the indicator of a taxel the force
+    that the taxel carries.
     In the following, we denote a measurement value (or observation) induced by the (unknown) true force measure $\nu_N^\star$ as $y = \mathcal M(\nu_N^\star) \in\mathbb R^r$.
 \end{definition}
 
@@ -429,6 +431,8 @@ and the union need not be convex. Property (iii) generalizes the concavity of Pr
     A candidate tangential wrench $w$ (about $O$) is carried by every compatible normal force measure, i.e., $w\in\X^-(y,\mathcal M)$, if and only if
     $\langle q,w\rangle\le\underline h(q;y,\mathcal M)$ for all $q$. Conversely, if $\langle q,w\rangle>\overline h(q;y,\mathcal M)$ for some $q$, then $w\notin\X^+(y,\mathcal M)$: no compatible
     measure carries $w$, and the contact slips whatever the actual pressure distribution. By Proposition~\ref{prop:inner_outer}(i), the second test is a convex membership test.
+    The sets are closed: a wrench with $\langle q,w\rangle=h_{\X(\nu_N)}(q)$ for some $q$ lies on the boundary of $\X(\nu_N)$, where the contact is at the
+    onset of sliding with twist $q$ (maximal dissipation). A strict inequality, or a margin, certifies the interior.
     Section~\ref{sec:load_factor} turns both tests into convex programs along a load direction\footnote{Because all support functions are positively homogeneous in $q$, it is sufficient
     to consider one normalized representative of each nonzero ray.}.
 \end{remark}
@@ -499,7 +503,9 @@ measurement operators.
     (iii) Immediate from the definitions.
 \end{proof}
 The characterization (ii) is pointwise: functions that agree almost everywhere with respect to area are not equivalent, since point loads see their values at single points.
-The number $r$ of measurement functions is not monotone with respect to $\succeq$, because measurement functions can be redundant.
+The number $r$ of measurement functions is not monotone with respect to $\succeq$, because measurement functions can be redundant. The operator
+without measurement functions ($r=0$, $\Pi=\mathcal M_+(P)$) is below every operator; its bounds are $0$ and $+\infty$, and it violates
+Assumption~\ref{ass:mass_control}.
 
 \begin{theorem}[Monotonicity with respect to information]
 \label{lem:monotone}
@@ -1200,7 +1206,8 @@ $h_{\X_o(\nu_N)}(q)=\mu\int_P\|a+bJ(x-o)\|_2\,d\nu_N$ and we write $\underline h
         $(c_i)$ be any point loads with $c_i\in\overline{P_i}$ (and $\sum_iF_ic_i=m_1$ for $\mathcal M_T$) otherwise. Then $\hat\nu_N=\sum_iF_i\delta_{c_i}$ is compatible and
         $s^\star_o(\hat\nu_N;w)=\underline s(w;y,\mathcal M)$: the certificate is attained by a compatible measure.
         \item (Decision rule.) If $\underline s\ge1$, every compatible normal force measure carries $w$. If $\overline s<1$, none does: whatever the actual distribution, no admissible friction
-        field balances $w$, and the contact slips (quasi-statically). If $\underline s<1\le\overline s$, the measurement does not decide. If $\mathcal M\succeq\mathcal M'$, then
+        field balances $w$, and the contact slips (quasi-statically). If $\underline s<1\le\overline s$, the measurement does not decide. At $\underline s=1$ the load is
+        carried but at the onset of sliding for the least favorable compatible measure; $\underline s>1$ gives a strict margin. If $\mathcal M\succeq\mathcal M'$, then
         $\underline s(w;y',\mathcal M')\le\underline s(w;y,\mathcal M)\le s_o^\star(\nu_N^\star;w)\le\overline s(w;y,\mathcal M)\le\overline s(w;y',\mathcal M')$.
         \item (Several contacts.) Let $K$ contacts act on the same rigid object, with independent measurements $y_k$ of their normal force measures
         $\nu^k_N$, the same $\mu$, and patches identified with subsets of a common plane (common coordinates $x$, torques about the common normal). Assume
