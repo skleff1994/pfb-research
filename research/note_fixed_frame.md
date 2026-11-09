@@ -243,3 +243,31 @@ The report `doc/experiments.tex` cites several removed labels. They are listed a
 - M_T asymptotics: how much the CoP constraint reduces the gap at high resolution.
 - Robust extension: with fixed q and F_i ∈ [F_i⁻, F_i⁺], the M_T lower bound stays an SOCP in the homogeneous (F_i, u_i). The load factor with interval F_i is bilinear in (a, F_i): still open.
 - The algebra of measurement operators (Yann's quotient space): roadmap only.
+
+## 7. Follow-up of 2026-11-09: coverage check and grid-only taxel sections
+**Coverage.** Every point of Yann's discussion file and of the meeting notes was checked against `doc/main.tex`.
+- **Covered:** all the points of §2 above.
+- **Added on 2026-11-09:**
+  - measurement-function examples (φ = 1 gives f_N, φ = x gives m_1, an indicator gives a taxel force) at the definition of a measurement operator;
+  - the operator with no measurement functions as the minimal element of the preorder;
+  - the boundary of the wrench set as the onset of sliding, with a strict margin for the interior (rem:use_bounds, decision rule);
+  - the explicit compatible-CoP set for a uniform grid: a taxel-shaped rectangle centred at the force-weighted average of the taxel centres, of diameter D (rem:cop_taxel);
+  - the meeting-notes point "rather than a partition, just define a grid" (below).
+- **His corner count** (4·inner + 2·border + corner) is the same as our 4r variables, so there is nothing to add.
+- **Deliberately not in the paper:**
+  - the algebra of measurement operators (roadmap);
+  - his g-identities, implied by lem:varignon;
+  - the K = 3 closed form (open, pending from Yann).
+
+**Grid-only taxel sections (user decision, 2026-11-09).** M_0 stays general: any compact convex patch. Sections 5–9 assume a uniform k_x × k_y grid of half-open rectangles on the sensor rectangle, which is what `pfb.TaxelGrid` implements.
+- **Removed:**
+  - the generic partition assumption and the dyadic definition (both replaced by def:grid);
+  - the closure family Π̄;
+  - the polygon notation (A_i, d_i, K_i) and the general barycentric coordinates.
+- **New:**
+  - closed-cell measures, defined inside the boundary lemma (lem:half_open, label kept);
+  - nesting iff divisibility (prop:grid_chain);
+  - bilinear spreading;
+  - box constraints in the M_T and load-factor SOCPs;
+  - rem:other_layouts, which states what carries over to convex polygonal cells and non-uniform grids, and what does not (the rate theorem and the CoP rectangle).
+- **Lost:** only the generality of the statements for non-rectangular layouts, which is kept as a remark. No result is weakened, and the code is unchanged.

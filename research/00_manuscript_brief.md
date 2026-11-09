@@ -22,9 +22,9 @@ All of these are generalized moment problems. Measurement operators are compared
 
 ## Measurement models
 - **M0:** f_N and m_1 (zeroth and first moments).
-- **M_F:** the taxel forces F_i on a half-open partition, in practice the dyadic grids G(p_x, p_y). The CoP is unknown.
+- **M_F:** the taxel forces F_i on a uniform k_x × k_y grid of half-open rectangular taxels (since 2026-11-09 the taxel sections assume grids; other layouts are covered by a remark). The CoP is unknown.
 - **M_T = M0 ∨ M_F:** both.
-- Nested grids form chains in the preorder; non-nested grids (3×3 vs 4×4) are not comparable.
+- Grids are comparable iff the cell counts divide each other (dyadic grids form chains; 3×3 vs 4×4 are not comparable).
 
 ## Main results
 1. **M0** (Thm 4.2, Cor 4.3, Thm 4.4, Cor 4.5):

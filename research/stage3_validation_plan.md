@@ -131,6 +131,7 @@ The scope, decided 2026-10-21, is to test the pipeline (sensing → certificate 
 - planar joint for the bar.
 
 ## 7. Decision log (protocol changes)
+- **2026-11-09** — Taxel sections of main.tex restricted to uniform rectangular grids (M_0 stays general); remaining points of Yann's review added (`note_fixed_frame.md` §7). Code and report numbers are unchanged.
 - **2026-11-04, Yann's review → fixed-frame reformulation** (`note_fixed_frame.md`).
   - Torques are taken about a fixed point throughout. The CoP-referenced M_F results, Prop 7.4 and the outer search are removed.
   - M_F becomes an exact closed form. The new results are the upper load factor s_up (hold / slip / undecided) and the first-order rate of tightening.
