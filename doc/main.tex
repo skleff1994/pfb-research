@@ -542,7 +542,7 @@ and Figure~\ref{fig:measurements} illustrates what each of them observes.
     \includegraphics[width=\textwidth]{measurements}
     \caption{What each measurement operator observes for the same contact ($4\times4$ taxels). $\mathcal M_0$: only $f_N$ and the CoP, the pressure
     distribution (faded) is unknown. $\mathcal M_F$: the taxel forces $F_i$ (cells filled with the mean pressure $F_i/|P_i|$), the CoP is only known to lie
-    in the weighted Minkowski average of the taxels (dashed, Remark~\ref{rem:cop_taxel}). $\mathcal M_T$: taxel forces and CoP.
+    in a taxel-shaped rectangle centered at the force-weighted average of the taxel centers (dashed, Remark~\ref{rem:cop_taxel}). $\mathcal M_T$: taxel forces and CoP.
     }
     \label{fig:measurements}
 \end{figure}
@@ -718,28 +718,24 @@ The two bounds differ in general, which shows that the coarse measurement does n
 
 The results of this section are recovered in Section~\ref{sec:MT} as the special case of a single taxel $P_1=P$.
 
-\section{Taxel measurements: preliminaries (common setting)}
+\section{Taxel grids: setting and common lemmas}
 \label{sec:taxels}
 
-We now assume that a tactile array measures the normal force carried by each taxel, with or without the coarse measurement.
+We now assume that a tactile array measures the normal force carried by each taxel, with or without the coarse measurement. Tactile arrays are
+grids of rectangular taxels, and we restrict to them; other layouts are discussed in Remark~\ref{rem:other_layouts}.
 This section fixes the setting and collects the lemmas used in Sections~\ref{sec:MF} and~\ref{sec:MT}.
 
-\begin{assumption}[Taxel partition]
-\label{ass:taxels}
-    The patch $P$ is partitioned into $r$ nonempty, pairwise disjoint, convex Borel sets $P_1,\ldots,P_r$, called \textit{taxels},
-    with $P=\bigcup_{i=1}^rP_i$. When stated, the closure of each taxel is a convex polygon
-    $\overline{P_i}=\operatorname{conv}\{v_{i1},\ldots,v_{iK_i}\}$ with vertices $v_{ik}\in\R^2$.
-\end{assumption}
-
-\begin{definition}[Dyadic taxel grids]
-\label{def:dyadic}
-    Let $P=[0,L]\times[0,\ell]$. For $p_x,p_y\in\mathbb N$, the grid $G(p_x,p_y)$ has the $2^{p_x}\times2^{p_y}$ half-open cells
-    $[k\frac{L}{2^{p_x}},(k+1)\frac{L}{2^{p_x}})\times[l\frac{\ell}{2^{p_y}},(l+1)\frac{\ell}{2^{p_y}})$, the cells of the last column and row being closed on their outer side,
-    so that they partition $P$. Each cell is a rectangle of size $w_x\times w_y=\frac{L}{2^{p_x}}\times\frac{\ell}{2^{p_y}}$, and $G(p_x,p_y)$ satisfies Assumption~\ref{ass:taxels}.
+\begin{definition}[Taxel grid]
+\label{def:grid}
+    Let $P=[0,L]\times[0,\ell]$ be the sensor area. For $k_x,k_y\ge1$, the grid $G(k_x,k_y)$ divides $P$ into $r=k_xk_y$ \textit{taxels} $P_1,\ldots,P_r$: the rectangles
+    $[\mathrm{lo}_i,\mathrm{hi}_i)$ (componentwise half-open) of size $w_x\times w_y=\frac{L}{k_x}\times\frac{\ell}{k_y}$, those of the last column and row being closed on their outer side,
+    so that every point of $P$ belongs to exactly one taxel. We write $\overline{P_i}=[\mathrm{lo}_i,\mathrm{hi}_i]$ for the closed taxel, $m_i$ for its center, $v_{i1},\ldots,v_{i4}$ for its
+    corners, and $D=\sqrt{w_x^2+w_y^2}$ for the taxel diameter. A load exactly on an edge shared by two taxels is assigned to one of them by this convention; a real sensor
+    cannot resolve it, but a pressure field with a density puts no force on edges, and Lemma~\ref{lem:half_open} shows that the convention does not change the bounds.
 \end{definition}
 
 \begin{definition}[Taxel force measurement]\label{def:MF}
-    Given the true unknown normal force measure $\nu_N^\star$ and the partition $\{P_i\}_{i=1}^r$, the \textit{taxel force measurement} is
+    Given the true unknown normal force measure $\nu_N^\star$ and a taxel grid, the \textit{taxel force measurement} is
     \begin{align}
     y_F = \mathcal M_F(\nu_N^\star) \triangleq
     \left(
@@ -747,8 +743,8 @@ This section fixes the setting and collects the lemmas used in Sections~\ref{sec
     \right),
     \end{align}
     with measurement functions $\phi_i=\mathbf 1_{P_i}$, $i=1,\ldots,r$. The measured taxel forces are denoted $F_i\triangleq\nu_N^\star(P_i)$, and $f_N=\sum_iF_i$.
-    Since $\sum_i\mathbf 1_{P_i}=1$, $\mathcal M_F$ satisfies Assumption~\ref{ass:mass_control}. For the dyadic grid $G(p_x,p_y)$ we write $\mathcal M_F(p_x,p_y)$ for this operator
-    (Yann's family $\mathcal M(T;p_x,p_y)$).
+    Since $\sum_i\mathbf 1_{P_i}=1$, $\mathcal M_F$ satisfies Assumption~\ref{ass:mass_control}. For the grid $G(k_x,k_y)$ we write $\mathcal M_F(k_x,k_y)$; the dyadic grids
+    $\mathcal M_F(2^{p_x},2^{p_y})$ are Yann's family $\mathcal M(T;p_x,p_y)$.
 \end{definition}
 
 \begin{definition}[Combined coarse and taxel force measurement]
@@ -760,62 +756,57 @@ The \textit{combined measurement} is the concatenation $\mathcal M_T\triangleq\m
     \qquad
     \Pi_{\mathcal M_T}(y_T)=\Pi_{\mathcal M_0}(y_0)\cap\Pi_{\mathcal M_F}(y_F).
 \end{align}
-For the dyadic grid $G(p_x,p_y)$ we write $\mathcal M_T(p_x,p_y)\triangleq\mathcal M_0\vee\mathcal M_F(p_x,p_y)$ (Yann's family $\mathcal M(T_c;p_x,p_y)$).
+We write $\mathcal M_T(k_x,k_y)\triangleq\mathcal M_0\vee\mathcal M_F(k_x,k_y)$ (Yann's family $\mathcal M(T_c;p_x,p_y)$ for dyadic grids).
 \end{definition}
 
 \begin{proposition}[Information chains]
 \label{prop:grid_chain}
+    Let $\ell>0$.
     \begin{enumerate}[label=(\roman*)]
-        \item If the partition $\{P'_j\}$ refines $\{P_i\}$ (each $P_i$ is a union of cells $P'_j$), then $\mathcal M_F'\succeq\mathcal M_F$ and $\mathcal M_T'\succeq\mathcal M_T$.
-        In particular, $\mathcal M_F(p_x',p_y')\succeq\mathcal M_F(p_x,p_y)$ and $\mathcal M_T(p_x',p_y')\succeq\mathcal M_T(p_x,p_y)$ whenever $p_x'\ge p_x$ and $p_y'\ge p_y$, with
-        $\mathcal M_F(0,0)$ the resultant normal force alone and $\mathcal M_T(0,0)$ equivalent to $\mathcal M_0$ (each $\succeq$ the other).
-        \item $\mathcal M_T\succeq\mathcal M_0$ and $\mathcal M_T\succeq\mathcal M_F$. If $r\ge2$ and the taxels have nonempty interiors, $\mathcal M_0$ and $\mathcal M_F$ are not comparable.
-        \item Grids that are not nested are not comparable in general: e.g.\ $3\times3$ and $4\times4$ grids of the same rectangle, or $G(p_x',p_y')$ and $G(p_x,p_y)$ with
-        $p_x'>p_x$ and $p_y'<p_y$.
+        \item $\mathcal M_F(k_x,k_y)\succeq\mathcal M_F(k_x',k_y')$ if and only if $k_x'$ divides $k_x$ and $k_y'$ divides $k_y$, and the same holds for $\mathcal M_T$. In particular, the dyadic grids
+        form chains, and $3\times3$ and $4\times4$ grids are not comparable. $\mathcal M_F(1,1)$ measures the resultant normal force alone, and $\mathcal M_T(1,1)$ is equivalent to
+        $\mathcal M_0$ (each $\succeq$ the other).
+        \item $\mathcal M_T\succeq\mathcal M_0$ and $\mathcal M_T\succeq\mathcal M_F$. If $r\ge2$, $\mathcal M_0$ and $\mathcal M_F$ are not comparable.
     \end{enumerate}
 \end{proposition}
 \begin{proof}
-    By Proposition~\ref{prop:preorder}(ii). (i) $\mathbf 1_{P_i}=\sum_{j:P'_j\subseteq P_i}\mathbf 1_{P'_j}$ pointwise, and concatenation with $\mathcal M_0$ preserves the order.
-    (ii) Proposition~\ref{prop:preorder}(iii); an indicator of a proper taxel is not affine on $P$, and $x_1$ is not constant on a taxel with nonempty interior.
-    (iii) An indicator of a cell of one grid is not constant on some cell of the other.
+    By Proposition~\ref{prop:preorder}(ii). (i) If $k_x'\mid k_x$ and $k_y'\mid k_y$, every coarse taxel is a union of fine taxels (the half-open conventions agree), so
+    $\mathbf 1_{P'_j}=\sum_{i:P_i\subseteq P'_j}\mathbf 1_{P_i}$ pointwise; concatenation with $\mathcal M_0$ preserves the order. Conversely, if $k_x'\nmid k_x$, some coarse breakpoint
+    $jL/k_x'$ lies strictly inside a fine column. Along a horizontal segment that crosses it inside one fine taxel, the indicator of a coarse taxel jumps, while every fine indicator is
+    constant and $1,x_1,x_2$ are continuous: it is not a combination of them. The same holds in $y$.
+    (ii) Proposition~\ref{prop:preorder}(iii); a taxel indicator is not affine on $P$, and $x_1$ is not constant on a taxel.
 \end{proof}
 
-\paragraph{Taxel boundaries.}
-Because the taxels are half-open, a measure that puts force on the boundary of a taxel counts it in one taxel only. The finite-dimensional formulas below are attained by measures
-that may put force on a corner owned by a neighboring taxel. We therefore introduce the \textit{closure model}
-\begin{align}
-    \label{eq:PiMF}
-    \overline\Pi_{\mathcal M_F}(y_F)&\triangleq\Bigl\{\nu_N=\sum_{i=1}^r\nu_i:\ \nu_i\in\mathcal M_+(P)\text{ supported on }\overline{P_i},\ \nu_i(\overline{P_i})=F_i\Bigr\},\\
-    \overline\Pi_{\mathcal M_T}(y_T)&\triangleq\overline\Pi_{\mathcal M_F}(y_F)\cap\Pi_{\mathcal M_0}(y_0),
-\end{align}
-which contains the compatible families (take $\nu_i$ the restriction of $\nu_N$ to $P_i$), and show that it gives the same bounds.
+\paragraph{Loads on taxel boundaries.}
+The finite-dimensional formulas below are attained by point loads that may sit on an edge or a corner owned by a neighboring taxel. We call
+$\nu_N=\sum_i\nu_i$ a \textit{closed-cell measure} for the data $(F_1,\ldots,F_r)$ if each $\nu_i\in\mathcal M_+(P)$ is carried by the closed taxel $\overline{P_i}$ and
+$\nu_i(\overline{P_i})=F_i$. Every compatible measure is one (take $\nu_i$ the restriction of $\nu_N$ to $P_i$), and the converse holds up to an arbitrarily small move:
 
-\begin{lemma}[Half-open taxels]
+\begin{lemma}[Boundary loads]
 \label{lem:half_open}
-    Let the taxels be the cells of a dyadic grid (Definition~\ref{def:dyadic}). For $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$, an observation $y=\mathcal M(\nu_N^\star)$ and every $q$,
-    the infimum and the supremum of $h_{\X(\nu_N)}(q)$ over $\Pi_{\mathcal M}(y)$ and over $\overline\Pi_{\mathcal M}(y)$ coincide.
+    Let $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$ on a taxel grid, $y=\mathcal M(\nu_N^\star)$, and let $\nu_N=\sum_i\nu_i$ be a closed-cell measure for the taxel forces of $y$ (with
+    $m_1(\nu_N)=m_1$ for $\mathcal M_T$). For every $\varepsilon\in(0,1]$ there is $\nu_N^\varepsilon\in\Pi_{\mathcal M}(y)$ with
+    $|h_{\X(\nu_N^\varepsilon)}(q)-h_{\X(\nu_N)}(q)|\le\varepsilon\mu|b|\sum_iF_i\operatorname{diam}(P_i)$ for every $q=(a,b)$. Consequently, the infimum and the supremum of $h_{\X(\nu_N)}(q)$ over
+    $\Pi_{\mathcal M}(y)$ equal those over the closed-cell measures.
 \end{lemma}
 \begin{proof}
-    One inclusion is immediate. Conversely, let $\nu_N=\sum_i\nu_i\in\overline\Pi_{\mathcal M}(y)$ and $\varepsilon\in(0,1]$. For each $i$ with $F_i>0$, let $p_i\in P_i$ be the local CoP of
-    $\nu_N^\star$ in $P_i$, which lies in the half-open rectangle $P_i$ (an average of points of $[\alpha,\beta)$ lies in $[\alpha,\beta)$), and push every mass of $\nu_i$ a fraction $\varepsilon$
-    toward it: $\nu_i^\varepsilon$ is the image of $\nu_i$ under $x\mapsto(1-\varepsilon)x+\varepsilon p_i$. For a rectangle this map sends $\overline{P_i}$ into $P_i$ coordinate-wise,
-    so $\nu_N^\varepsilon=\sum_i\nu_i^\varepsilon$ has taxel forces $F_i$. Its first moment is $(1-\varepsilon)m_1(\nu_N)+\varepsilon\sum_iF_ip_i=m_1(\nu_N)$ when $m_1(\nu_N)=m_1(\nu_N^\star)$,
-    so $\nu_N^\varepsilon\in\Pi_{\mathcal M}(y)$ in both cases. Each mass moves by at most $\varepsilon\operatorname{diam}(P_i)$, so by Lemma~\ref{lem:integrand}(ii),
-    $|h_{\X(\nu_N^\varepsilon)}(q)-h_{\X(\nu_N)}(q)|\le\varepsilon\mu|b|\sum_iF_i\operatorname{diam}(P_i)$. Let $\varepsilon\to0$.
+    For each $i$ with $F_i>0$, let $p_i$ be the local CoP of $\nu_N^\star$ in $P_i$; it lies in the half-open rectangle $P_i$, since an average of points of $[\alpha,\beta)$ lies in
+    $[\alpha,\beta)$. Let $\nu_i^\varepsilon$ be the image of $\nu_i$ under $x\mapsto(1-\varepsilon)x+\varepsilon p_i$, which maps $\overline{P_i}$ into $P_i$ coordinate-wise. Then
+    $\nu_N^\varepsilon=\sum_i\nu_i^\varepsilon$ has taxel forces $F_i$, and first moment $(1-\varepsilon)m_1(\nu_N)+\varepsilon\sum_iF_ip_i=m_1(\nu_N)$ when $m_1(\nu_N)=m_1(\nu_N^\star)$, so
+    $\nu_N^\varepsilon\in\Pi_{\mathcal M}(y)$. Each mass moves by at most $\varepsilon\operatorname{diam}(P_i)$, which gives the estimate by Lemma~\ref{lem:integrand}(ii).
 \end{proof}
-For general convex taxels, the same argument applies whenever every point of $\overline{P_i}$ can be moved into $P_i$ toward a point of $P_i$; otherwise the bounds below remain valid,
-possibly conservative, by Theorem~\ref{lem:monotone} applied to the larger closure family.
 
 \begin{lemma}[Concentration and spreading]
 \label{lem:concentrate_spread}
-    Under Assumption~\ref{ass:taxels}, let $\nu_N=\sum_i\nu_i\in\overline\Pi_{\mathcal M_F}(y_F)$, with local first moments $u_i\triangleq\int x\,d\nu_i(x)$.
+    Let $\nu_N=\sum_i\nu_i$ be a closed-cell measure, with local first moments $u_i\triangleq\int x\,d\nu_i(x)$.
     \begin{enumerate}[label=(\roman*)]
-        \item \textit{Concentration.} For $F_i>0$, $c_i\triangleq u_i/F_i\in\overline{P_i}$, and the measure $\nu_N^{c}\triangleq\sum_{i:F_i>0}F_i\delta_{c_i}$ belongs to
-        $\overline\Pi_{\mathcal M_F}(y_F)$, has the first moment of $\nu_N$, and
+        \item \textit{Concentration.} For $F_i>0$, $c_i\triangleq u_i/F_i\in\overline{P_i}$, and the closed-cell measure $\nu_N^{c}\triangleq\sum_{i:F_i>0}F_i\delta_{c_i}$ has the first moment of
+        $\nu_N$ and
         \begin{align}
             \X(\nu_N^{c})\subseteq\X(\nu_N).
         \end{align}
-        \item \textit{Spreading.} If the closures are polygons, there are corner weights $\lambda_{ik}\ge0$ with $\sum_k\lambda_{ik}=F_i$ and $\sum_{i,k}\lambda_{ik}v_{ik}=m_1(\nu_N)$
+        If $\nu_N$ is compatible ($\nu_i$ its restriction to $P_i$), then $c_i\in P_i$ and $\nu_N^c$ is compatible.
+        \item \textit{Spreading.} There are corner weights $\lambda_{ik}\ge0$ with $\sum_k\lambda_{ik}=F_i$ and $\sum_{i,k}\lambda_{ik}v_{ik}=m_1(\nu_N)$
         such that the corner-supported measure $\nu_N^{s}\triangleq\sum_{i,k}\lambda_{ik}\delta_{v_{ik}}$ satisfies
         \begin{align}
             \X(\nu_N)\subseteq\X(\nu_N^{s}).
@@ -826,11 +817,12 @@ possibly conservative, by Theorem~\ref{lem:monotone} applied to the larger closu
 \end{lemma}
 \begin{proof}
     We use the description of $\X(\nu_N)$ by tangential measures $\nu_T$ with $\|\nu_T(E)\|_2\le\mu\nu_N(E)$ (footnote to~\eqref{eq:coulomb_measure}).
-    (i) $c_i\in\overline{P_i}$ since $\overline{P_i}$ is closed and convex. A wrench of $\nu_N^c$ is given by vectors $\gamma_i\in B(0,\mu)$ at the atoms: $(\sum_iF_i\gamma_i,\sum_ic_i\times F_i\gamma_i)$.
-    The tangential measure $\nu_T=\sum_i\gamma_i\nu_i$ is admissible for $\nu_N$, with resultant force $\sum_iF_i\gamma_i$ and moment $\sum_iu_i\times\gamma_i$, the same wrench.
-    (ii) Choose measurable barycentric coordinates $\alpha_{ik}(x)\ge0$ on $\overline{P_i}$, with $\sum_k\alpha_{ik}=1$ and $\sum_k\alpha_{ik}(x)v_{ik}=x$ (e.g.\ bilinear coordinates on a
-    rectangle), and let $\lambda_{ik}=\int\alpha_{ik}\,d\nu_i$, which has the stated sums. A wrench of $\nu_N$ is given by an admissible field $\gamma_T$; set
-    $\rho_{ik}=\int\alpha_{ik}\gamma_T\,d\nu_i$. Then $\|\rho_{ik}\|_2\le\mu\lambda_{ik}$, $\sum_{i,k}\rho_{ik}=f_T$ and
+    (i) $c_i$ is an average of points of $\overline{P_i}$ (of $P_i$ if $\nu_N$ is compatible). A wrench of $\nu_N^c$ is given by vectors $\gamma_i\in B(0,\mu)$ at the atoms:
+    $(\sum_iF_i\gamma_i,\sum_ic_i\times F_i\gamma_i)$. The tangential measure $\nu_T=\sum_i\gamma_i\nu_i$ is admissible for $\nu_N$, with resultant force $\sum_iF_i\gamma_i$ and moment
+    $\sum_iu_i\times\gamma_i$, the same wrench.
+    (ii) On $\overline{P_i}$, let $t=(x_1-\mathrm{lo}_{i,1})/w_x$ and $s=(x_2-\mathrm{lo}_{i,2})/w_y$, and let $\alpha_{ik}(x)$ be the bilinear weights $(1-t)(1-s)$, $t(1-s)$, $ts$, $(1-t)s$ of the
+    corners, so that $\alpha_{ik}\ge0$, $\sum_k\alpha_{ik}=1$ and $\sum_k\alpha_{ik}(x)v_{ik}=x$. Let $\lambda_{ik}=\int\alpha_{ik}\,d\nu_i$, which has the stated sums. A wrench of $\nu_N$ is given
+    by an admissible field $\gamma_T$; set $\rho_{ik}=\int\alpha_{ik}\gamma_T\,d\nu_i$. Then $\|\rho_{ik}\|_2\le\mu\lambda_{ik}$, $\sum_{i,k}\rho_{ik}=f_T$ and
     $\sum_{i,k}v_{ik}\times\rho_{ik}=\sum_i\int(\sum_k\alpha_{ik}(x)v_{ik})\times\gamma_T(x)\,d\nu_i(x)=\tau_N$, so the corner forces $\rho_{ik}$ realize the same wrench for $\nu_N^s$.
 \end{proof}
 Spreading is the reduction to the extreme points of the patch in Yann's draft (his Eq.~(33) and Proposition~4.4), applied taxel by taxel and at the level of sets.
@@ -845,8 +837,7 @@ Spreading is the reduction to the extreme points of the patch in Yann's draft (h
         \item \textit{Upper bounds = ``spread to corners''.} Splitting each mass among the corners of its taxel, with weights whose average position is the mass's position, keeps the
         taxel forces and the first moment, and every wrench of the original measure remains available. Needed for all upper bounds: $\mathcal M_0$
         (Corollary~\ref{cor:coarse_upper_polygon}, corners of $P$), $\mathcal M_F$ (Theorem~\ref{thm:MF}) and $\mathcal M_T$ (Theorem~\ref{thm:combined_upper}).
-        \item \textit{Boundaries.} A corner of a half-open taxel may belong to its neighbor; Lemma~\ref{lem:half_open} shows that corner-supported measures nevertheless give the
-        exact values.
+        \item \textit{Boundaries.} A corner of a taxel may belong to its neighbor; by Lemma~\ref{lem:half_open}, corner-supported measures nevertheless give the exact values.
     \end{itemize}
 \end{remark}
 
@@ -864,10 +855,16 @@ Spreading is the reduction to the extreme points of the patch in Yann's draft (h
 
 \begin{remark}[Compatible CoPs]
 \label{rem:cop_taxel}
-    In the closure model, the first moments compatible with $y_F$ form the Minkowski sum $\sum_iF_i\overline{P_i}$, by Lemma~\ref{lem:concentrate_spread}(i) and its converse
-    ($\sum_iF_i\delta_{c_i}$ is compatible for any $c_i\in\overline{P_i}$). For $f_N>0$ the compatible CoPs form the weighted Minkowski average $\sum_i\frac{F_i}{f_N}\overline{P_i}$, a
-    convex set of diameter at most $\sum_i\frac{F_i}{f_N}\operatorname{diam}(P_i)$. The bounds do not use this set; it is shown in the figures, and an observation $y_T$ is consistent only if
-    $m_1\in\sum_iF_i\overline{P_i}$.
+    The first moments of the closed-cell measures for $y_F$ form the Minkowski sum $\sum_iF_i\overline{P_i}$, by Lemma~\ref{lem:concentrate_spread}(i) and its converse
+    ($\sum_iF_i\delta_{c_i}$ is a closed-cell measure for any $c_i\in\overline{P_i}$). Since the closed taxels are translates $m_i+R_0$ of one rectangle
+    $R_0=[-\frac{w_x}{2},\frac{w_x}{2}]\times[-\frac{w_y}{2},\frac{w_y}{2}]$, this is, for $f_N>0$ and in terms of the CoP,
+    \begin{align}
+        \sum_{i=1}^r\frac{F_i}{f_N}\,\overline{P_i}=\bar c_F+R_0,
+        \qquad
+        \bar c_F\triangleq\frac{1}{f_N}\sum_{i=1}^rF_im_i:
+    \end{align}
+    a taxel-shaped rectangle centered at the force-weighted average of the taxel centers (Yann's observation), of diameter $D$ whatever the forces. The compatible CoPs are dense in it.
+    The bounds do not use this set; it is shown in the figures, and an observation $y_T$ is consistent only if its CoP lies in $\bar c_F+R_0$.
 \end{remark}
 
 \section{$\mathcal{M}_F$ case (taxel forces)}
@@ -878,27 +875,26 @@ Without the first-moment constraint, the taxels decouple and both bounds have cl
 
 \begin{theorem}[Exact bounds for taxel force measurements]
 \label{thm:MF}
-    Under Assumption~\ref{ass:taxels} with polygonal closures and half-open dyadic cells (or the closure model), for every $q=(a,b)\in\R^2\times\R$,
+    On a taxel grid, for every $q=(a,b)\in\R^2\times\R$,
     \begin{align}
         \label{eq:MF_bounds}
         \boxed{
         \underline h(q;y_F,\mathcal M_F)=\mu\sum_{i=1}^rF_i\min_{x\in\overline{P_i}}\|a+bJx\|_2,
         \qquad
-        \overline h(q;y_F,\mathcal M_F)=\mu\sum_{i=1}^rF_i\max_{k}\|a+bJv_{ik}\|_2.}
+        \overline h(q;y_F,\mathcal M_F)=\mu\sum_{i=1}^rF_i\max_{k=1,\ldots,4}\|a+bJv_{ik}\|_2.}
     \end{align}
-    For $b\neq0$, with the instantaneous center of rotation $p=Ja/b$, these are $\mu|b|\sum_iF_i\operatorname{dist}(p,\overline{P_i})$ and $\mu|b|\sum_iF_i\max_k\|v_{ik}-p\|_2$.
-    For a rectangular taxel with center $m_i$ and sides $w_x\times w_y$, and $\Delta=m_i-p$,
+    For $b\neq0$, with the instantaneous center of rotation $p=Ja/b$ and $\Delta_i=m_i-p$, these are $\mu|b|\sum_iF_i\,d_i^{\min}$ and $\mu|b|\sum_iF_i\,d_i^{\max}$, with
     \begin{align}
         \label{eq:MF_rectangle}
-        \min_{x\in\overline{P_i}}\|x-p\|_2&=\left\|\left(\left(|\Delta_1|-\tfrac{w_x}{2}\right)_+,\left(|\Delta_2|-\tfrac{w_y}{2}\right)_+\right)\right\|_2,\\
-        \max_{x\in\overline{P_i}}\|x-p\|_2&=\left\|\left(|\Delta_1|+\tfrac{w_x}{2},|\Delta_2|+\tfrac{w_y}{2}\right)\right\|_2.
+        d_i^{\min}&=\min_{x\in\overline{P_i}}\|x-p\|_2=\left\|\left(\left(|\Delta_{i,1}|-\tfrac{w_x}{2}\right)_+,\left(|\Delta_{i,2}|-\tfrac{w_y}{2}\right)_+\right)\right\|_2,\\
+        d_i^{\max}&=\max_{x\in\overline{P_i}}\|x-p\|_2=\left\|\left(|\Delta_{i,1}|+\tfrac{w_x}{2},|\Delta_{i,2}|+\tfrac{w_y}{2}\right)\right\|_2.
     \end{align}
     For $b=0$ both bounds equal $\mu f_N\|a\|_2$.
 \end{theorem}
 \begin{proof}
-    By Lemma~\ref{lem:half_open}, we may optimize over $\overline\Pi_{\mathcal M_F}(y_F)$, which is the product of the families $\{\nu_i\text{ on }\overline{P_i},\ \nu_i(\overline{P_i})=F_i\}$, and the
+    By Lemma~\ref{lem:half_open}, we may optimize over the closed-cell measures, a product of the families $\{\nu_i\text{ on }\overline{P_i},\ \nu_i(\overline{P_i})=F_i\}$, and the
     objective $\mu\sum_i\int g\,d\nu_i$ is a sum of one term per family. For each term, $F_i\min_{\overline{P_i}}g\le\int g\,d\nu_i\le F_i\max_{\overline{P_i}}g$, with equality for a point load at a
-    minimizer or a maximizer; the maximum of the convex function $g(\cdot;q)$ over a polygon is attained at a vertex. The rectangle formulas are the distance from $p$ to the rectangle and
+    minimizer or a maximizer; the maximum of the convex function $g(\cdot;q)$ over a rectangle is attained at a corner. The closed forms are the distance from $p$ to the rectangle and
     to its farthest corner.
 \end{proof}
 
@@ -919,7 +915,7 @@ The taxel constraints act on each taxel separately, but the first-moment constra
 
 \begin{theorem}[Exact lower bound for combined measurements]
 \label{thm:combined_lower}
-    Under Assumption~\ref{ass:taxels} with half-open dyadic cells (or the closure model), given $y_T=(f_N,m_1,F_1,\ldots,F_r)=\mathcal M_T(\nu_N^\star)$, for every $q=(a,b)$,
+    On a taxel grid, given $y_T=(f_N,m_1,F_1,\ldots,F_r)=\mathcal M_T(\nu_N^\star)$, for every $q=(a,b)$,
     \begin{align}
         \label{eq:combined_lower_reduction}
         \boxed{
@@ -930,25 +926,25 @@ The taxel constraints act on each taxel separately, but the first-moment constra
         \sum_{i=1}^r
         \left\|F_ia+bJu_i\right\|_2\\
         \text{subject to}\quad&
-        u_i\in F_i\overline{P_i},
+        F_i\,\mathrm{lo}_i\le u_i\le F_i\,\mathrm{hi}_i,
         \qquad i=1,\ldots,r,\\
         &
         \sum_{i=1}^ru_i=m_1.
         \end{aligned}}
     \end{align}
-    The variables are the local first moments; for $F_i>0$, $u_i=F_ic_i$ with $c_i\in\overline{P_i}$ the local CoP, and the objective is $\mu\sum_iF_i\,g(c_i;q)$, while $F_i=0$ forces $u_i=0$.
-    The problem is convex, and an SOCP when the closures are polygons $\{x:A_ix\le d_i\}$, since $u_i\in F_i\overline{P_i}$ reads $A_iu_i\le F_id_i$.
+    The variables are the local first moments (inequalities componentwise); for $F_i>0$, $u_i=F_ic_i$ with $c_i\in\overline{P_i}$ the local CoP, and the objective is
+    $\mu\sum_iF_i\,g(c_i;q)$, while $F_i=0$ forces $u_i=0$. The problem is an SOCP.
 \end{theorem}
 \begin{proof}
-    By Lemma~\ref{lem:half_open}, we may use the closure model.
-    ($\ge$) For $\nu_N=\sum_i\nu_i\in\overline\Pi_{\mathcal M_T}(y_T)$, the local first moments $u_i$ are feasible, and $\int g\,d\nu_i\ge\|F_ia+bJu_i\|_2$ by Lemma~\ref{lem:integrand}(iii)
-    applied to $\nu_i$. ($\le$) For feasible $u_i$, the concentrated measure $\sum_{i:F_i>0}F_i\delta_{u_i/F_i}$ is compatible and attains the objective.
-    The feasible set is compact and nonempty (it contains the local first moments of $\nu_N^\star$), and the objective is convex and continuous.
+    ($\ge$) For a compatible $\nu_N$, the local first moments $u_i=\int_{P_i}x\,d\nu_N$ are feasible, and $\int_{P_i}g\,d\nu_N\ge\|F_ia+bJu_i\|_2$ by Lemma~\ref{lem:integrand}(iii)
+    applied to the restriction of $\nu_N$ to $P_i$. ($\le$) For feasible $u_i$, the concentrated measure $\sum_{i:F_i>0}F_i\delta_{u_i/F_i}$ is a closed-cell measure with first moment
+    $m_1$ that attains the objective; by Lemma~\ref{lem:half_open}, compatible measures come arbitrarily close.
+    The feasible set is compact and nonempty (it contains the local first moments of $\nu_N^\star$), and the objective is convex and continuous; epigraph variables give an SOCP.
 \end{proof}
 
 \begin{theorem}[Exact upper bound for combined measurements]
 \label{thm:combined_upper}
-    Under the assumptions of Theorem~\ref{thm:combined_lower}, with polygonal closures $\overline{P_i}=\operatorname{conv}\{v_{i1},\ldots,v_{iK_i}\}$, for every $q=(a,b)$,
+    Under the assumptions of Theorem~\ref{thm:combined_lower}, for every $q=(a,b)$,
     \begin{align}
         \label{eq:combined_upper_reduction}
         \boxed{
@@ -956,30 +952,30 @@ The taxel constraints act on each taxel separately, but the first-moment constra
         \overline h(q;y_T,\mathcal M_T)
         =
         \mu\max_{\lambda_{ik}\geq0}\quad&
-        \sum_{i=1}^r\sum_{k=1}^{K_i}
+        \sum_{i=1}^r\sum_{k=1}^{4}
         \lambda_{ik}
         \left\|a+bJv_{ik}\right\|_2\\
         \text{subject to}\quad&
-        \sum_{k=1}^{K_i}\lambda_{ik}=F_i,
+        \sum_{k=1}^{4}\lambda_{ik}=F_i,
         \qquad i=1,\ldots,r,\\
         &
-        \sum_{i=1}^r\sum_{k=1}^{K_i}
+        \sum_{i=1}^r\sum_{k=1}^{4}
         \lambda_{ik}v_{ik}=m_1.
         \end{aligned}}
     \end{align}
     This is a linear program, and an optimal solution exists with at most $r+2$ nonzero weights.
 \end{theorem}
 \begin{proof}
-    By Lemma~\ref{lem:half_open}, we may use the closure model.
-    ($\le$) For $\nu_N\in\overline\Pi_{\mathcal M_T}(y_T)$, Lemma~\ref{lem:concentrate_spread}(ii) gives a feasible $\lambda$ with $h_{\X(\nu_N)}(q)\le h_{\X(\nu_N^s)}(q)$, which is the objective of $\lambda$.
-    ($\ge$) For a feasible $\lambda$, the corner-supported measure $\sum_{i,k}\lambda_{ik}\delta_{v_{ik}}$ is compatible and attains the objective.
+    ($\le$) For a compatible $\nu_N$, Lemma~\ref{lem:concentrate_spread}(ii) gives a feasible $\lambda$ with $h_{\X(\nu_N)}(q)\le h_{\X(\nu_N^s)}(q)$, which is the objective of $\lambda$.
+    ($\ge$) For a feasible $\lambda$, the corner-supported measure $\sum_{i,k}\lambda_{ik}\delta_{v_{ik}}$ is a closed-cell measure with first moment $m_1$ that attains the objective; by
+    Lemma~\ref{lem:half_open}, compatible measures come arbitrarily close.
     The LP is feasible (by spreading $\nu_N^\star$) and bounded, and a basic optimal solution has at most as many nonzero entries as equality constraints, i.e., $r+2$.
 \end{proof}
 
 \begin{remark}[Recovering the coarse and taxel-force cases]
 \label{rem:MT_special}
-    For a single taxel $P_1=P$, the constraint of~\eqref{eq:combined_lower_reduction} forces $u_1=m_1$, and Theorem~\ref{thm:combined_lower} reduces to Theorem~\ref{thm:coarse_lower};
-    Theorem~\ref{thm:combined_upper} reduces to Corollary~\ref{cor:coarse_upper_polygon}, with $r+2=3$ nonzero weights.
+    For a single taxel ($k_x=k_y=1$), the constraint of~\eqref{eq:combined_lower_reduction} forces $u_1=m_1$, and Theorem~\ref{thm:combined_lower} reduces to Theorem~\ref{thm:coarse_lower};
+    Theorem~\ref{thm:combined_upper} reduces to Corollary~\ref{cor:coarse_upper_polygon} for the rectangle $P$, with $r+2=3$ nonzero weights.
     Dropping the first-moment constraint in~\eqref{eq:combined_lower_reduction} and~\eqref{eq:combined_upper_reduction} decouples the taxels and gives the $\mathcal M_F$ bounds of
     Theorem~\ref{thm:MF}. Consistently with Theorem~\ref{lem:monotone} and $\mathcal M_T\succeq\mathcal M_F$, the $\mathcal M_T$ bounds lie between the $\mathcal M_F$ bounds:
     \begin{align}
@@ -987,6 +983,20 @@ The taxel constraints act on each taxel separately, but the first-moment constra
         \underline h(q;y_F,\mathcal M_F)\le\underline h(q;y_T,\mathcal M_T)\le\overline h(q;y_T,\mathcal M_T)\le\overline h(q;y_F,\mathcal M_F).
     \end{align}
     The difference is the value of measuring the CoP in addition to the taxel forces.
+\end{remark}
+
+\begin{remark}[Other taxel layouts]
+\label{rem:other_layouts}
+    The restriction to uniform rectangular grids only simplifies the statements.
+    \begin{itemize}
+        \item \textit{Non-uniform rectangular grids and convex polygonal cells} (e.g.\ hexagonal arrays): Lemma~\ref{lem:concentrate_spread} holds with barycentric coordinates of the cell
+        (after a triangulation) instead of bilinear ones. Theorems~\ref{thm:MF}, \ref{thm:combined_lower} and~\ref{thm:combined_upper} hold with the minimum over the cell, the maximum over its
+        vertices, the constraint $u_i\in F_i\overline{P_i}$ (linear for a polygon) and the LP over all vertices, again with at most $r+2$ nonzero weights.
+        \item \textit{Boundaries:} Lemma~\ref{lem:half_open} needs that each closed cell can be pushed into its own cell toward an interior point, which holds for half-open
+        rectangles. Otherwise the formulas are the exact bounds of the closed-cell measures, which are valid and possibly conservative for the actual cells by Theorem~\ref{lem:monotone}.
+        \item \textit{Refinement:} a partition that refines another is more informative (Proposition~\ref{prop:preorder}(ii)). Theorem~\ref{thm:rate} and the rectangle of
+        Remark~\ref{rem:cop_taxel} use uniform rectangular cells.
+    \end{itemize}
 \end{remark}
 
 \section{Comparison of measurements and tightening under refinement}
@@ -1026,8 +1036,8 @@ with $\underline h(q;y_0,\mathcal M_0)=\mu\|f_Na+bJm_1\|_2$. The bounds of $\mat
 
 \begin{proposition}[Tightening under taxel refinement]
 \label{prop:taxel_refinement_MF}
-Let $\mathcal M_F'$ and $\mathcal M_T'$ be the taxel-force and combined measurements of a partition $\{P_j'\}$ that refines $\{P_i\}$, e.g.\ $G(p_x',p_y')$ and $G(p_x,p_y)$ with
-$p_x'\ge p_x$, $p_y'\ge p_y$. Then, for every $q$ and $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$, with $y=\mathcal M(\nu_N^\star)$ and $y'=\mathcal M'(\nu_N^\star)$,
+Let $\mathcal M_F'$, $\mathcal M_T'$ and $\mathcal M_F$, $\mathcal M_T$ be the taxel-force and combined measurements of the grids $G(k_x',k_y')$ and $G(k_x,k_y)$, with $k_x\mid k_x'$ and
+$k_y\mid k_y'$ (e.g.\ dyadic grids, each doubling the previous one). Then, for every $q$ and $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$, with $y=\mathcal M(\nu_N^\star)$ and $y'=\mathcal M'(\nu_N^\star)$,
 \begin{align}
 \boxed{
 \underline h(q;y,\mathcal M)
@@ -1045,8 +1055,8 @@ and the guaranteed sets grow and the possible sets shrink.
 \begin{proof}
     Proposition~\ref{prop:grid_chain}(i) and Theorem~\ref{lem:monotone}.
 \end{proof}
-The monotonicity is associated with nested partitions, not with the number of taxels $r$: a $3\times3$ and a $4\times4$ grid carry different information
-(Proposition~\ref{prop:grid_chain}(iii)), and nothing guarantees that the second gives tighter bounds. The gap bounds below, on the other hand, only require small taxel diameters.
+The monotonicity is associated with nested grids, not with the number of taxels $r$: a $3\times3$ and a $4\times4$ grid carry different information
+(Proposition~\ref{prop:grid_chain}(i)), and nothing guarantees that the second gives tighter bounds. The gap bounds below, on the other hand, only require small taxel diameters.
 
 \begin{proposition}[Resolution-dependent gap bounds]
 \label{prop:taxel_resolution_MT}
@@ -1070,8 +1080,8 @@ F_i\operatorname{diam}(P_i)
 \max_i\operatorname{diam}(P_i),
 \end{aligned}}
 \end{align}
-with equality in the first inequality for $\mathcal M_F$. Hence, along any sequence of taxel partitions with
-$\max_i\operatorname{diam}(P_i)\rightarrow0$, the four bounds of $\mathcal M_F$ and $\mathcal M_T$ converge to $h_{\X(\nu_N^\star)}(q)$.
+with equality in the first inequality for $\mathcal M_F$. Hence, along any sequence of taxel grids with
+taxel diameter $D\rightarrow0$, the four bounds of $\mathcal M_F$ and $\mathcal M_T$ converge to $h_{\X(\nu_N^\star)}(q)$.
 \end{proposition}
 \begin{proof}
     For $\mathcal M_F$ the gap is the difference of the two closed forms of Theorem~\ref{thm:MF}; for $\mathcal M_T$ it is smaller, by~\eqref{eq:cellwise_MT}. By Lemma~\ref{lem:integrand}(ii),
@@ -1084,7 +1094,7 @@ $u(x)=(x-p)/\|x-p\|_2$ the unit radial direction at $x\neq p$.
 
 \begin{theorem}[First-order rate of tightening]
 \label{thm:rate}
-    Let $P$ be a rectangle partitioned into a uniform grid of closed-open cells of size $w_x\times w_y$ (e.g.\ $G(p_x,p_y)$), with cell diameter $D=\sqrt{w_x^2+w_y^2}$, and let $\nu_N^\star$ have a
+    Consider a taxel grid $G(k_x,k_y)$ (Definition~\ref{def:grid}), with taxels of size $w_x\times w_y$ and diameter $D=\sqrt{w_x^2+w_y^2}$, and let $\nu_N^\star$ have a
     density $\rho_N\le\bar\rho$ with respect to area. Then, for every twist $q=(a,b)$ with $b\neq0$,
     \begin{align}
         \label{eq:rate}
@@ -1100,7 +1110,7 @@ $u(x)=(x-p)/\|x-p\|_2$ the unit radial direction at $x\neq p$.
         \overline h(q;y_F,\mathcal M_F)-\underline h(q;y_F,\mathcal M_F)=\mu|b|\,C_{\nu}(p)\,h+O(h^2),\\
         C_\nu(p)\triangleq\int_P\left(|u_1|+|u_2|\right)d\nu_N^\star\in\left[f_N,\sqrt2f_N\right],
     \end{align}
-    so that, if $f_N>0$, each joint dyadic refinement $G(p,p)\to G(p+1,p+1)$ divides the $\mathcal M_F$ gap by $2+O(h)$.
+    so that, if $f_N>0$, doubling $k_x$ and $k_y$ divides the $\mathcal M_F$ gap by $2+O(h)$.
 \end{theorem}
 \begin{proof}
     By Theorem~\ref{thm:MF}, the gap is $\mu|b|\sum_CF_Ce_C$, where the sum is over the cells, $F_C=\nu_N^\star(C)$, and $e_C=\max_{\overline C}d-\min_{\overline C}d$ with $d(x)=\|x-p\|_2$.
@@ -1126,7 +1136,7 @@ $u(x)=(x-p)/\|x-p\|_2$ the unit radial direction at $x\neq p$.
         \item In terms of the diameter $D=\sqrt2h$ of square cells, the $\mathcal M_F$ gap is $\frac{C_\nu(p)}{\sqrt2f_N}\,\mu|b|f_ND+O(D^2)$, between $\frac1{\sqrt2}$ and $1$ times the bound of
         Proposition~\ref{prop:taxel_resolution_MT}: that bound is sharp up to a factor at most $\sqrt2$. The constant $C_\nu(p)$ depends on how the load is distributed around the center of rotation,
         and is largest when the load is seen from $p$ along the diagonals of the grid.
-        \item Refining in one direction only, $G(p_x,p_y)\to G(p_x+1,p_y)$, halves the term $\int|u_1|\,d\nu\,w_x$ only: the gain depends on the direction of the load seen from $p$.
+        \item Refining in one direction only, $G(k_x,k_y)\to G(2k_x,k_y)$, halves the term $\int|u_1|\,d\nu\,w_x$ only: the gain depends on the direction of the load seen from $p$.
         \item The bounded density excludes point loads; for measures with concentrated loads near the cell boundaries, one refinement step can leave the gap almost unchanged at coarse
         resolution.
         \item The same first-order term bounds the $\mathcal M_T$ gap from above, by~\eqref{eq:cellwise_MT}. How much the first-moment constraint reduces the gap at high resolution, i.e., the value of
@@ -1172,19 +1182,19 @@ $h_{\X_o(\nu_N)}(q)=\mu\int_P\|a+bJ(x-o)\|_2\,d\nu_N$ and we write $\underline h
             \overline s(w;y,\mathcal M)&=\inf_{q:\,\langle q,w\rangle=1}\overline h_o(q;y,\mathcal M).
             \end{aligned}}
         \end{align}
-        \item Under Assumption~\ref{ass:taxels} with polygonal closures $\overline{P_i}=\{x:A_ix\le d_i\}$, for $\sigma\in\{-1,+1\}$ let
+        \item On a taxel grid (Definition~\ref{def:grid}), for $\sigma\in\{-1,+1\}$ let
         \begin{align}
             \boxed{
             \begin{aligned}
             V_\sigma\triangleq\mu\inf_{a\in\R^2,\,b\in\R,\,u_i\in\R^2}\quad&\sum_{i=1}^rF_i\left\|a+J(u_i-b\,o)\right\|_2\\
             \text{subject to}\quad&a^\top f+b\tau=1,\qquad\sigma b\ge0,\\
-            &\sigma\left(A_iu_i-b\,d_i\right)\le0,\qquad i=1,\ldots,r,\\
+            &\sigma\left(u_i-b\,\mathrm{lo}_i\right)\ge0,\quad\sigma\left(b\,\mathrm{hi}_i-u_i\right)\ge0,\qquad i=1,\ldots,r,\\
             &\textstyle\sum_{i=1}^rF_iu_i=b\,m_1\qquad(\mathcal M_T\text{ only}),
             \end{aligned}}
         \end{align}
         with $V_\sigma=+\infty$ if infeasible. Then $\underline s(w;y,\mathcal M)=\min\{V_{+1},V_{-1}\}$ for $\mathcal M\in\{\mathcal M_F,\mathcal M_T\}$,
         and each $V_\sigma$ is an SOCP.
-        \item Under the same assumptions, with vertices $v_{ik}$, the upper load factor is the SOCP
+        \item Under the same assumptions, with the taxel corners $v_{ik}$, the upper load factor is the SOCP
         \begin{align}
             \boxed{
             \begin{aligned}
@@ -1201,10 +1211,10 @@ $h_{\X_o(\nu_N)}(q)=\mu\int_P\|a+bJ(x-o)\|_2\,d\nu_N$ and we write $\underline h
             &\textstyle\sum_{i,k}\rho_{ik}=sf,\quad\sum_{i,k}(v_{ik}-o)\times\rho_{ik}=s\tau,\\
             &\textstyle\sum_{i,k}\lambda_{ik}v_{ik}=m_1\quad(\mathcal M_T\text{ only}),
         \end{align}
-        whose optimal $\lambda$ is a most favorable compatible measure (in the closure model), with friction forces $\rho_{ik}$ at its corners.
+        whose optimal $\lambda$ is a most favorable closed-cell measure, with friction forces $\rho_{ik}$ at its corners.
         \item If $(a^\star,b^\star,u^\star)$ is optimal for the smaller of the two programs in (ii), let $c_i=u_i^\star/b^\star$ if $b^\star\neq0$, and let
-        $(c_i)$ be any point loads with $c_i\in\overline{P_i}$ (and $\sum_iF_ic_i=m_1$ for $\mathcal M_T$) otherwise. Then $\hat\nu_N=\sum_iF_i\delta_{c_i}$ is compatible and
-        $s^\star_o(\hat\nu_N;w)=\underline s(w;y,\mathcal M)$: the certificate is attained by a compatible measure.
+        $(c_i)$ be any point loads with $c_i\in\overline{P_i}$ (and $\sum_iF_ic_i=m_1$ for $\mathcal M_T$) otherwise. Then $\hat\nu_N=\sum_iF_i\delta_{c_i}$ is a closed-cell measure with
+        $s^\star_o(\hat\nu_N;w)=\underline s(w;y,\mathcal M)$: the certificate is attained, by a compatible measure when each $c_i$ lies in its own taxel.
         \item (Decision rule.) If $\underline s\ge1$, every compatible normal force measure carries $w$. If $\overline s<1$, none does: whatever the actual distribution, no admissible friction
         field balances $w$, and the contact slips (quasi-statically). If $\underline s<1\le\overline s$, the measurement does not decide. At $\underline s=1$ the load is
         carried but at the onset of sliding for the least favorable compatible measure; $\underline s>1$ gives a strict margin. If $\mathcal M\succeq\mathcal M'$, then
@@ -1236,18 +1246,18 @@ $h_{\X_o(\nu_N)}(q)=\mu\int_P\|a+bJ(x-o)\|_2\,d\nu_N$ and we write $\underline h
     (ii) By (i) and Theorems~\ref{thm:MF} and~\ref{thm:combined_lower}, $\underline s(w;y,\mathcal M)$ is the infimum of $\mu\sum_iF_i\|a+bJ(c_i-o)\|_2$ jointly over $(a,b)$
     with $a^\top f+b\tau=1$ and over point loads $c_i\in\overline{P_i}$ (with $\sum_iF_ic_i=m_1$ for $\mathcal M_T$); for $\mathcal M_F$ the minimum over $c_i$ is attained at the closed-form minimizers of
     Theorem~\ref{thm:MF}. The objective is bilinear in $(b,c_i)$. Split the feasible set by the sign of $b$ and substitute $u_i=bc_i$.
-    For $\sigma b>0$, this is a bijection between the feasible $c_i$ and the $u_i$ with $u_i/b\in\overline{P_i}$, i.e., $\sigma(A_iu_i-b\,d_i)\le0$, and
+    For $\sigma b>0$, this is a bijection between the feasible $c_i$ and the $u_i$ with $u_i/b\in\overline{P_i}$, i.e., $\sigma(u_i-b\,\mathrm{lo}_i)\ge0$ and $\sigma(b\,\mathrm{hi}_i-u_i)\ge0$, and
     $\sum_iF_iu_i=b\,m_1$. Moreover $bJ(c_i-o)=J(u_i-b\,o)$, so the objective is preserved. For $b=0$, the original objective is $\mu f_N\|a\|_2$ for every
-    feasible $(c_i)$, and feasible points exist. In the new variables, $\sigma A_iu_i\le0$ forces $u_i=0$ because $\overline{P_i}$ is bounded, and the
+    feasible $(c_i)$, and feasible points exist. In the new variables, the box constraints force $u_i=0$, and the
     objective is again $\mu f_N\|a\|_2$. The objective is a sum of norms of affine functions and the constraints are linear, so epigraph variables give an SOCP.
 
     (iii) By (i) and Theorem~\ref{thm:MF}, for $\mathcal M_F$, $\overline s=\inf\mu\sum_iF_i\max_k\|a+bJ(v_{ik}-o)\|_2$ over $\langle q,w\rangle=1$, which is the stated program in epigraph form.
     For $\mathcal M_T$, the LP of Theorem~\ref{thm:combined_upper} (with $g(v_{ik};q)$ replaced by $\|a+bJ(v_{ik}-o)\|_2$) is feasible and bounded, so by LP duality
     $\overline h_o(q)=\min\{\sum_iF_iy_i+z^\top m_1:\ y_i+z^\top v_{ik}\ge\mu\|a+bJ(v_{ik}-o)\|_2\}$; minimizing jointly over $(q,y,z)$ gives the stated program, whose constraints are second-order cones.
-    For the primal form: by Lemmas~\ref{lem:half_open} and~\ref{lem:concentrate_spread}(ii), $\operatorname{cl}\X_o^+(y)$ is the union of the sets $\X_o$ of the corner-supported compatible measures,
+    For the primal form: by Lemmas~\ref{lem:half_open} and~\ref{lem:concentrate_spread}(ii), $\operatorname{cl}\X_o^+(y)$ is the union of the sets $\X_o$ of the corner-supported closed-cell measures,
     i.e., the projection of the (compact, convex) feasible set of $(\lambda,\rho)$ onto the wrench $(\sum\rho,\sum(v-o)\times\rho)$.
 
-    (iv) $\hat\nu_N$ is compatible (Lemma~\ref{lem:concentrate_spread}(i) and its converse). With $q^\star=(a^\star,b^\star)$, by (i),
+    (iv) By (i) and Lemma~\ref{lem:half_open}, $\underline s$ is also the infimum of $s^\star_o$ over the closed-cell measures, and $\hat\nu_N$ is one. With $q^\star=(a^\star,b^\star)$, by (i),
     $s^\star_o(\hat\nu_N;w)\le h_{\X_o(\hat\nu_N)}(q^\star)=\mu\sum_iF_i\|a^\star+b^\star J(c_i-o)\|_2=\underline s(w;y,\mathcal M)\le s^\star_o(\hat\nu_N;w)$.
 
     (v) Definitions, and Theorem~\ref{lem:monotone} for the sets.
@@ -1270,8 +1280,8 @@ $h_{\X_o(\nu_N)}(q)=\mu\int_P\|a+bJ(x-o)\|_2\,d\nu_N$ and we write $\underline h
         \item \textit{Membership tests for general operators.} When $\overline h$ can be evaluated with a maximizing wrench (a support point of $\X^+$) but no closed form is available, e.g., through
         moment relaxations of the GMP, the distance from $w$ to $\operatorname{cl}\X^+$ can be computed by the Frank--Wolfe method, whose linear minimization oracle is exactly this support
         point. For the taxel measurements, (iii) is exact and cheaper.
-        \item \textit{Taxel boundaries.} The values are exact for the half-open taxels of dyadic grids (Lemma~\ref{lem:half_open}). For other partitions they are exact for the closure model and valid,
-        possibly conservative, for the half-open one (Theorem~\ref{lem:monotone}).
+        \item \textit{Taxel boundaries.} The values are exact for the taxel grid with its boundary convention (Lemma~\ref{lem:half_open}); other layouts are discussed in
+        Remark~\ref{rem:other_layouts}.
         \item \textit{Scope.} The certificate is quasi-static and applies to the measured state. In a feedback loop the load and the contact change between
         decisions, which requires a separate margin. In (vi), the assumption on the out-of-plane components matters: with a free object, offset normal
         forces at opposing contacts create a couple about an in-plane axis that must be balanced by friction, which the planar model does not account for.
