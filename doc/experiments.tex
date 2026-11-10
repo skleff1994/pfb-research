@@ -63,8 +63,7 @@ and torsion that a contact can hold depend on that field: pressure near the rim 
 The theory bounds the admissible tangential wrench set $\X(\nu_N)$, with the torque about a fixed point (Proposition~\T{prop:support}), over all
 normal-force measures $\nu_N$ compatible with a measurement $y$: the \emph{guaranteed} (inner) set $\X^-(y)$ and the \emph{possible} (outer) set
 $\X^+(y)$, which is convex (Definition~\T{def:measurement_support_bounds}, Proposition~\T{prop:inner_outer}). Three measurement models are considered:
-$\M_0$ (total normal force and CoP, i.e.\ an F/T sensor), $\M_F$ (taxel forces) and $\M_T$ (taxel forces and CoP). For control, the certified load
-factor (Proposition~\T{prop:load_factor}) gives the largest scaling of a load that every compatible contact carries (two SOCPs), and the upper load
+$\M_0$ (total normal force and CoP, i.e.\ an F/T sensor), $\M_F$ (taxel forces) and $\M_T$ (taxel forces and CoP). For control, the certified load factor (Proposition~\T{prop:load_factor_lower}) gives the largest scaling of a load that every compatible contact carries (two SOCPs), and the upper load
 factor the scaling beyond which no compatible contact carries it (one SOCP): a load is surely held, surely not held, or undecided.
 
 \paragraph{Questions.} The studies answer six questions.
@@ -125,8 +124,8 @@ the purpose of the planned hardware study (Section~\ref{sec:hardware}).
     \item \emph{Support values} $h_{\X(\nu_N)}(q)$ for a twist $q=(a,b)$, with their bounds $\underline h(q;y,\M)\le h\le\overline h(q;y,\M)$
     (Definition~\T{def:measurement_support_bounds}). A twist is a physical object, written about a stated point: in F2 and F3, $q=(0,0,1)$ is the
     unit rotation about the true CoP of each field, a fixed twist for every compatible measure. Support values describe the sets; F1--F3 use them.
-    \item \emph{Load factors} $s^\star_o(\nu_N;w)=\max\{s\ge0:sw\in\X_o(\nu_N)\}$ (Definition~\T{def:load_factor}), the capacity along a load $w$
-    expressed about a fixed point $o$, with the certified (lower) and upper load factors $\underline s(w;y,\M)\le s^\star_o\le\overline s(w;y,\M)$.
+    \item \emph{Load factors} $s^\star(\nu_N;w)=\max\{s\ge0:sw\in\X(\nu_N)\}$ (Definition~\T{def:load_factor}), the capacity along a load $w$
+    given about a fixed point $o$ (moved to the origin by Varignon's formula), with the certified (lower) and upper load factors $\underline s(w;y,\M)\le s^\star\le\overline s(w;y,\M)$.
     For a pure torque $w=(0,0,1)$ this is the maximal torque $\inf_a h((a,1))$, which is at most $h((0,0,1))$. Load factors are what a controller
     needs; the load-factor study and S2--S4 use them.
 \end{itemize}
@@ -153,7 +152,7 @@ when the success rate is low, so the main comparisons use \emph{matched seeds}: 
 \paragraph{Implementation.} The library \code{pfb} implements the exact forms of the theory, with torques and twists about a fixed point: the
 $\M_F$ bounds in closed form (Theorem~\T{thm:MF}), the $\M_T$ lower bound as an SOCP in the local first moments (Theorem~\T{thm:combined_lower}), the
 $\M_T$ and $\M_0$ upper bounds as corner LPs (Theorem~\T{thm:combined_upper}, Corollary~\T{cor:coarse_upper_polygon}), the certified load factor (two SOCPs
-after the substitution $u_i=bc_i$) and the upper load factor (one SOCP; Proposition~\T{prop:load_factor}). Conic programs are solved with CVXPY/Clarabel and the
+after the substitution $u_i=bc_i$) and the upper load factor (one SOCP; Proposition~\T{prop:load_factor_upper}). Conic programs are solved with CVXPY/Clarabel and the
 brute-force grid LPs with HiGHS. Lengths are in pad sides for the analytic studies, and $\mu=1$ there ($\mu=0.8$ in Drake).
 
 % =====================================================================================================
@@ -166,8 +165,8 @@ into the same controller (Section~\ref{sec:S3}).
 \begin{description}[style=nextline,leftmargin=1.2em]
     \item[Oracle.] The true capacity of the current contact, computed from Drake's contact faces. It is not available in practice; it
     defines the minimal squeeze and calibrates the dynamic margin of the loop.
-    \item[Certified $\M_T$ ($k\times k$ taxels).] The certified load factor of Proposition~\T{prop:load_factor}(ii) from $k\times k$ taxel forces and
-    the CoP on each pad, summed over the two pads (Proposition~\T{prop:load_factor}(vi)). $k\in\{2,4,8,16\}$ on a $32\times32$\,mm footprint per pad.
+    \item[Certified $\M_T$ ($k\times k$ taxels).] The certified load factor of Proposition~\T{prop:load_factor_lower} from $k\times k$ taxel forces and
+    the CoP on each pad, summed over the two pads (Proposition~\T{prop:load_factor_grasp}). $k\in\{2,4,8,16\}$ on a $32\times32$\,mm footprint per pad.
     \item[Certified $\M_F$ ($16\times16$).] The same without the CoP.
     \item[Certified, one pad sensed.] $\M_T$ $16\times16$ on one pad; the other pad is unsensed except for its normal force, and contributes its
     worst case over the pad, $\mu f_N\min_{x\in P_2}\|a+bJ(x-o)\|$. This is the hardware configuration (one GelSight finger).
@@ -206,9 +205,8 @@ calibrated physical pad; the first is planned as a hardware baseline (Section~\r
     \item The script \code{examples/01\_counterexample.py} evaluates the non-identifiability example (Example~\T{ex:segment}).
     \item Unit tests (\code{pixi run test}), one per statement of the theory: the change of reference point, linearity, convexity of the possible set,
     the closed forms of $\M_0$ and $\M_F$, monotonicity along dyadic grid chains, the gap bounds and the first-order rate (Theorem~\T{thm:rate}), the
-    certified load factor against finite direction grids and a brute-force minimum over point loads, its tightness (Proposition~\T{prop:load_factor}(iv))
-    for one and two pads, the upper load factor (primal and dual programs, attained by a corner measure), the analytic $\M_0$ case of
-    Remark~\T{rem:load_factor}, and the field generators.
+    certified load factor against finite direction grids and a brute-force minimum over point loads, its tightness (Proposition~\T{prop:load_factor_lower})
+    for one and two pads, the upper load factor (primal and dual programs, attained by a corner measure), the analytic $\M_0$ case (no certified torsion about the CoP, Corollary~\T{cor:coarse_inner}), and the field generators.
 \end{itemize}
 \paragraph{Results.} On one field with $4\times4$ taxels and twists over the whole sphere, all orderings hold:
 $\max(\underline h_{\M_0},\underline h_{\M_F})\le\underline h_{\M_T}\le h\le\overline h_{\M_T}\le\min(\overline h_{\M_0},\overline h_{\M_F})$
@@ -218,7 +216,7 @@ same total force and CoP have supports 0 and 0.5 ($=\mu f_NL/2$) for the rotatio
 tests pass.
 \paragraph{Interpretation.} The exact forms are exact where the theory says so, and both load factors are attained by compatible measures.
 A direction grid, by contrast, \emph{over}-certifies: minimizing $\underline h$ over finitely many directions gives a value above the true
-certified load factor, by up to about 7\% with 1500 directions (Remark~\T{rem:load_factor}, first item). This is why the certificate is
+certified load factor, by up to about 7\% with 1500 directions (Proposition~\T{prop:load_factor_lower}). This is why the certificate is
 computed as a joint convex program rather than on a grid.
 
 \subsection{Field population}
@@ -385,7 +383,7 @@ fields for a pure torque and in 81--95\% for the lever load. The values are thos
 grid (the certified load factor did not change with the fixed-frame formulation, which it already used). Pure-torque capacity is $\inf_ah((a,1))$, slightly below the support value
 $h((0,0,1))$ of F2, which is why the load-factor ratios at $2\times2$ (0.24) are below the support ratios (0.30).
 \paragraph{Decision band.} The two factors bracket the true capacity: a load is surely held below $\underline s$ and surely lost above $\overline s$
-(Proposition~\T{prop:load_factor}(v)). For a pure torque with $\M_T$, the undecided band shrinks from $[0.24,2.46]$ times the true capacity at
+(Corollary~\T{cor:load_factor_decision}). For a pure torque with $\M_T$, the undecided band shrinks from $[0.24,2.46]$ times the true capacity at
 $2\times2$ to $[0.83,1.19]$ at $16\times16$ and $[0.92,1.09]$ at $32\times32$. A controller can therefore also detect, from the measurement alone, that a
 demanded load exceeds what any compatible contact could carry: for the median field at $16\times16$, any pure torque more than 19\% above the true
 capacity. In the closed loop of S3 and S4
@@ -461,7 +459,7 @@ similar, stiction $10^{-6}$ & 1.001 & 0.915 \\
 \begin{itemize}
     \item With the lagged or similar solvers and a stiction tolerance of at most $10^{-5}$\,m/s, the bar breaks away within 1\% of the ideal Coulomb
     capacity, insensitive to time step, ramp rate, mesh and stiffness, and the certificate stays below it (0.915--0.923 at $16\times16$; about
-    0.5 with one pad unsensed). Two-pad additivity (Proposition~\T{prop:load_factor}(vi)) holds in this setting.
+    0.5 with one pad unsensed). Two-pad additivity (Proposition~\T{prop:load_factor_grasp}) holds in this setting.
     \item Drake's default tolerance makes points near the rotation centre creep below full friction, so the bar breaks away at 89\% of its
     capacity and a sound certificate \emph{appears} violated. SAP holds 36\% above the Coulomb capacity although its normal forces match the
     pressure field within 0.6\%; the cause is unexplained and SAP is excluded.
@@ -503,8 +501,8 @@ semi-thickness (18--76\,N), and an episode is \emph{flagged} at the first cycle 
 
 \paragraph{Free object.} In a pilot with a free bar, pads whose normal-force centres did not line up created a couple about an in-plane axis that
 opposite tangential forces at the two faces had to balance; the oracle slipped at a 5\% margin with a bar tilt of about 1.6$^\circ$. The planar
-certificate does not account for this internal load: Proposition~\T{prop:load_factor}(vi) assumes the out-of-plane components are balanced without
-friction. The planar joint enforces that assumption in the study; with a real free object it is a limitation (Remark~\T{rem:load_factor}).
+certificate does not account for this internal load: Proposition~\T{prop:load_factor_grasp} assumes the out-of-plane components are balanced without
+friction. The planar joint enforces that assumption in the study; with a real free object it is a limitation (Section~\T{sec:load_factor}, scope).
 
 \paragraph{Design.} 30 seeds $\times$ 2 scenarios $\times$ (3 oracle margins + 10 methods $\times$ 6 margins,
 $m\in\{0,0.05,0.1,0.25,0.5,1\}$) $=3780$ episodes (1.8\,h on 22 processes); none was rejected by the side-wall and footprint filters.
@@ -740,7 +738,7 @@ Claim & Evidence & Status \\
 \midrule
 F/T + CoP never certifies torsion about the CoP & Cor.~\T{cor:coarse_inner}; F1; S3 (uniform over pad fails at $m=1$) & proven; illustrated \\
 Exact, tractable taxel bounds ($\M_F$ closed form, $\M_T$ SOCP/LP) & Thms~\T{thm:MF}, \T{thm:combined_lower}, \T{thm:combined_upper}; verification & proven; verified \\
-Certified and upper load factors, tight, multi-contact; hold / slip / undecided & Prop.~\T{prop:load_factor}; tests; load factor; S2 & proven (sketch); verified \\
+Certified and upper load factors, tight, multi-contact; hold / slip / undecided & Prop.~\T{prop:load_factor}, Cor.~\T{cor:load_factor_decision}, Props.~\T{prop:load_factor_lower}--\T{prop:load_factor_grasp}; tests; load factor; S2 & proven (sketch); verified \\
 Gap halves per dyadic refinement; value of the CoP for mixed loads & Props.~\T{prop:taxel_refinement}--\T{prop:taxel_resolution_MT}, Thm~\T{thm:rate}; F2; load factor; S3 & proven; quantified \\
 Plug-in estimates are unsafe & F3; load factor; S3 & numerical, simulation \\
 Certificate sound in closed loop; price & S3 & simulation (Drake, planar joint) \\
@@ -777,8 +775,7 @@ measurement is an interval rather than a value. The friction coefficient is also
 \paragraph{Theory.} Bounds and the certified load factor for interval taxel forces $F_i\in[F_i^-,F_i^+]$ (with consistent totals and, for $\M_T$, a
 convex set of CoPs) and $\mu\in[\mu_{\rm lo},\mu_{\rm hi}]$. The friction coefficient only scales the bounds. For a fixed twist, the $\M_T$ lower
 bound stays an SOCP with interval taxel forces, since it is jointly convex in the forces and the local first moments (Theorem~\T{thm:combined_lower}).
-For the load factor, the twist is a variable and $F_i$ multiplies the direction $a$, so the substitution $u_i=bc_i$ of Proposition~\T{prop:load_factor}
-may not keep the problem jointly convex; another formulation or a relaxation with a certified gap may be needed.
+For the load factor, the twist is a variable and $F_i$ multiplies the direction $a$, so the substitution $u_i=bc_i$ of Proposition~\T{prop:load_factor_lower} may not keep the problem jointly convex; another formulation or a relaxation with a certified gap may be needed.
 \paragraph{Numerical study (F4: resolution against noise).} Pixel noise aggregated into taxel intervals. The nominal gap shrinks like $1/k$
 (Proposition~\T{prop:taxel_resolution_MT}) while the sum of the interval widths grows like $\sqrt r$ for $r=k^2$ independent taxels, so an interior
 optimal resolution is plausible; the study will test whether it exists and where.
