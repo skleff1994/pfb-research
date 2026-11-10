@@ -213,8 +213,7 @@ calibrated physical pad; the first is planned as a hardware baseline (Section~\r
 \paragraph{Results.} On one field with $4\times4$ taxels and twists over the whole sphere, all orderings hold:
 $\max(\underline h_{\M_0},\underline h_{\M_F})\le\underline h_{\M_T}\le h\le\overline h_{\M_T}\le\min(\overline h_{\M_0},\overline h_{\M_F})$
 (Proposition~\T{prop:taxel_refinement}). The brute-force grid LPs lie inside the exact bounds, with differences of
-$7\cdot10^{-11}$ ($\M_0$), $1.6\cdot10^{-3}$ ($\M_T$) and $5.0\cdot10^{-3}$ ($\M_F$), the discretization error of the grid (half-open cells,
-Lemma~\T{lem:half_open}); the mean bound widths are 0.128 ($\M_0$), 0.190 ($\M_F$) and 0.048 ($\M_T$). Example~\T{ex:segment}: two measures with the
+$7\cdot10^{-11}$ ($\M_0$), $1.6\cdot10^{-3}$ ($\M_T$) and $5.0\cdot10^{-3}$ ($\M_F$), the discretization error of the grid (closed-cell model); the mean bound widths are 0.128 ($\M_0$), 0.190 ($\M_F$) and 0.048 ($\M_T$). Example~\T{ex:segment}: two measures with the
 same total force and CoP have supports 0 and 0.5 ($=\mu f_NL/2$) for the rotation about the CoP, and the $\M_0$ bounds are $[0,0.5]$. The 113 unit
 tests pass.
 \paragraph{Interpretation.} The exact forms are exact where the theory says so, and both load factors are attained by compatible measures.
